@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "apis-instance-tibschol"
+version = "0.0.1"
+description = "An APIS instance for the research project TibSchol"
+authors = ["Saranya Balasubramanian <saranya.balasubramanian@oeaw.ac.at>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "apis_ontology"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+psycopg2 = "^2.9"
+apis-core = { git = "https://github.com/acdh-oeaw/apis-core-rdf.git", branch = "birger/relations-ng" }
+apis-highlighter-ng = "^0.3.1"
+apis-acdhch-default-settings = "1.0.0"
+django-action-logger = "^0.1.5"
+django-acdhch-functions = "^0.1.3"
+django-extensions = "^3.1.3"
+
+[tool.poetry.group.dev.dependencies]
+jupyter = "^1.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

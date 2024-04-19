@@ -12,6 +12,7 @@ INSTALLED_APPS += [
     "apis_highlighter",
     "django.contrib.postgres",
     "apis_core.collections",
+    "apis_core.history",
 ]
 
 LOGGING = {

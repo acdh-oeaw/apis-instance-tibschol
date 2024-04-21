@@ -12,4 +12,28 @@ INSTALLED_APPS += [
     "apis_highlighter",
     "django.contrib.postgres",
     "apis_core.collections",
+    "apis_core.history",
 ]
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[%(levelname)-8s %(asctime)s] %(name)-6s %(message)s",
+            "datefmt": "%y-%m-%d %H:%M %Z",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+}
+
+LOG_LIST_NOSTAFF_EXCLUDE_APP_LABELS = ["admin", "sessions", "auth"]

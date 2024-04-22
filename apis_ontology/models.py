@@ -96,6 +96,40 @@ class Place(
         return f"{self.label}"
 
 
+class Work(
+    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
+):
+    class_uri = "http://id.loc.gov/ontologies/bibframe/Work"
+    LANGUAGES = [
+        ("Sanskrit", "Sanskrit"),
+        ("Tibetan", "Tibetan"),
+        ("Tangut", "Tangut"),
+        ("Other", "Other"),
+    ]
+    subject = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="subject",
+    )  # should be a controlled vocabulary field
+
+    name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
+    sde_dge_ref = models.CharField(
+        max_length=25, blank=True, null=True, verbose_name="Derge reference"
+    )
+    original_language = models.CharField(
+        max_length=10, choices=LANGUAGES, blank=True, null=True
+    )
+    isExtant = models.BooleanField(default=True, verbose_name="Is extant")
+
+    class Meta:
+        verbose_name = _("work")
+        verbose_name_plural = _("Works")
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class ZoteroEntry(GenericModel, models.Model):
     zoteroId = models.CharField(max_length=255, verbose_name="Zotero ID")
     shortTitle = models.TextField(blank=True, null=True, verbose_name="Short title")

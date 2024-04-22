@@ -130,6 +130,79 @@ class Work(
         return f"{self.name}"
 
 
+class Instance(
+    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
+):
+    class_uri = "http://id.loc.gov/ontologies/bibframe/Instance"
+    SETS = [
+        ("Set 1", "Set 1"),
+        ("Set 2", "Set 2"),
+        ("Set 3", "Set 3"),
+        ("Set 4", "Set 4"),
+    ]
+    AVAILABILITY = [
+        ("lost", "lost"),
+        ("available", "available"),
+        ("non-accessible", "non-accessible"),
+    ]
+    name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
+    set_num = models.CharField(
+        max_length=5, choices=SETS, null=True, blank=True, verbose_name="Set"
+    )
+    volume = models.CharField(max_length=255, blank=True, null=True)
+    sb_text_number = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Number ascribed to item by Tibschol",
+    )
+    pp_kdsb = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Page numbers in print",
+    )
+    num_folios = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Number of folios"
+    )
+
+    signature_letter = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Signature letter (category)",
+    )
+    signature_number = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Signature number"
+    )
+    drepung_number = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Drepung catalogue number"
+    )
+    provenance = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name="Provenance"
+    )
+    zotero_ref = models.TextField(blank=True, null=True, verbose_name="Zotero")
+    tibschol_ref = models.TextField(
+        blank=True, null=True, verbose_name="Tibschol reference"
+    )
+    availability = models.CharField(
+        max_length=15,
+        choices=AVAILABILITY,
+        blank=True,
+        null=True,
+        verbose_name="Availability",
+    )
+    item_description = models.TextField(
+        blank=True, null=True, verbose_name="Item description"
+    )
+
+    class Meta:
+        verbose_name = _("instance")
+        verbose_name_plural = _("Instances")
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class ZoteroEntry(GenericModel, models.Model):
     zoteroId = models.CharField(max_length=255, verbose_name="Zotero ID")
     shortTitle = models.TextField(blank=True, null=True, verbose_name="Short title")

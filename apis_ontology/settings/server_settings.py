@@ -6,6 +6,10 @@ DEBUG = True
 APIS_BASE_URI = "https://tibschol.acdh-ch.oeaw.ac.at/"
 
 ROOT_URLCONF = "apis_ontology.urls"
+CSRF_TRUSTED_ORIGINS = [
+    "https://tibschol.acdh-ch.oeaw.ac.at",
+    "https://tibschol-test.acdh-ch-dev.oeaw.ac.at",
+]
 
 INSTALLED_APPS += [
     "apis_core.relations",
@@ -13,7 +17,12 @@ INSTALLED_APPS += [
     "django.contrib.postgres",
     "apis_core.collections",
     "apis_core.history",
+    "django_action_logger",
+    "django_acdhch_functions",
 ]
+INSTALLED_APPS.remove("apis_ontology")
+INSTALLED_APPS.insert(0, "apis_ontology")
+
 
 LOGGING = {
     "version": 1,

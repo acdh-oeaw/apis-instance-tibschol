@@ -1,4 +1,29 @@
+<!DOCTYPE html>
 {% extends "base.html" %}
+
+{% load apis_templatetags %}
+{% load apiscore %}
+
+{% block main-menu %}
+<li class="nav-item dropdown">
+    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+        aria-expanded="false">
+        Entities
+        <span class="caret" />
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+        {% block entities-menu-items %}
+        {% entities_content_types as entities %}
+        {% for content_type in entities %}
+        <a class="dropdown-item" href="{% url 'apis:generic:list' content_type %}">
+            {{ content_type|model_meta:"verbose_name_plural" }}</a>
+        {% endfor %}
+        {% endblock entities-menu-items %}
+
+    </div>
+</li>
+{% endblock main-menu %}
 
 {% block userlogin-menu %}
 <ul class="navbar-nav">
@@ -10,11 +35,11 @@
             <div class="dropdown-item">
                 <a class="nav-link p-0" href="{% url 'apis:logout' %}?next=/">
                     <span class="material-symbols-outlined">logout</span>
-                    log out
+                    Logout
                 </a>
             </div>
             <div class="dropdown-item">
-                <a class="nav-link p-0" href="{% url " django_action_logger:log" %}">
+                <a class="nav-link p-0" href="{% url "django_action_logger:log" %}">
                     <span class="material-symbols-outlined">web_stories</span>
                     Log
                 </a>

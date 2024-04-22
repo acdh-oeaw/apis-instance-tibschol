@@ -69,7 +69,6 @@ class Person(
     nationality = models.CharField(
         max_length=10, choices=NATIONALITY, blank=True, null=True
     )
-    comments = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = _("person")

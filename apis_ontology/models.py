@@ -238,6 +238,8 @@ class TibScholRelationMixin(Relation, LegacyDateMixin):
         verbose_name="Confidence",
         max_length=1000,
     )
+    subj_model = None
+    obj_model = None
 
     @property
     def subject_type(self):

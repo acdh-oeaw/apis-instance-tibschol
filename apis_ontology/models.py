@@ -54,6 +54,31 @@ class LegacyStuffMixin(models.Model):
         return uri
 
 
+class Person(
+    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
+):
+    class_uri = "http://id.loc.gov/ontologies/bibframe/Person"
+    GENDERS = [
+        ("male", "Male"),
+        ("female", "Female"),
+    ]
+    NATIONALITY = [("Indic", "Indic"), ("Tibetan", "Tibetan")]
+
+    name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
+    gender = models.CharField(max_length=6, choices=GENDERS, default="male")
+    nationality = models.CharField(
+        max_length=10, choices=NATIONALITY, blank=True, null=True
+    )
+    comments = models.TextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("person")
+        verbose_name_plural = _("Persons")
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Place(
     E53_Place,
     VersionMixin,

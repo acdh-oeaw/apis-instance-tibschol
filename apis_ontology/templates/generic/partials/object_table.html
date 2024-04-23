@@ -1,6 +1,7 @@
 {% load apisgeneric %}
 {% load filter_utils %}
 {% load parse_comment %}
+{% load linkify_list %}
 
 <table class="table table-hover">
     {% modeldict object as d %}
@@ -14,6 +15,8 @@
         <td>
             {% if key|endswith:'.comments' %}
             {{ value | parse_comment | safe}}
+            {% elif key|endswith:'.external_links' %}
+            {{ value | render_links | safe}}
             {% else %}
             {{ value }}
             {% endif %}

@@ -1,6 +1,11 @@
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 from django import template
+
+from apis_ontology.models import ZoteroEntry
 
 register = template.Library()
 
@@ -20,7 +25,12 @@ def parse_comment(value):
         elif match.group("zotero_id_only"):
             # Case: [ID]
             zotero_id = match.group("zotero_id_only")
-            return f'<a target="_BLANK" href="https://www.zotero.org/groups/4394244/tibschol/items/{zotero_id}/item-details#">{zotero_id}</a>'
+            try:
+                zotero_obj = ZoteroEntry.objects.filter(zoteroId=zotero_id)[0]
+                return f'<a target="_BLANK" href="https://www.zotero.org/groups/4394244/tibschol/items/{zotero_id}/item-details#">{zotero_obj.shortTitle}</a>'
+            except Exception as e:
+                logger.error(e)
+                return f'<a target="_BLANK" href="https://www.zotero.org/groups/4394244/tibschol/items/{zotero_id}/item-details#">{zotero_id}</a>'
 
     def replace_entity_link(match):
         entity_id = match.group("entity_id")

@@ -1,4 +1,6 @@
 import logging
+from apis_core.apis_metainfo.models import RootObject
+from apis_core.relations.models import Relation
 
 import pandas as pd
 from django.apps import apps
@@ -17,66 +19,85 @@ class Command(BaseCommand):
     """
 
     import_file = "data/dump_test.json"
+    import_base_rels = "data/relations_dump.json"
 
-    def handle(self, *args, **kwargs):
-        """
-        parses the data dump from the old schema and imports it into the current schema
-        """
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--clean",
+            action="store_true",
+            dest="clean",
+            default=False,
+            help="Delete all existing relations. Default: False)",
+        )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.df = pd.read_json(self.import_file)
-        self.df = self.df[self.df.model != "apis_metainfo.uri"]
+        self.df = self.df[
+            (
+                (self.df.model.str.startswith("apis_ontology"))
+                & (self.df.model != "apis_ontology.zoteroentry")
+                & (self.df.model != "apis_ontology.place")
+                & (self.df.model != "apis_ontology.person")
+                & (self.df.model != "apis_ontology.work")
+                & (self.df.model != "apis_ontology.instance")
+            )
+        ]
+
+        self.base_rels = pd.read_json(self.import_base_rels)
+
         logger.debug("Columns: %s", self.df.columns)
         logger.debug("Number of rows: %d", self.df.shape[0])
         logger.debug("Models: %s", self.df.model.unique())
 
-        def get_relations_data(model_name):
+    def handle(self, *args, **kwargs):
+        """
+        parses the data dump from the old schema and imports it into the current schema
+        """
+        if kwargs["clean"]:
+            Relation.objects.all().delete()
 
-            entity_rows = self.df[self.df.model == f"apis_ontology.{model_name}"]
-            logging.debug("Found %d rows of type %s", entity_rows.shape[0], model_name)
-            other_fields = {}
-            for _, row in tqdm(entity_rows.iterrows(), total=entity_rows.shape[0]):
-                # get data from root object
-                other_object_info = self.df[
-                    (self.df.pk == row.pk) & (self.df.model != row.model)
-                ]
-                for _, extra_fields in other_object_info.iterrows():
-                    if extra_fields.model.startswith("apis_ontology"):
-                        continue
+        def get_subj_obj_data(pk):
+            base_rel_match = self.base_rels[self.base_rels.pk == pk].iloc[0]
+            try:
+                subj = RootObject.objects_inheritance.get_subclass(
+                    pk=base_rel_match.fields["subj"]
+                )
+                obj = RootObject.objects_inheritance.get_subclass(
+                    pk=base_rel_match.fields["obj"]
+                )
+            except Exception as e:
+                logging.error(
+                    "Cannot find subject and object for relation [%s], %s",
+                    pk,
+                    base_rel_match,
+                )
+                return None, None
+            return subj, obj
 
-                    other_fields = {**other_fields, **extra_fields.fields}
+        for _, row in tqdm(self.df.iterrows(), total=self.df.shape[0]):
 
-                field_values = {
-                    "id": row.pk,
-                    **row.fields,
-                    **other_fields,
-                }
-
-                field_values.pop("self_contenttype")
-                field_values.pop("collection")
-                field_values.pop("status")
-                field_values.pop("source")
-                field_values.pop("references")
-                field_values["external_links"] = field_values["external_link"]
-                field_values.pop("external_link")
-
-                # pprint(field_values)
-                model_class = apps.get_model(f"apis_ontology.{model_name}")
-
-                model_object = model_class(**field_values)
-                model_object.save()
-
-        for i, row in self.df.iterrows():
-            if not row.model.startswith("apis_ontology"):
+            field_values = {**row.fields}  # "id": row.pk,
+            subj_obj_data = get_subj_obj_data(row.pk)
+            field_values["subj"], field_values["obj"] = subj_obj_data
+            if not (field_values["subj"] and field_values["obj"]):
+                logging.error(
+                    "SKIPPING relation %s with values: %s", row.model, field_values
+                )
                 continue
 
-            entity_model_names = [f"apis_ontology.{m}" for m in ENTITY_MODELS]
-            if row.model in entity_model_names:
-                continue
+            try:
+                if "notes" in field_values:
+                    if (
+                        not field_values["notes"]
+                        or field_values.get("notes", "").strip()
+                    ):
+                        field_values.pop("notes")
+            except Exception as e:
+                print(field_values, repr(e))
+                break
 
-            field_values = {"id": row.pk, **row.fields}
             model_class = apps.get_model(row.model)
             model_object = model_class(**field_values)
             model_object.save()

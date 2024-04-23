@@ -78,7 +78,7 @@ class Command(BaseCommand):
 
         for _, row in tqdm(self.df.iterrows(), total=self.df.shape[0]):
 
-            field_values = {**row.fields}  # "id": row.pk,
+            field_values = {"id": row.pk, **row.fields}  #
             subj_obj_data = get_subj_obj_data(row.pk)
             field_values["subj"], field_values["obj"] = subj_obj_data
             if not (field_values["subj"] and field_values["obj"]):

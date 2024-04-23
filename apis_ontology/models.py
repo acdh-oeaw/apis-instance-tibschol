@@ -1,3 +1,4 @@
+from functools import cached_property
 import logging
 
 logger = logging.getLogger(__name__)
@@ -123,6 +124,15 @@ class Work(
     )
     isExtant = models.BooleanField(default=True, verbose_name="Is extant")
 
+    @cached_property
+    def author(self):
+        try:
+            author = PersonAuthorOfWork.objects.filter(obj=self)
+            return Person.objects.get(pk=author[0].subj.pk)
+        except Exception as e:
+            print(e)
+            return
+
     class Meta:
         verbose_name = _("work")
         verbose_name_plural = _("Works")
@@ -195,6 +205,23 @@ class Instance(
     item_description = models.TextField(
         blank=True, null=True, verbose_name="Item description"
     )
+
+    @cached_property
+    def work(self):
+        try:
+            work_has_as_instance = WorkHasAsAnInstanceInstance.objects.filter(obj=self)
+            return work_has_as_instance[0].subj
+        except Exception as e:
+            print("Error while fetching work associated with instance:", e)
+            return
+
+    @cached_property
+    def author(self):
+        try:
+            return Work.objects.get(id=self.work.id).author
+        except Exception as e:
+            print("Error while getting author info for instance", e)
+            return
 
     class Meta:
         verbose_name = _("instance")

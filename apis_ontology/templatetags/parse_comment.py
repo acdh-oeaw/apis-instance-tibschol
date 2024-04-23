@@ -11,27 +11,29 @@ def parse_comment(value):
         return ""
     print(f"Parsing {value}")
 
-    if "<<" in value and ">>" in value:
-        # When comment contains a text to link and a Zotero ID in square bracckets
-        pattern = r"<<(.*?) \[(.*?)\]>>"
-        subbed = re.sub(
-            pattern,
-            r'<a target="_BLANK" href="https://www.zotero.org/groups/4394244/tibschol/items/\2/item-details#">\1</a>',
-            value,
-        )
-        value = subbed
+    def replace_zotero_link(match):
+        if match.group("text"):
+            # Case: <<text [ID]>>
+            text = match.group("text")
+            zotero_id = match.group("zotero_id")
+            return f'<a target="_BLANK" href="https://www.zotero.org/groups/4394244/tibschol/items/{zotero_id}/item-details#">{text}</a>'
+        elif match.group("zotero_id_only"):
+            # Case: [ID]
+            zotero_id = match.group("zotero_id_only")
+            return f'<a target="_BLANK" href="https://www.zotero.org/groups/4394244/tibschol/items/{zotero_id}/item-details#">{zotero_id}</a>'
 
-    if "[" in value and "]" in value:
-        # Only Zotero ID without hyperlink text in square brackets
-        pattern = r"\[([A-Z0-9]+)\]"
-        replacement = r'<a target="_BLANK" href="https://www.zotero.org/groups/4394244/tibschol/items/\1/item-details#">\1</a>'
-        subbed = re.sub(pattern, replacement, value)
-        value = subbed
+    def replace_entity_link(match):
+        entity_id = match.group("entity_id")
+        return f'<a target="_BLANK" href="/entity/{entity_id}">{entity_id}</a>'
 
-    if "(ID:" in value:
-        pattern = r"\(ID:\s*(\d+)\)"
-        replacement = r'<a target="_BLANK" href="/entity/\1">\1</a>'
-        subbed = re.sub(pattern, replacement, value)
-        value = subbed
+    # Combined regex pattern to handle all cases
+    combined_pattern = r"<<(?P<text>.*?) \[(?P<zotero_id>[A-Z0-9]+)\]>>|\[(?P<zotero_id_only>[A-Z0-9]+)\]|\(ID:\s*(?P<entity_id>\d+)\)"
 
-    return value
+    # Apply substitutions using the combined pattern
+    transformed_value = re.sub(
+        combined_pattern,
+        lambda match: replace_zotero_link(match) or replace_entity_link(match),
+        value,
+    )
+
+    return transformed_value

@@ -3,7 +3,7 @@ from apis_core.apis_entities.tables import AbstractEntityTable
 from django_tables2.utils import A
 
 from .templatetags.linkify_list import render_links, render_list_field
-from .models import Person, Place
+from .models import Person, Place, Work
 
 
 class PlaceTable(AbstractEntityTable):
@@ -40,3 +40,19 @@ class PersonTable(AbstractEntityTable):
 
     def render_external_links(self, value):
         return render_links(value)
+
+
+class WorkTable(AbstractEntityTable):
+    class Meta:
+        model = Work
+        fields = [
+            "id",
+            "name",
+            "sde_dge_ref",
+        ]
+        exclude = ["desc"]
+
+    id = tables.Column(
+        linkify=lambda record: record.get_edit_url(),
+        empty_values=[],
+    )

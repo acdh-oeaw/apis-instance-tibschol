@@ -77,7 +77,7 @@ class Person(
         verbose_name_plural = _("Persons")
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} ({self.pk})"
 
 
 class Place(
@@ -138,7 +138,7 @@ class Work(
         verbose_name_plural = _("Works")
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} ({self.pk})"
 
 
 class Instance(
@@ -228,7 +228,7 @@ class Instance(
         verbose_name_plural = _("Instances")
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} ({self.pk})"
 
 
 class ZoteroEntry(GenericModel, models.Model):

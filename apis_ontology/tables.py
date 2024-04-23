@@ -2,7 +2,7 @@ import django_tables2 as tables
 from apis_core.apis_entities.tables import AbstractEntityTable
 from django_tables2.utils import A
 
-from .templatetags.linkify_list import render_links, render_list_field
+from .templatetags.linkify_list import render_links
 from .models import Instance, Person, Place, Work
 
 

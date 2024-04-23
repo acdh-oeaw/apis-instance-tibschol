@@ -14,6 +14,9 @@ register = template.Library()
 
 @register.filter
 def parse_comment(value):
+    if not value:
+        return ""
+
     def custom_replace(match):
         if match.group("text"):
             # Handle <<text [ZoteroID]>>

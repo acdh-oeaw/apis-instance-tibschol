@@ -1,9 +1,20 @@
 import django_tables2 as tables
 from apis_core.apis_entities.tables import AbstractEntityTable
+from apis_core.generic.tables import GenericTable
 from django_tables2.utils import A
 
+from .models import Instance, Person, Place, TibScholRelationMixin, Work
 from .templatetags.filter_utils import render_links
-from .models import Instance, Person, Place, Work
+from .templatetags.parse_comment import parse_comment
+
+import django_tables2 as tables
+import logging
+from apis_core.apis_metainfo.models import RootObject
+
+from django.utils.safestring import mark_safe
+
+
+logger = logging.getLogger(__name__)
 
 
 class PlaceTable(AbstractEntityTable):
@@ -13,7 +24,7 @@ class PlaceTable(AbstractEntityTable):
         exclude = ["desc"]
 
     id = tables.Column(
-        linkify=lambda record: record.get_edit_url(),
+        linkify=lambda record: record.get_absolute_url(),
         empty_values=[],
     )
 
@@ -34,7 +45,7 @@ class PersonTable(AbstractEntityTable):
         exclude = ["desc"]
 
     id = tables.Column(
-        linkify=lambda record: record.get_edit_url(),
+        linkify=lambda record: record.get_absolute_url(),
         empty_values=[],
     )
 
@@ -49,7 +60,7 @@ class WorkTable(AbstractEntityTable):
         exclude = ["desc"]
 
     id = tables.Column(
-        linkify=lambda record: record.get_edit_url(),
+        linkify=lambda record: record.get_absolute_url(),
         empty_values=[],
     )
     author = tables.Column(verbose_name="Author", accessor="author", orderable=False)
@@ -62,10 +73,72 @@ class InstanceTable(AbstractEntityTable):
         exclude = ["desc"]
 
     id = tables.Column(
-        linkify=lambda record: record.get_edit_url(),
+        linkify=lambda record: record.get_absolute_url(),
         empty_values=[],
     )
     author = tables.Column(verbose_name="Author", accessor="author", orderable=False)
 
     def render_external_links(self, value):
         return render_links(value)
+
+
+class RelationsTable(GenericTable):
+    reverse = False
+
+    class Meta(GenericTable.Meta):
+        model = TibScholRelationMixin
+        fields = [
+            "id",
+            "name",
+            "obj",
+            "support_notes",
+            "zotero_refs",
+            "TEI",
+        ]
+        exclude = ["view", "edit", "desc", "delete", "subj"]
+
+    name = tables.Column(verbose_name="Relationship")
+    obj = tables.Column(verbose_name="Object")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Define the obj attribute based on the value of self.reverse
+
+    def render_name(self, record):
+        if self.context["object"].pk == record.subj.pk:
+            return record.name
+        elif self.context["object"].pk == record.obj.pk:
+            return record.reverse_name
+        else:
+            return ""
+
+    def render_support_notes(self, value):
+        return mark_safe(parse_comment(value))
+
+    def render_zotero_refs(self, value):
+        return mark_safe(parse_comment(value))
+
+    def render_obj(self, record):
+        # return str(record) + str(self.context["object"].pk)
+        if self.context["object"].pk == record.obj.pk:
+            # return str(RootObject.objects_inheritance.get_subclass(pk=record.subj.pk))
+            actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.subj.pk)
+
+        else:
+            actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)
+
+        return mark_safe(
+            "<a href='"
+            + actual_obj.get_absolute_url()
+            + "' target='_BLANK'>"
+            + str(actual_obj)
+            + "</a>"
+        )
+
+
+class RelationsTableEdit(RelationsTable):
+    pass
+
+
+class RelationsTableView(RelationsTable):
+    pass

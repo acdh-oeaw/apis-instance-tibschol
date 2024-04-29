@@ -1,0 +1,41 @@
+{% extends "apis_core/apis_entities/abstractentity.html" %}
+{% load django_tables2 %}
+{% load apis_templatetags %}
+{% load apiscore %}
+{% load relationsng %}
+
+{% block col-zero %}
+<div class="card">
+    <div class="card-body">{% include "generic/partials/object_table.html" %}</div>
+</div>
+{% endblock col-zero %}
+
+{% block col-one %}
+<h4>Relations</h4>
+{% related_entity_types as related_entity_types %}
+<div class="container">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+        {% for ent_type in related_entity_types %}
+
+        <li class="nav-item">
+            <a class="nav-link {% if forloop.first %}active{% endif %}" data-toggle="tab"
+                href="#reltype{{forloop.counter0}}">{{ent_type |model_meta:"verbose_name" | title}}</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        {% for ent_type in related_entity_types %}
+        <div class="tab-pane container {% if forloop.first %}active{% endif %}" id="reltype{{forloop.counter0}}">
+            {% entity_relations with_type=ent_type as entity_relations %}
+            {% render_table entity_relations %}
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock col-one %}

@@ -21,8 +21,8 @@
     <div class="tab-content">
         {% for ent_type in related_entity_types %}
         <div class="tab-pane container {% if forloop.first %}active{% endif %}" id="reltype{{forloop.counter0}}">
-            {% entity_relations with_type=ent_type %}
-
+            {% entity_relations with_type=ent_type as entity_relations %}
+            {% render_table entity_relations %}
         </div>
         {% endfor %}
 

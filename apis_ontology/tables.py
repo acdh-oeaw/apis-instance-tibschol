@@ -3,10 +3,16 @@ from apis_core.apis_entities.tables import AbstractEntityTable
 from apis_core.generic.tables import GenericTable
 from django_tables2.utils import A
 
-from .models import Instance, Person, Place, Work
+from .models import Instance, Person, Place, TibScholRelationMixin, Work
 from .templatetags.filter_utils import render_links
 
 import django_tables2 as tables
+import logging
+from apis_core.apis_metainfo.models import RootObject
+
+from django.utils.safestring import mark_safe
+
+logger = logging.getLogger(__name__)
 
 
 class PlaceTable(AbstractEntityTable):
@@ -75,23 +81,54 @@ class InstanceTable(AbstractEntityTable):
 
 
 class RelationsTable(GenericTable):
-    class Meta(GenericTable.Meta):
-        fields = ["id", "relation", "obj", "support_notes", "zotero_refs", "TEI"]
-        exclude = ["edit", "desc", "delete", "view"]
+    reverse = False
 
-    def __init__(self, forward_rels, reverse_rels, *args, **kwargs):
+    class Meta(GenericTable.Meta):
+        model = TibScholRelationMixin
+        fields = [
+            "id",
+            "obj",
+            "support_notes",
+            "zotero_refs",
+            "TEI",
+            "name",
+        ]
+        exclude = ["view", "edit", "desc", "delete", "subj"]
+        name = tables.Column(empty_values=(), verbose_name="relationship")
+
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        rows = []
-        # Populate the table with data from Model1
-        for rel in forward_rels:
-            rows.append(
-                {
-                    "id": rel.id,
-                    "relation": rel.name,
-                    "obj": rel.obj,
-                    "support_notes": rel.support_notes,
-                    "zotero_refs": rel.zotero_refs,
-                    "TEI": "",
-                }
-            )
-        self.rows = rows
+        # Define the obj attribute based on the value of self.reverse
+
+    def render_name(self, record):
+        if self.context["object"].pk == record.subj.pk:
+            return record.name
+        elif self.context["object"].pk == record.obj.pk:
+            return record.reverse_name
+        else:
+            return ""
+
+    def render_obj(self, record):
+        # return str(record) + str(self.context["object"].pk)
+        if self.context["object"].pk == record.obj.pk:
+            # return str(RootObject.objects_inheritance.get_subclass(pk=record.subj.pk))
+            actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.subj.pk)
+
+        else:
+            actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)
+
+        return mark_safe(
+            "<a href='"
+            + actual_obj.get_absolute_url()
+            + "' target='_BLANK'>"
+            + str(actual_obj)
+            + "</a>"
+        )
+
+
+class RelationsTableEdit(RelationsTable):
+    pass
+
+
+class RelationsTableView(RelationsTable):
+    pass

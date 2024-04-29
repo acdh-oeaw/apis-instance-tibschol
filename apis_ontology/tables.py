@@ -24,7 +24,7 @@ class PlaceTable(AbstractEntityTable):
         exclude = ["desc"]
 
     id = tables.Column(
-        linkify=lambda record: record.get_edit_url(),
+        linkify=lambda record: record.get_absolute_url(),
         empty_values=[],
     )
 
@@ -45,7 +45,7 @@ class PersonTable(AbstractEntityTable):
         exclude = ["desc"]
 
     id = tables.Column(
-        linkify=lambda record: record.get_edit_url(),
+        linkify=lambda record: record.get_absolute_url(),
         empty_values=[],
     )
 
@@ -60,7 +60,7 @@ class WorkTable(AbstractEntityTable):
         exclude = ["desc"]
 
     id = tables.Column(
-        linkify=lambda record: record.get_edit_url(),
+        linkify=lambda record: record.get_absolute_url(),
         empty_values=[],
     )
     author = tables.Column(verbose_name="Author", accessor="author", orderable=False)
@@ -73,7 +73,7 @@ class InstanceTable(AbstractEntityTable):
         exclude = ["desc"]
 
     id = tables.Column(
-        linkify=lambda record: record.get_edit_url(),
+        linkify=lambda record: record.get_absolute_url(),
         empty_values=[],
     )
     author = tables.Column(verbose_name="Author", accessor="author", orderable=False)

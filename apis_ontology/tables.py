@@ -5,12 +5,14 @@ from django_tables2.utils import A
 
 from .models import Instance, Person, Place, TibScholRelationMixin, Work
 from .templatetags.filter_utils import render_links
+from .templatetags.parse_comment import parse_comment
 
 import django_tables2 as tables
 import logging
 from apis_core.apis_metainfo.models import RootObject
 
 from django.utils.safestring import mark_safe
+
 
 logger = logging.getLogger(__name__)
 
@@ -87,14 +89,16 @@ class RelationsTable(GenericTable):
         model = TibScholRelationMixin
         fields = [
             "id",
+            "name",
             "obj",
             "support_notes",
             "zotero_refs",
             "TEI",
-            "name",
         ]
         exclude = ["view", "edit", "desc", "delete", "subj"]
-        name = tables.Column(empty_values=(), verbose_name="relationship")
+
+    name = tables.Column(verbose_name="Relationship")
+    obj = tables.Column(verbose_name="Object")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -107,6 +111,12 @@ class RelationsTable(GenericTable):
             return record.reverse_name
         else:
             return ""
+
+    def render_support_notes(self, value):
+        return mark_safe(parse_comment(value))
+
+    def render_zotero_refs(self, value):
+        return mark_safe(parse_comment(value))
 
     def render_obj(self, record):
         # return str(record) + str(self.context["object"].pk)

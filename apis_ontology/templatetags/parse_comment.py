@@ -1,15 +1,14 @@
-import re
 import logging
+import re
 
-logger = logging.getLogger(__name__)
 
+from apis_core.apis_metainfo.models import RootObject
+from apis_ontology.models import ZoteroEntry
 from django import template
 from django.contrib.contenttypes.models import ContentType
 
-from apis_ontology.models import ZoteroEntry
-from apis_core.apis_metainfo.models import RootObject
-
 register = template.Library()
+logger = logging.getLogger(__name__)
 
 
 @register.filter

@@ -4,7 +4,7 @@ from apis_core.generic.tables import GenericTable
 from django_tables2.utils import A
 
 from .models import Instance, Person, Place, TibScholRelationMixin, Work
-from .templatetags.filter_utils import render_links
+from .templatetags.filter_utils import render_coordinate, render_links
 from .templatetags.parse_comment import parse_comment
 
 import django_tables2 as tables
@@ -39,10 +39,10 @@ class PlaceTable(AbstractEntityTable):
         return render_links(value)
 
     def render_latitude(self, value):
-        return round(value, 4)
+        return render_coordinate(value)
 
     def render_longitude(self, value):
-        return round(value, 4)
+        return render_coordinate(value)
 
 
 class PersonTable(AbstractEntityTable):

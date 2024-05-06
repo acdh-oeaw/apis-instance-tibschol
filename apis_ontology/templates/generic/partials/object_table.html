@@ -6,7 +6,6 @@
     {% modeldict object as d %}
     {% for key, value in d.items %}
     <tr>
-
         <th>
             {{ key.verbose_name | title}}
         </th>
@@ -16,8 +15,10 @@
             {{ value | parse_comment | safe}}
             {% elif key|endswith:'.external_links' %}
             {{ value | render_links | safe}}
-            {% elif key|endswith:'.alternative_names' %}
-            {{ value | render_list_field | safe}}
+            {% elif key|endswith:'.longitude' %}
+            {{ value | render_coordinate}}
+            {% elif key|endswith:'.latitude' %}
+            {{ value | render_coordinate}}
             {% else %}
             {{ value }}
             {% endif %}

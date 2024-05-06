@@ -30,3 +30,11 @@ def render_list_field(value):
     list_vals = [v.strip() for v in value.split("\n") if v.strip()]
     rendered_list = "<br>".join(v for v in list_vals)
     return mark_safe(rendered_list)
+
+
+@register.filter
+def render_coordinate(value):
+    try:
+        return round(value, 4)
+    except:
+        return ""

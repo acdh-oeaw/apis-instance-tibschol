@@ -4,7 +4,7 @@ from apis_core.generic.tables import GenericTable
 from django_tables2.utils import A
 
 from .models import Instance, Person, Place, TibScholRelationMixin, Work
-from .templatetags.filter_utils import render_links
+from .templatetags.filter_utils import render_coordinate, render_links
 from .templatetags.parse_comment import parse_comment
 
 import django_tables2 as tables
@@ -20,8 +20,15 @@ logger = logging.getLogger(__name__)
 class PlaceTable(AbstractEntityTable):
     class Meta:
         model = Place
-        fields = ["id", "label", "latitude", "longitude", "external_links"]
-        exclude = ["desc"]
+        fields = [
+            "id",
+            "label",
+            "start_date_written",
+            "latitude",
+            "longitude",
+            "external_links",
+        ]
+        exclude = ["desc", "view"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),
@@ -30,6 +37,12 @@ class PlaceTable(AbstractEntityTable):
 
     def render_external_links(self, value):
         return render_links(value)
+
+    def render_latitude(self, value):
+        return render_coordinate(value)
+
+    def render_longitude(self, value):
+        return render_coordinate(value)
 
 
 class PersonTable(AbstractEntityTable):

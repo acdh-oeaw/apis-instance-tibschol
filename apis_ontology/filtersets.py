@@ -41,8 +41,9 @@ class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
         }
 
 
-class InstanceMixinFilterSet(AbstractEntityFilterSet):
+class PlaceFilterSet(AbstractEntityFilterSet):
     class Meta(AbstractEntityFilterSet.Meta):
+        exclude = [*ABSTRACT_ENTITY_FILTERS_EXCLUDE, "end_date_written"]
         filter_overrides = {
             models.TextField: {
                 "filter_class": django_filters.CharFilter,

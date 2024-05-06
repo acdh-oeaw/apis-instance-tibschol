@@ -20,8 +20,15 @@ logger = logging.getLogger(__name__)
 class PlaceTable(AbstractEntityTable):
     class Meta:
         model = Place
-        fields = ["id", "label", "latitude", "longitude", "external_links"]
-        exclude = ["desc"]
+        fields = [
+            "id",
+            "label",
+            "start_date_written",
+            "latitude",
+            "longitude",
+            "external_links",
+        ]
+        exclude = ["desc", "view"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),
@@ -30,6 +37,12 @@ class PlaceTable(AbstractEntityTable):
 
     def render_external_links(self, value):
         return render_links(value)
+
+    def render_latitude(self, value):
+        return round(value, 4)
+
+    def render_longitude(self, value):
+        return round(value, 4)
 
 
 class PersonTable(AbstractEntityTable):

@@ -145,7 +145,7 @@ class RelationsTableEdit(RelationsTable):
         exclude = ["view", "desc", "delete", "subj"]
 
     edit = tables.TemplateColumn(
-        "<a href='{% url 'apis:relationupdate' record.id %}'><span class=\"material-symbols-outlined\">edit</span></a>"
+        "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>"
     )
 
 

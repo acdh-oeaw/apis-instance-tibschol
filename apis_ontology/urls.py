@@ -22,3 +22,7 @@ urlpatterns += [
 urlpatterns += [
     path("", include("django_acdhch_functions.urls")),
 ]
+
+urlpatterns += [
+    path("select2/", include("django_select2.urls")),
+]

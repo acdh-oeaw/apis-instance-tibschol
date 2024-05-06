@@ -684,6 +684,20 @@ Django = ">=2.2"
 packaging = "*"
 
 [[package]]
+name = "django-appconf"
+version = "1.0.6"
+description = "A helper class for handling configuration defaults of packaged apps gracefully."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-appconf-1.0.6.tar.gz", hash = "sha256:cfe87ea827c4ee04b9a70fab90b86d704cb02f2981f89da8423cb0fabf88efbf"},
+    {file = "django_appconf-1.0.6-py3-none-any.whl", hash = "sha256:c3ae442fba1ff7ec830412c5184b17169a7a1e71cf0864a4c3f93cf4c98a1993"},
+]
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-auth-ldap"
 version = "4.8.0"
 description = "Django LDAP authentication backend"
@@ -819,6 +833,26 @@ files = [
 [package.dependencies]
 anytree = "*"
 Django = "*"
+
+[[package]]
+name = "django-select2"
+version = "8.1.2"
+description = "This is a Django_ integration of Select2_."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_select2-8.1.2-py3-none-any.whl", hash = "sha256:dc09e09299988dd7cc1f31c27582976377f0e1479101be1f3bb0d1f24216477f"},
+    {file = "django_select2-8.1.2.tar.gz", hash = "sha256:f44685ee1c39090aade01e3ebc256702f05620f3c78a3c268440ad9a66070876"},
+]
+
+[package.dependencies]
+django = ">=3.2"
+django-appconf = ">=0.6.0"
+
+[package.extras]
+docs = ["sphinx"]
+selenium = ["selenium"]
+test = ["pytest", "pytest-cov", "pytest-django", "selenium"]
 
 [[package]]
 name = "django-simple-history"
@@ -2972,4 +3006,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "326aa154142b4bbdb32613b4347727d1ed7e4cbcff3e7d34ecf18a3416b97288"
+content-hash = "a2b4ef97b3fd4dc07100d334a18a3f4eb8b7ffbcc26e77a049908cb5f5f7f0d8"

@@ -12,6 +12,7 @@ import logging
 from apis_core.apis_metainfo.models import RootObject
 
 from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 
 logger = logging.getLogger(__name__)
@@ -98,18 +99,6 @@ class InstanceTable(AbstractEntityTable):
 class RelationsTable(GenericTable):
     reverse = False
 
-    class Meta(GenericTable.Meta):
-        model = TibScholRelationMixin
-        fields = [
-            "id",
-            "name",
-            "obj",
-            "support_notes",
-            "zotero_refs",
-            "TEI",
-        ]
-        exclude = ["view", "edit", "desc", "delete", "subj"]
-
     name = tables.Column(verbose_name="Relationship")
     obj = tables.Column(verbose_name="Object")
 
@@ -150,8 +139,35 @@ class RelationsTable(GenericTable):
 
 
 class RelationsTableEdit(RelationsTable):
-    pass
+    class Meta(GenericTable.Meta):
+        model = TibScholRelationMixin
+        fields = ["id", "name", "obj", "support_notes", "zotero_refs", "TEI", "edit"]
+        exclude = ["view", "desc", "delete", "subj"]
+
+    def render_edit(self, record):
+        update_uri = reverse("apis:relationupdate", kwargs={"pk": record.id})
+        return mark_safe(
+            '<a title="edit" target="_BLANK" href="'
+            + update_uri
+            + '"'
+            # + 'hx-get="'
+            # + update_uri
+            # + '"'
+            # + 'hx-target="'
+            # + '"'
+            + 'class="text-warning"><span class="material-symbols-outlined">edit</span></a>'
+        )
 
 
 class RelationsTableView(RelationsTable):
-    pass
+    class Meta(GenericTable.Meta):
+        model = TibScholRelationMixin
+        fields = [
+            "id",
+            "name",
+            "obj",
+            "support_notes",
+            "zotero_refs",
+            "TEI",
+        ]
+        exclude = ["view", "edit", "desc", "delete", "subj"]

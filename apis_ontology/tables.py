@@ -144,19 +144,9 @@ class RelationsTableEdit(RelationsTable):
         fields = ["id", "name", "obj", "support_notes", "zotero_refs", "TEI", "edit"]
         exclude = ["view", "desc", "delete", "subj"]
 
-    def render_edit(self, record):
-        update_uri = reverse("apis:relationupdate", kwargs={"pk": record.id})
-        return mark_safe(
-            '<a title="edit" target="_BLANK" href="'
-            + update_uri
-            + '"'
-            # + 'hx-get="'
-            # + update_uri
-            # + '"'
-            # + 'hx-target="'
-            # + '"'
-            + 'class="text-warning"><span class="material-symbols-outlined">edit</span></a>'
-        )
+    edit = tables.TemplateColumn(
+        "<a href='{% url 'apis:relationupdate' record.id %}'><span class=\"material-symbols-outlined\">edit</span></a>"
+    )
 
 
 class RelationsTableView(RelationsTable):

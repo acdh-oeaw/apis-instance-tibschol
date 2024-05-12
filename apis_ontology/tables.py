@@ -141,11 +141,24 @@ class RelationsTable(GenericTable):
 class RelationsTableEdit(RelationsTable):
     class Meta(GenericTable.Meta):
         model = TibScholRelationMixin
-        fields = ["id", "name", "obj", "support_notes", "zotero_refs", "TEI", "edit"]
-        exclude = ["view", "desc", "delete", "subj"]
+        fields = [
+            "id",
+            "name",
+            "obj",
+            "support_notes",
+            "zotero_refs",
+            "TEI",
+            "edit",
+            "delete",
+        ]
+        exclude = ["view", "desc", "subj"]
 
     edit = tables.TemplateColumn(
         "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>"
+    )
+
+    delete = tables.TemplateColumn(
+        "<a href='{% url 'apis:relationdelete' record.id %}?next={{ request.GET.next }}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">delete</span></a>"
     )
 
 

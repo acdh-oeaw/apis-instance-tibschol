@@ -27,33 +27,26 @@
     </h3>
 
     <!-- Render subject and object correctly -->
-    {% if form.inverted %}
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
+                {% if form.inverted %}
                 {{ form.obj|as_crispy_field }}
+                {% else %}
+                {{ form.subj|as_crispy_field }}
+                {% endif %}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
+                {% if form.inverted %}
                 {{ form.subj|as_crispy_field }}
+                {% else %}
+                {{ form.obj|as_crispy_field }}
+                {% endif %}
             </div>
         </div>
     </div>
-    {% else %}
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form.subj|as_crispy_field }}
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                {{ form.obj|as_crispy_field }}
-            </div>
-        </div>
-    </div>
-    {% endif %}
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">

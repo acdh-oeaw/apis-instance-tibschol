@@ -95,7 +95,7 @@ class Place(
         verbose_name_plural = _("Places")
 
     def __str__(self):
-        return f"{self.label}"
+        return f"{self.label} ({self.pk})"
 
 
 class Work(

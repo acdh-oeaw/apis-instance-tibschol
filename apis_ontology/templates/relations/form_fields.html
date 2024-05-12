@@ -7,7 +7,7 @@
 <h3>
     {{form.heading}}
 </h3>
-<form method="post">
+<form method="post" {% for key, value in form.helper.attrs.items %} {{ key }}="{{ value }}" {% endfor %}>
     {% csrf_token %}
     <!-- Render subject and object correctly -->
     {% if form.inverted %}

@@ -1,0 +1,18 @@
+<!-- form_fields.html -->
+{% load crispy_forms_tags %}
+
+{{ form.errors }}
+{{ form.non_field_errors }}
+
+<form method="post">
+  {% csrf_token %}
+  <!-- Render each form field -->
+  {% for field in form %}
+    <div class="form-group">
+    <!-- <label for="{{ field.id_for_label }}">{{ field.label }}</label> -->
+    {{ field|as_crispy_field }}
+    </div>
+  {% endfor %}
+
+<button type="submit" class="btn btn-primary">Submit</button>
+</form>

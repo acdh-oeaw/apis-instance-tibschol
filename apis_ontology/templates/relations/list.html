@@ -15,10 +15,7 @@
 {% endif %}
 
 {% if form %}
-{{ form.errors }}
-{{ form.non_field_errors }}
-{% load crispy_forms_tags %}
-{% crispy form %}
+{% include 'relations/form_fields.html' %}
 {% endif %}
 
 {% endblock content %}

@@ -1,0 +1,8 @@
+{% if table %}
+{% load render_table from django_tables2 %}
+{% render_table table %}
+{% endif %}
+
+{% if form %}
+{% include 'relations/form_fields.html' %}
+{% endif %}

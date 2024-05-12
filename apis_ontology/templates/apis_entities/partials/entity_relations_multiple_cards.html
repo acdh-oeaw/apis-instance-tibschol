@@ -9,24 +9,37 @@
 <div class="container">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
-        {% for ent_type in related_entity_types %}
-
         <li class="nav-item">
-            <a class="nav-link {% if forloop.first %}active{% endif %}" data-toggle="tab"
-                href="#reltype{{forloop.counter0}}">{{ent_type |model_meta:"verbose_name" | title}}</a>
+            <a class="nav-link active" data-toggle="tab" href="#reltypeALL">ALL</a>
+        </li>
+        {% for ent_type in related_entity_types %}
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#reltype{{forloop.counter0}}">
+                {{ent_type | model_meta:"verbose_name" | title}}
+            </a>
         </li>
         {% endfor %}
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
+        <div class="tab-pane container active" id="reltypeALL">
+            {% for ent_type in related_entity_types %}
+            <h3> {{ent_type | model_meta:"verbose_name" | title}}</h3>
+            <div>
+                {% entity_relations with_type=ent_type edit=True as entity_relations %}
+                {% render_table entity_relations %}
+            </div>
+            {% endfor %}
+        </div>
         {% for ent_type in related_entity_types %}
-        <div class="tab-pane container {% if forloop.first %}active{% endif %}" id="reltype{{forloop.counter0}}">
+        <div class="tab-pane container " id="reltype{{forloop.counter0}}">
+            <div class="container mt-2">
+                <h5>Add new relationship </h5>
+                {% relations_links instance=object tocontenttype=ent_type htmx=True %}
+            </div>
             {% entity_relations with_type=ent_type edit=True as entity_relations %}
             {% render_table entity_relations %}
-
-            {% relations_links instance=object tocontenttype=ent_type htmx=True %}
-
         </div>
         {% endfor %}
 

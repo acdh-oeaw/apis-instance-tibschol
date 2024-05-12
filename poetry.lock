@@ -87,7 +87,7 @@ tablib = "^3.5.0"
 type = "git"
 url = "https://github.com/acdh-oeaw/apis-core-rdf.git"
 reference = "gythaogg/relations-ng-updated"
-resolved_reference = "3bdc033d4bb551e9d2551835027459f4290d5c02"
+resolved_reference = "e76b74388c5fee30784e3404a0f555d2e1b9cea1"
 
 [[package]]
 name = "apis-highlighter-ng"

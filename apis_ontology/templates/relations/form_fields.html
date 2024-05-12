@@ -4,15 +4,58 @@
 {{ form.errors }}
 {{ form.non_field_errors }}
 
+<h3>
+    {{form.heading}}
+</h3>
 <form method="post">
-  {% csrf_token %}
-  <!-- Render each form field -->
-  {% for field in form %}
-    <div class="form-group">
-    <!-- <label for="{{ field.id_for_label }}">{{ field.label }}</label> -->
-    {{ field|as_crispy_field }}
+    {% csrf_token %}
+    <!-- Render subject and object correctly -->
+    {% if form.inverted %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form.obj|as_crispy_field }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form.subj|as_crispy_field }}
+            </div>
+        </div>
     </div>
-  {% endfor %}
+    {% else %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form.subj|as_crispy_field }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form.obj|as_crispy_field }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form.start_date_written|as_crispy_field }}
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                {{ form.end_date_written|as_crispy_field }}
+            </div>
+            </div>
+            </div>
+            {% for field in form %}
+    {% if field.name != "subj" and field.name != "obj" and field.name != "start_date_written" and field.name != "end_date_written"%}
+    <div class="form-group">
+        {{ field|as_crispy_field }}
+    </div>
+    {% endif %}
+    {% endfor %}
 
-<button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>

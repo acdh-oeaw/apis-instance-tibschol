@@ -4,11 +4,28 @@
 {{ form.errors }}
 {{ form.non_field_errors }}
 
-<h3>
-    {{form.heading}}
-</h3>
-<form method="post" {% for key, value in form.helper.attrs.items %} {{ key }}="{{ value }}" {% endfor %}>
+<form method="post" {% for key, value in form.helper.attrs.items %} {{ key }}="{{ value }}" {% endfor %} class="m2">
     {% csrf_token %}
+    <style>
+        /* CSS rule applies only to textarea elements within this form */
+        textarea {
+            height: 6em !important;
+        }
+
+
+        @media (min-width: 1280px) {
+            .form-container {
+                max-width: 80rem;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    </style>
+    <div class="form-container">
+    <h3>
+        {{form.heading}}
+    </h3>
+
     <!-- Render subject and object correctly -->
     {% if form.inverted %}
     <div class="row">
@@ -47,9 +64,9 @@
             <div class="form-group">
                 {{ form.end_date_written|as_crispy_field }}
             </div>
-            </div>
-            </div>
-            {% for field in form %}
+        </div>
+    </div>
+    {% for field in form %}
     {% if field.name != "subj" and field.name != "obj" and field.name != "start_date_written" and field.name != "end_date_written"%}
     <div class="form-group">
         {{ field|as_crispy_field }}
@@ -58,4 +75,5 @@
     {% endfor %}
 
     <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
 </form>

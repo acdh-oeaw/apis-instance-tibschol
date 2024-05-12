@@ -30,7 +30,6 @@ def related_entity_types(context):
         if ContentType.objects.get_for_model(m.obj_model) == content_type:
             relavent_models.add(ContentType.objects.get_for_model(m.subj_model))
 
-    logger.debug("RELAVENT MODELS: %s", relavent_models)
     return relavent_models
 
 
@@ -47,14 +46,12 @@ def entity_relations(context, with_type, edit=False):
             and ContentType.objects.get_for_model(m.obj_model) == with_type
         ):
             forward_relations.extend(m.objects.filter(subj=entity))
-            logger.debug(m.objects.filter(subj=entity))
 
         if (
             ContentType.objects.get_for_model(m.obj_model) == content_type
             and ContentType.objects.get_for_model(m.subj_model) == with_type
         ):
             reverse_relations.extend(m.objects.filter(obj=entity))
-            logger.debug(m.objects.filter(subj=entity))
 
     if edit:
         table = RelationsTableEdit

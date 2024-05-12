@@ -2,8 +2,9 @@
 {% load relations %}
 
 {% block content %}
-  {% if model or object %}
-    <h1 class="text-center">{{ model.name }}{{ object }}</h1>
+
+  {% if object %}
+    <h1 class="text-center">{{ object.subj }} {{ object.name }} {{ object.obj }}</h1>
     {% else %}
     {% relations_links %}
     {% endif %}

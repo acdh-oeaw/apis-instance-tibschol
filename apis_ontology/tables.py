@@ -12,6 +12,7 @@ import logging
 from apis_core.apis_metainfo.models import RootObject
 
 from django.utils.safestring import mark_safe
+from django.urls import reverse
 
 
 logger = logging.getLogger(__name__)
@@ -98,18 +99,6 @@ class InstanceTable(AbstractEntityTable):
 class RelationsTable(GenericTable):
     reverse = False
 
-    class Meta(GenericTable.Meta):
-        model = TibScholRelationMixin
-        fields = [
-            "id",
-            "name",
-            "obj",
-            "support_notes",
-            "zotero_refs",
-            "TEI",
-        ]
-        exclude = ["view", "edit", "desc", "delete", "subj"]
-
     name = tables.Column(verbose_name="Relationship")
     obj = tables.Column(verbose_name="Object")
 
@@ -150,8 +139,38 @@ class RelationsTable(GenericTable):
 
 
 class RelationsTableEdit(RelationsTable):
-    pass
+    class Meta(GenericTable.Meta):
+        model = TibScholRelationMixin
+        fields = [
+            "id",
+            "name",
+            "obj",
+            "support_notes",
+            "zotero_refs",
+            "TEI",
+            "edit",
+            "delete",
+        ]
+        exclude = ["view", "desc", "subj"]
+
+    edit = tables.TemplateColumn(
+        "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>"
+    )
+
+    delete = tables.TemplateColumn(
+        "<a href='{% url 'apis:relationdelete' record.id %}?next={{ request.GET.next }}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">delete</span></a>"
+    )
 
 
 class RelationsTableView(RelationsTable):
-    pass
+    class Meta(GenericTable.Meta):
+        model = TibScholRelationMixin
+        fields = [
+            "id",
+            "name",
+            "obj",
+            "support_notes",
+            "zotero_refs",
+            "TEI",
+        ]
+        exclude = ["view", "edit", "desc", "delete", "subj"]

@@ -14,7 +14,7 @@ from django.utils.translation import gettext_lazy as _
 
 from django.db import models
 from django.urls import reverse
-from apis_core.relations.models import Relation
+from apis_core.relations.models import Relation, RootObject
 
 
 class TibScholEntityMixin(models.Model):
@@ -77,7 +77,7 @@ class Person(
         verbose_name_plural = _("Persons")
 
     def __str__(self):
-        return f"{self.name} ({self.pk})"
+        return f"{RootObject.objects_inheritance.get_subclass(pk=self.pk).name} ({self.pk})"
 
 
 class Place(
@@ -95,7 +95,7 @@ class Place(
         verbose_name_plural = _("Places")
 
     def __str__(self):
-        return f"{self.label}"
+        return f"{self.label} ({self.pk})"
 
 
 class Work(
@@ -275,6 +275,24 @@ class TibScholRelationMixin(Relation, LegacyDateMixin):
     @property
     def object_type(self):
         return str(self.obj_model.__name__).lower()
+
+    @property
+    def subj_to_obj_text(self):
+        try:
+            return f"{RootObject.objects_inheritance.get_subclass(pk=self.subj.pk)} {self.name} {RootObject.objects_inheritance.get_subclass(pk=self.obj.pk)}"
+        except Exception as e:
+            logger.error(e)
+
+        return f"{self.subj} relation to {self.obj}"
+
+    @property
+    def obj_to_subj_text(self):
+        try:
+            return f"{self.subj} {self.reverse_name} {self.obj}"
+        except:
+            logger.error(e)
+
+        return f"{self.obj} relation to {self.subj}"
 
     class Meta:
         abstract = True

@@ -41,7 +41,7 @@ def parse_comment(value):
             try:
                 root_obj = RootObject.objects_inheritance.get_subclass(pk=entity_id)
                 ct = ContentType.objects.get_for_model(root_obj)
-                return f'<a target="_BLANK" href="/apis/apis_ontology.{ct.name}/{root_obj.pk}">{root_obj}</a>'
+                return f'<a target="_BLANK" href="/apis/apis_ontology.{ct.name}/{root_obj.pk}">{entity_id}</a>'
 
             except Exception as e:
                 logger.error("Error finding entity #%s", entity_id)

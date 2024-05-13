@@ -16,7 +16,7 @@ class Command(BaseCommand):
     Imports data from the old schema into the new schema INCLUDING the primary keys
     """
 
-    import_file = "data/dump_test.json"
+    import_file = "data/20240513_entities.json"
 
     def add_arguments(self, parser):
         parser.add_argument("args", nargs="*", type=str)

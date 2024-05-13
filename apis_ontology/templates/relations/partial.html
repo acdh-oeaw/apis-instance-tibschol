@@ -3,6 +3,10 @@
 {% render_table table %}
 {% endif %}
 
+
 {% if form %}
-{% include 'relations/form_fields.html' %}
+{{ form.errors }}
+{{ form.non_field_errors }}
+{% load crispy_forms_tags %}
+{% crispy form %}
 {% endif %}

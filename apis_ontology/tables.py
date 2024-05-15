@@ -4,7 +4,11 @@ from apis_core.generic.tables import GenericTable
 from django_tables2.utils import A
 
 from .models import Instance, Person, Place, TibScholRelationMixin, Work
-from .templatetags.filter_utils import render_coordinate, render_links
+from .templatetags.filter_utils import (
+    render_coordinate,
+    render_links,
+    render_list_field,
+)
 from .templatetags.parse_comment import parse_comment
 
 import django_tables2 as tables
@@ -118,7 +122,7 @@ class RelationsTable(GenericTable):
         return mark_safe(parse_comment(value))
 
     def render_zotero_refs(self, value):
-        return mark_safe(parse_comment(value))
+        return mark_safe(parse_comment(render_list_field(value)))
 
     def render_obj(self, record):
         # return str(record) + str(self.context["object"].pk)

@@ -48,3 +48,6 @@ LOGGING = {
 
 LOG_LIST_NOSTAFF_EXCLUDE_APP_LABELS = ["admin", "sessions", "auth"]
 SIMPLE_HISTORY_ENABLED = False  # disable for now
+
+SELECT2_CACHE_BACKEND = "default"  # Specify your cache backend here
+SELECT2_CACHE_TIMEOUT = 3600  # Set cache timeout in seconds (e.g., 1 hour)

@@ -29,7 +29,7 @@ class Command(BaseCommand):
         res = requests.get(QUERY_URL, headers=HEADERS, params=PARAMS)
         res.raise_for_status()
         num_records = res.headers["Total-Results"]
-
+        print(f"Found {len(num_records)} records")
         all_items = []
         for start in tqdm(range(0, int(num_records), 25)):
             PARAMS["start"] = start
@@ -37,10 +37,12 @@ class Command(BaseCommand):
 
             res.raise_for_status()
             items = res.json()
+            print(f"Fetched {len(items)}.")
             all_items.extend(items)
 
         df = pd.json_normalize(all_items)
-
+        print(f"Fetched {df.shape[0]} items in total")
+        print(f"... of which there are {len(df['data.key'].unique())} are unique keys.")
         for i, row in tqdm(df.iterrows(), total=df.shape[0]):
             if "apis" in [tag["tag"].lower() for tag in row["data.tags"]]:
                 zotero_entry, _ = ZoteroEntry.objects.get_or_create(

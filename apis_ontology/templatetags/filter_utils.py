@@ -49,7 +49,7 @@ def render_zotero_links(value):
     if not value:
         return ""
 
-    delim = "\n" if "\n" in value else ","
+    delim = "\n" if "\n" in value else "," if "," in value else ""
     zotero_refs = [
         zotero_id.strip().replace("[", "").replace("]", "")
         for zotero_id in value.split(delim)

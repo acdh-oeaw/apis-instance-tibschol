@@ -141,6 +141,10 @@ class RelationsTable(GenericTable):
             + "</a>"
         )
 
+    def render_tei_refs(self, value):
+        # TODO: match the xml id, get the excerpt and display
+        return value
+
 
 class RelationsTableEdit(RelationsTable):
     class Meta(GenericTable.Meta):
@@ -151,7 +155,7 @@ class RelationsTableEdit(RelationsTable):
             "obj",
             "support_notes",
             "zotero_refs",
-            "TEI",
+            "tei_refs",
             "edit",
             "delete",
         ]
@@ -175,6 +179,6 @@ class RelationsTableView(RelationsTable):
             "obj",
             "support_notes",
             "zotero_refs",
-            "TEI",
+            "tei_refs",
         ]
         exclude = ["view", "edit", "desc", "delete", "subj"]

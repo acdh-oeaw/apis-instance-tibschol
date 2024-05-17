@@ -20,6 +20,8 @@
             {{ value | render_coordinate}}
             {% elif key|endswith:'.latitude' %}
             {{ value | render_coordinate}}
+            {% elif key|endswith:'.zotero_ref' %}
+            {{ value | render_zotero_links | safe}}
             {% else %}
             {{ value }}
             {% endif %}

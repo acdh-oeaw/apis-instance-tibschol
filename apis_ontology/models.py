@@ -243,7 +243,7 @@ class ZoteroEntry(GenericModel, models.Model):
 class Excerpts(GenericModel, models.Model):
     xml_id = models.CharField(max_length=255, unique=True)
     xml_content = models.TextField()
-    source = models.CharField(max_length=255, unique=True)  # the TEI file source
+    source = models.CharField(max_length=255)  # the TEI file source
 
 
 #######################################################################################

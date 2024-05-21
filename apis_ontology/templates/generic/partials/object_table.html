@@ -6,6 +6,8 @@
     {% modeldict object as d %}
     {% for key, value in d.items %}
     {% if not key|endswith:'.rootobject_ptr' %}
+    {% if value %}
+
     <tr>
         <th>
             {{ key.verbose_name | title}}
@@ -27,6 +29,7 @@
             {% endif %}
         </td>
     </tr>
+    {% endif %}
     {% endif %}
     {% endfor %}
 </table>

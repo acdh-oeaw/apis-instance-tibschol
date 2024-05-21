@@ -1,9 +1,11 @@
 {% load apisgeneric %}
 {% load filter_utils %}
 {% load parse_comment %}
+{% load citation %}
 
 <table class="table table-hover">
     {% modeldict object as d %}
+
     {% for key, value in d.items %}
     {% if not key|endswith:'.rootobject_ptr' %}
     {% if value %}
@@ -29,6 +31,12 @@
             {% endif %}
         </td>
     </tr>
+    {% if key|endswith:'.pp_kdsb' %}
+    <tr>
+        <th> Citation</th>
+        <td>{{object|cite}}</td>
+    </tr>
+    {% endif %}
     {% endif %}
     {% endif %}
     {% endfor %}

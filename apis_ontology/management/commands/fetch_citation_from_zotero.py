@@ -13,7 +13,7 @@ KEY = os.environ.get("APIS_BIBSONOMY_PASSWORD")
 GROUP = "4394244"
 
 
-QUERY_URL = f"https://api.zotero.org/groups/{GROUP}/items/"
+QUERY_URL = f"https://api.zotero.org/groups/{GROUP}/items"
 HEADERS = {"Authorization": f"Bearer {KEY}"}
 PARAMS = {
     "v": 3,
@@ -30,11 +30,11 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         destination = "apis_ontology/static/citations.json"
         citations = {}
-        for k in KEYS:
-            res = requests.get(QUERY_URL, headers=HEADERS, params=PARAMS)
+        for i, k in enumerate(KEYS):
+            res = requests.get(f"{QUERY_URL}/{k}", headers=HEADERS, params=PARAMS)
             res.raise_for_status()
-            citations[k] = res.json()
+            citations[f"Set {i + 1}"] = res.json()
 
         with open(destination, "w") as f:
             f.write(json.dumps(citations))
-        self.stdout.write(self.style.SUCCESS(f"Processed {df.shape[0]} excerpts."))
+        self.stdout.write(self.style.SUCCESS(f"Imported citations"))

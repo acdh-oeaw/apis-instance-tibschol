@@ -1,3 +1,4 @@
+from apis_ontology.views import ExcerptsView
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
@@ -13,6 +14,11 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("entity/<int:pk>/", GetEntityGeneric.as_view(), name="GetEntityGenericRoot"),
     path("", TemplateView.as_view(template_name="base.html")),
+    path(
+        "apis/excerpts/<str:xml_id>/<str:render_style>/",
+        ExcerptsView.as_view(),
+        name="excerpts_view",
+    ),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

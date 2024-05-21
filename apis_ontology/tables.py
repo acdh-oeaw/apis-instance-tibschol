@@ -1,9 +1,11 @@
+from django.utils.html import escape
+
 import django_tables2 as tables
 from apis_core.apis_entities.tables import AbstractEntityTable
 from apis_core.generic.tables import GenericTable
 from django_tables2.utils import A
 
-from .models import Instance, Person, Place, TibScholRelationMixin, Work
+from .models import Excerpts, Instance, Person, Place, TibScholRelationMixin, Work
 from .templatetags.filter_utils import (
     render_coordinate,
     render_links,
@@ -18,6 +20,7 @@ from apis_core.apis_metainfo.models import RootObject
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 
+from lxml import etree
 
 logger = logging.getLogger(__name__)
 
@@ -109,6 +112,9 @@ class RelationsTable(GenericTable):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Define the obj attribute based on the value of self.reverse
+        xslt_file = "apis_ontology/xslt/teibp.xsl"
+        xslt = etree.parse(xslt_file)
+        self.transform = etree.XSLT(xslt)
 
     def render_name(self, record):
         if self.context["object"].pk == record.subj.pk:
@@ -141,6 +147,18 @@ class RelationsTable(GenericTable):
             + "</a>"
         )
 
+    def render_tei_refs(self, value):
+        delim = "\n" if "\n" in value else "," if "," in value else " "
+        xml_ids = value.split(delim)
+        links = []
+        for xml_id in xml_ids:
+            true_id = xml_id.replace('"', "").replace("xml:id=", "").strip()
+            links.append(
+                f"""<a href="#" onclick="showPopup('{true_id}'); return false;">{true_id}</a>"""
+            )
+
+        return mark_safe("<br />".join(links))
+
 
 class RelationsTableEdit(RelationsTable):
     class Meta(GenericTable.Meta):
@@ -151,7 +169,7 @@ class RelationsTableEdit(RelationsTable):
             "obj",
             "support_notes",
             "zotero_refs",
-            "TEI",
+            "tei_refs",
             "edit",
             "delete",
         ]
@@ -175,6 +193,6 @@ class RelationsTableView(RelationsTable):
             "obj",
             "support_notes",
             "zotero_refs",
-            "TEI",
+            "tei_refs",
         ]
         exclude = ["view", "edit", "desc", "delete", "subj"]

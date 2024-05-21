@@ -152,21 +152,24 @@ class RelationsTable(GenericTable):
         xml_ids = value.split(delim)
         links = []
         for xml_id in xml_ids:
-            true_id = xml_id.replace('"', "").replace("xml:id=", "")
+            true_id = xml_id.replace('"', "").replace("xml:id=", "").strip()
             excerpt_xml = ""  # Fallback blank excerpt
             try:
                 excerpt_xml = Excerpts.objects.get(xml_id=true_id).xml_content
+
             except Excerpts.DoesNotExist:
                 logger.error(
-                    "Could not find excerpt with id %s in the database", true_id
+                    "Could not find excerpt with id %s in the database.", true_id
                 )
             except Exception as e:
                 logger.error(repr(e))
-        encoded_excerpt_xml = escape(excerpt_xml.replace("'", "\\'").replace("\n", ""))
-        # Append the link with the onclick event
-        links.append(
-            f'<a href="#" onclick="alert(\'{encoded_excerpt_xml}\'); return false;">{true_id}</a>'
-        )
+            encoded_excerpt_xml = escape(
+                excerpt_xml.replace("'", "\\'").replace("\n", "")
+            )
+            # Append the link with the onclick event
+            links.append(
+                f'<a href="#" onclick="alert(\'{encoded_excerpt_xml}\'); return false;">{true_id}</a>'
+            )
 
         return mark_safe("<br />".join(links))
 

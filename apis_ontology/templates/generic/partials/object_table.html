@@ -27,7 +27,7 @@
             {% elif key|endswith:'.zotero_ref' %}
             {{ value | render_zotero_links | safe}}
             {% else %}
-            {{ value }}
+            {{ value | render_list_field}}
             {% endif %}
         </td>
     </tr>

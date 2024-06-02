@@ -31,12 +31,8 @@ class PlaceTable(AbstractEntityTable):
         fields = [
             "id",
             "label",
-            "start_date_written",
-            "latitude",
-            "longitude",
-            "external_links",
         ]
-        exclude = ["desc", "view"]
+        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),

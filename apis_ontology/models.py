@@ -89,6 +89,9 @@ class Place(
     AbstractEntity,
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Place"
+    end_date = None
+    end_start_date = None
+    end_end_date = None
 
     class Meta:
         verbose_name = _("place")

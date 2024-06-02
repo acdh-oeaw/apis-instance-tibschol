@@ -72,6 +72,11 @@ class WorkTable(AbstractEntityTable):
         model = Work
         fields = ["id", "name", "author"]
         exclude = ["desc", "view", "edit", "noduplicate", "delete"]
+        row_attrs = {
+            "style": lambda record: "background-color: lightgray;"
+            if not record.isExtant
+            else None
+        }
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),

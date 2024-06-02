@@ -186,6 +186,12 @@ class Instance(
     end_start_date = None
     end_end_date = None
     end_date_written = None
+    start_date_written = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Date",
+    )
 
     SETS = [
         ("Set 1", "Set 1"),

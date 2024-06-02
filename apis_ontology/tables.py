@@ -83,8 +83,8 @@ class WorkTable(AbstractEntityTable):
 class InstanceTable(AbstractEntityTable):
     class Meta:
         model = Instance
-        fields = ["id", "tibschol_ref", "name", "author", "external_links"]
-        exclude = ["desc"]
+        fields = ["id", "name", "date", "author"]
+        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),

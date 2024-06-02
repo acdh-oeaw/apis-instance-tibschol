@@ -31,12 +31,8 @@ class PlaceTable(AbstractEntityTable):
         fields = [
             "id",
             "label",
-            "start_date_written",
-            "latitude",
-            "longitude",
-            "external_links",
         ]
-        exclude = ["desc", "view"]
+        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),
@@ -59,11 +55,8 @@ class PersonTable(AbstractEntityTable):
         fields = [
             "id",
             "name",
-            "start_date_written",
-            "end_date_written",
-            "external_links",
         ]
-        exclude = ["desc"]
+        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),
@@ -77,8 +70,8 @@ class PersonTable(AbstractEntityTable):
 class WorkTable(AbstractEntityTable):
     class Meta:
         model = Work
-        fields = ["id", "name", "sde_dge_ref", "author"]
-        exclude = ["desc"]
+        fields = ["id", "name", "author"]
+        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),
@@ -90,8 +83,8 @@ class WorkTable(AbstractEntityTable):
 class InstanceTable(AbstractEntityTable):
     class Meta:
         model = Instance
-        fields = ["id", "tibschol_ref", "name", "author", "external_links"]
-        exclude = ["desc"]
+        fields = ["id", "name", "date", "author"]
+        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),
@@ -164,7 +157,6 @@ class RelationsTableEdit(RelationsTable):
     class Meta(GenericTable.Meta):
         model = TibScholRelationMixin
         fields = [
-            "id",
             "name",
             "obj",
             "support_notes",
@@ -188,7 +180,6 @@ class RelationsTableView(RelationsTable):
     class Meta(GenericTable.Meta):
         model = TibScholRelationMixin
         fields = [
-            "id",
             "name",
             "obj",
             "support_notes",

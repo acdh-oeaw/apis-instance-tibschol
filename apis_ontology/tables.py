@@ -157,7 +157,6 @@ class RelationsTableEdit(RelationsTable):
     class Meta(GenericTable.Meta):
         model = TibScholRelationMixin
         fields = [
-            "id",
             "name",
             "obj",
             "support_notes",
@@ -181,7 +180,6 @@ class RelationsTableView(RelationsTable):
     class Meta(GenericTable.Meta):
         model = TibScholRelationMixin
         fields = [
-            "id",
             "name",
             "obj",
             "support_notes",

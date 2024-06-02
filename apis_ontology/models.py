@@ -92,6 +92,7 @@ class Place(
     end_date = None
     end_start_date = None
     end_end_date = None
+    end_date_written = None
 
     class Meta:
         verbose_name = _("place")
@@ -108,6 +109,7 @@ class Work(
     end_date = None
     end_start_date = None
     end_end_date = None
+    end_date_written = None
 
     LANGUAGES = [
         ("Sanskrit", "Sanskrit"),
@@ -155,6 +157,7 @@ class Instance(
     end_date = None
     end_start_date = None
     end_end_date = None
+    end_date_written = None
 
     SETS = [
         ("Set 1", "Set 1"),

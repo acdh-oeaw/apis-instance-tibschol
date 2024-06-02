@@ -60,6 +60,20 @@ class Person(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Person"
+
+    start_date_written = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Life date start",
+    )
+    end_date_written = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Life date end",
+    )
+
     GENDERS = [
         ("male", "Male"),
         ("female", "Female"),

@@ -77,7 +77,7 @@ class Person(
         verbose_name_plural = _("Persons")
 
     def __str__(self):
-        return f"{RootObject.objects_inheritance.get_subclass(pk=self.pk).name} ({self.pk})"
+        return f"{self.name} ({self.pk})"
 
 
 class Place(

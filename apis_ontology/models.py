@@ -41,7 +41,7 @@ class LegacyStuffMixin(models.Model):
         "standards.",
     )
     notes = models.TextField(blank=True, null=True, verbose_name="Notes")
-    published = models.BooleanField(default=False)
+    # published = models.BooleanField(default=False)
     collection = models.ManyToManyField("apis_metainfo.Collection", editable=False)
 
     @classmethod
@@ -77,7 +77,7 @@ class Person(
         verbose_name_plural = _("Persons")
 
     def __str__(self):
-        return f"{RootObject.objects_inheritance.get_subclass(pk=self.pk).name} ({self.pk})"
+        return f"{self.name} ({self.pk})"
 
 
 class Place(
@@ -89,6 +89,9 @@ class Place(
     AbstractEntity,
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Place"
+    end_date = None
+    end_start_date = None
+    end_end_date = None
 
     class Meta:
         verbose_name = _("place")
@@ -102,6 +105,10 @@ class Work(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Work"
+    end_date = None
+    end_start_date = None
+    end_end_date = None
+
     LANGUAGES = [
         ("Sanskrit", "Sanskrit"),
         ("Tibetan", "Tibetan"),
@@ -145,6 +152,10 @@ class Instance(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Instance"
+    end_date = None
+    end_start_date = None
+    end_end_date = None
+
     SETS = [
         ("Set 1", "Set 1"),
         ("Set 2", "Set 2"),

@@ -55,11 +55,8 @@ class PersonTable(AbstractEntityTable):
         fields = [
             "id",
             "name",
-            "start_date_written",
-            "end_date_written",
-            "external_links",
         ]
-        exclude = ["desc"]
+        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),

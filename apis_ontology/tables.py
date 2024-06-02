@@ -70,8 +70,8 @@ class PersonTable(AbstractEntityTable):
 class WorkTable(AbstractEntityTable):
     class Meta:
         model = Work
-        fields = ["id", "name", "sde_dge_ref", "author"]
-        exclude = ["desc"]
+        fields = ["id", "name", "author"]
+        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),

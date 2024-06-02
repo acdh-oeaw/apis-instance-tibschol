@@ -105,6 +105,10 @@ class Work(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Work"
+    end_date = None
+    end_start_date = None
+    end_end_date = None
+
     LANGUAGES = [
         ("Sanskrit", "Sanskrit"),
         ("Tibetan", "Tibetan"),
@@ -148,6 +152,10 @@ class Instance(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Instance"
+    end_date = None
+    end_start_date = None
+    end_end_date = None
+
     SETS = [
         ("Set 1", "Set 1"),
         ("Set 2", "Set 2"),

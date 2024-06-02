@@ -131,7 +131,9 @@ class Work(
     original_language = models.CharField(
         max_length=10, choices=LANGUAGES, blank=True, null=True
     )
-    isExtant = models.BooleanField(default=True, verbose_name="Is extant")
+    isExtant = models.BooleanField(
+        default=True, verbose_name="Is extant", null=True, blank=True
+    )
 
     @cached_property
     def author(self):

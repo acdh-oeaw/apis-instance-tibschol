@@ -5,39 +5,58 @@
 
 <table class="table table-hover">
     {% modeldict object as d %}
-
-    {% for key, value in d.items %}
-    {% if not key|endswith:'.rootobject_ptr' %}
-    {% if value %}
+    <tr>
+        <th>
+            Name
+        </th>
+        <td>
+            {{ object.label }}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            Alternative names
+        </th>
+        <td>
+            {{ object.alternative_names | render_list_field }}
+        </td>
+    </tr>
+    <tr>
+        <th>
+            Date
+        </th>
+        <td>
+            {{ object.start_date_written }}
+        </td>
+    </tr>
 
     <tr>
         <th>
-            {{ key.verbose_name | title}}
+            Coordinates
         </th>
-
         <td>
-            {% if key|endswith:'.comments' %}
-            {{ value | parse_comment | safe}}
-            {% elif key|endswith:'.external_links' %}
-            {{ value | render_links | safe}}
-            {% elif key|endswith:'.longitude' %}
-            {{ value | render_coordinate}}
-            {% elif key|endswith:'.latitude' %}
-            {{ value | render_coordinate}}
-            {% elif key|endswith:'.zotero_ref' %}
-            {{ value | render_zotero_links | safe}}
-            {% else %}
-            {{ value | render_list_field}}
+            {% if object.latitude %}
+            {{ object.latitude | render_coordinate}},
+            {% endif %}
+            {% if object.longitude %}
+            {{object.longitude | render_coordinate}}
             {% endif %}
         </td>
     </tr>
-    {% if key|endswith:'.pp_kdsb' %}
     <tr>
-        <th> Citation</th>
-        <td>{{object|cite}}</td>
+        <th>
+            Comments
+        </th>
+        <td>
+            {{ object.comments | render_list_field }}
+        </td>
     </tr>
-    {% endif %}
-    {% endif %}
-    {% endif %}
-    {% endfor %}
+    <tr>
+        <th>
+            External links
+        </th>
+        <td>
+            {{ object.external_links | render_links | safe }}
+        </td>
+    </tr>
 </table>

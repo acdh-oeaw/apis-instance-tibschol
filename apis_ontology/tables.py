@@ -100,6 +100,16 @@ class InstanceTable(AbstractEntityTable):
     def render_external_links(self, value):
         return render_links(value)
 
+    def render_availability(self, value):
+        symbol = "indeterminate_question_box"
+        if value == "lost":
+            symbol = "close"
+        elif value == "non-accessible":
+            symbol = "lock"
+        elif value == "available":
+            symbol = "check"
+        return mark_safe(f'<span class="material-symbols-outlined">{symbol}</span>')
+
 
 class RelationsTable(GenericTable):
     reverse = False

@@ -32,19 +32,12 @@ class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
 class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
     class Meta(AbstractEntityFilterSet.Meta):
         filter_overrides = {
-            models.TextField: {
+            models.CharField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {
                     "lookup_expr": "icontains",
                 },
             },
-        }
-
-
-class PlaceFilterSet(AbstractEntityFilterSet):
-    class Meta(AbstractEntityFilterSet.Meta):
-        exclude = [*ABSTRACT_ENTITY_FILTERS_EXCLUDE, "end_date_written"]
-        filter_overrides = {
             models.TextField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {

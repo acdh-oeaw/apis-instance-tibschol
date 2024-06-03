@@ -88,7 +88,7 @@ class WorkTable(AbstractEntityTable):
 class InstanceTable(AbstractEntityTable):
     class Meta:
         model = Instance
-        fields = ["id", "name", "date", "author"]
+        fields = ["id", "name", "start_date_written", "author"]
         exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
     id = tables.Column(

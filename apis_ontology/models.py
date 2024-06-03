@@ -103,6 +103,7 @@ class Place(
     AbstractEntity,
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Place"
+    label = models.CharField(blank=True, default="", verbose_name="Name")
     end_date = None
     end_start_date = None
     end_end_date = None

@@ -48,8 +48,6 @@ class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
             },
         }
 
-    name = django_filters.CharFilter(method="custom_name_search")
-
     comments = django_filters.CharFilter(
         label="Comments contain", lookup_expr="icontains"
     )
@@ -60,16 +58,16 @@ class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
         label="Alternative names contain", lookup_expr="icontains"
     )
 
-    def custom_name_search(self, queryset, name, value):
-        return queryset.filter(
-            models.Q(name__icontains=value)
-            | models.Q(alternative_names__icontains=value)
-        )
-
 
 class PlaceFilterSet(TibScholEntityMixinFilterSet):
     class Meta:
-        exclude = [*ABSTRACT_ENTITY_FILTERS_EXCLUDE, "latitude", "longitude", "notes"]
+        exclude = [
+            *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
+            "latitude",
+            "longitude",
+            "notes",
+            "name",
+        ]
         form = PlaceSearchForm
         filter_overrides = {
             models.CharField: {

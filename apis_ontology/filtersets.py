@@ -87,11 +87,13 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
     label = django_filters.CharFilter(method="custom_name_search")
 
     def custom_name_search(self, queryset, name, value):
-        return queryset.filter(
-            models.Q(label__icontains=value)
-            | models.Q(alternative_names__icontains=value)
-            | models.Q(pk=value)
+        name_query = models.Q(label__icontains=value) | models.Q(
+            alternative_names__icontains=value
         )
+        if value.isdigit():
+            name_query = name_query | models.Q(pk=int(value))
+
+        return queryset.filter(name_query)
 
 
 class PersonFilterSet(TibScholEntityMixinFilterSet):

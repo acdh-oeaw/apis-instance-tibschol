@@ -5,7 +5,6 @@ class PlaceSearchForm(GenericFilterSetForm):
     field_order = [
         "columns",
         "label",
-        "alternative_names",
         "start_date_written",
         "comments",
         "notes",

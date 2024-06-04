@@ -90,6 +90,7 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
         return queryset.filter(
             models.Q(label__icontains=value)
             | models.Q(alternative_names__icontains=value)
+            | models.Q(pk=value)
         )
 
 
@@ -122,4 +123,5 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
         return queryset.filter(
             models.Q(name__icontains=value)
             | models.Q(alternative_names__icontains=value)
+            | models.Q(pk=value)
         )

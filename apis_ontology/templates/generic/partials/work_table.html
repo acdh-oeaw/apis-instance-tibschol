@@ -1,43 +1,76 @@
 {% load apisgeneric %}
 {% load filter_utils %}
 {% load parse_comment %}
-{% load citation %}
 
 <table class="table table-hover">
-    {% modeldict object as d %}
-
-    {% for key, value in d.items %}
-    {% if not key|endswith:'.rootobject_ptr' %}
-    {% if value %}
-
     <tr>
-        <th>
-            {{ key.verbose_name | title}}
-        </th>
+        <th>Name</th>
+        <td>{{ object.name }}</td>
+    </tr>
+    {% if object.alternative_names %}
+        <tr>
+            <th>Alternative names</th>
+            <td>{{ object.alternative_names | render_list_field }}</td>
+        </tr>
+    {% endif %}
+    {% if object.original_language %}
+        <tr>
+            <th>Original language</th>
+            <td>{{ object.original_language }}</td>
+        </tr>
+    {% endif %}
+    {% if object.subject %}
+        <tr>
+            <th>Subject</th>
+            <td>{{ object.subject }}</td>
+        </tr>
+    {% endif %}
 
-        <td>
-            {% if key|endswith:'.comments' %}
-            {{ value | parse_comment | safe}}
-            {% elif key|endswith:'.external_links' %}
-            {{ value | render_links | safe}}
-            {% elif key|endswith:'.longitude' %}
-            {{ value | render_coordinate}}
-            {% elif key|endswith:'.latitude' %}
-            {{ value | render_coordinate}}
-            {% elif key|endswith:'.zotero_ref' %}
-            {{ value | render_zotero_links | safe}}
-            {% else %}
-            {{ value | render_list_field}}
-            {% endif %}
-        </td>
+    {% if object.start_date_written %}
+        <tr>
+            <th>Date of composition</th>
+            <td>
+                {% if object.start_date_written %}
+                    {{ object.start_date_written }}
+                {% else %}
+                    Unknown
+                {% endif %}
+            </td>
+        </tr>
+    {% endif %}
+    {% if object.sde_dge_ref %}
+        <tr>
+            <th>Derge reference</th>
+            <td>{{ object.sde_dge_ref }}</td>
+        </tr>
+    {% endif %}
+    {% if object.isExtant %}
+        <tr>
+            <th>Is extant</th>
+            <td>{{ object.isExtant }}</td>
+        </tr>
+    {% endif %}
+
+    {% if object.comments %}
+        <tr>
+            <th>
+                Comments
+            </th>
+            <td>
+                {{ object.comments | parse_comment }}
+            </td>
+        </tr>
+    {% endif %}
+    {% if object.external_links %}
+        <tr>
+            <th>
+                External links
+            </th>
+            <td>
+                {{ object.external_links | render_links | safe }}
+            </td>
+        </tr>
+    {% endif %}
+
     </tr>
-    {% if key|endswith:'.pp_kdsb' %}
-    <tr>
-        <th> Citation</th>
-        <td>{{object|cite}}</td>
-    </tr>
-    {% endif %}
-    {% endif %}
-    {% endif %}
-    {% endfor %}
 </table>

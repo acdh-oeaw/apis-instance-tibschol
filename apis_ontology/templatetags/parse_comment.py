@@ -7,6 +7,8 @@ from apis_ontology.models import ZoteroEntry
 from django import template
 from django.contrib.contenttypes.models import ContentType
 
+from apis_ontology.templatetags.filter_utils import render_list_field
+
 register = template.Library()
 logger = logging.getLogger(__name__)
 
@@ -61,4 +63,4 @@ def parse_comment(value):
     # Apply substitutions using the combined pattern and custom replacement function
     transformed_value = re.sub(combined_pattern, custom_replace, value)
 
-    return transformed_value
+    return render_list_field(transformed_value)

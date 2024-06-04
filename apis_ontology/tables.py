@@ -25,7 +25,23 @@ from lxml import etree
 logger = logging.getLogger(__name__)
 
 
-class PlaceTable(AbstractEntityTable):
+class TibscholEntityMixinTable(AbstractEntityTable):
+    def render_alternative_names(self, value):
+        return render_list_field(value)
+
+    def render_external_links(self, value):
+        return render_links(value)
+
+    def render_comments(self, value):
+        return mark_safe(parse_comment(value))
+
+    id = tables.Column(
+        linkify=lambda record: record.get_absolute_url(),
+        empty_values=[],
+    )
+
+
+class PlaceTable(TibscholEntityMixinTable):
     class Meta:
         model = Place
         fields = [
@@ -33,11 +49,6 @@ class PlaceTable(AbstractEntityTable):
             "label",
         ]
         exclude = ["desc", "view", "edit", "noduplicate", "delete"]
-
-    id = tables.Column(
-        linkify=lambda record: record.get_absolute_url(),
-        empty_values=[],
-    )
 
     def render_external_links(self, value):
         return render_links(value)

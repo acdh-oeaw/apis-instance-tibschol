@@ -66,6 +66,9 @@ class PersonTable(AbstractEntityTable):
     def render_external_links(self, value):
         return render_links(value)
 
+    def render_alternative_names(self, value):
+        return render_list_field(value)
+
 
 class WorkTable(AbstractEntityTable):
     class Meta:

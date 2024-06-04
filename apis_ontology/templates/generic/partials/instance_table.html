@@ -4,40 +4,129 @@
 {% load citation %}
 
 <table class="table table-hover">
-    {% modeldict object as d %}
-
-    {% for key, value in d.items %}
-    {% if not key|endswith:'.rootobject_ptr' %}
-    {% if value %}
-
     <tr>
-        <th>
-            {{ key.verbose_name | title}}
-        </th>
+        <th>Name</th>
+        <td>{{ object.name }}</td>
+    </tr>
+    {% if object.alternative_names %}
+    <tr>
+        <th>Alternative names</th>
+        <td>{{ object.alternative_names | render_list_field }}</td>
+    </tr>
+    {% endif %}
 
+    {% if object.start_date_written %}
+    <tr>
+        <th>Date</th>
         <td>
-            {% if key|endswith:'.comments' %}
-            {{ value | parse_comment | safe}}
-            {% elif key|endswith:'.external_links' %}
-            {{ value | render_links | safe}}
-            {% elif key|endswith:'.longitude' %}
-            {{ value | render_coordinate}}
-            {% elif key|endswith:'.latitude' %}
-            {{ value | render_coordinate}}
-            {% elif key|endswith:'.zotero_ref' %}
-            {{ value | render_zotero_links | safe}}
+            {% if object.start_date_written %}
+            {{ object.start_date_written }}
             {% else %}
-            {{ value | render_list_field}}
+            Unknown
             {% endif %}
         </td>
     </tr>
-    {% if key|endswith:'.pp_kdsb' %}
+    {% endif %}
+    {% if object.availabity %}
     <tr>
-        <th> Citation</th>
-        <td>{{object|cite}}</td>
+        <th>Availability</th>
+        <td>{{object.availabity}}</td>
     </tr>
     {% endif %}
+
+    {% if object.tibschol_ref %}
+    <tr>
+        <th>Tibschol reference</th>
+        <td>{{object.tibschol_ref}}</td>
+    </tr>
     {% endif %}
+
+    {% if object.set_num %}
+    <tr>
+        <th>Set</th>
+        <td>{{ object.set_num }}</td>
+    </tr>
     {% endif %}
-    {% endfor %}
+
+    {% if object.volume %}
+    <tr>
+        <th>Volume</th>
+        <td>{{ object.volume }}</td>
+    </tr>
+    {% endif %}
+
+    {% if object.sb_text_number %}
+    <tr>
+        <th>Number ascribed to item by Tibschol</th>
+        <td>{{ object.sb_text_number }}</td>
+    </tr>
+    {% endif %}
+    {% if object.pp_kdsb %}
+    <tr>
+        <th>Page numbers in print</th>
+        <td>{{ object.pp_kdsb }}</td>
+    </tr>
+    {% endif %}
+
+    {% if object.num_folios %}
+    <tr>
+        <th>Number of folios</th>
+        <td>{{ object.num_folios }}</td>
+    </tr>
+    {% endif %}
+
+    {% if object.signature_letter %}
+    <tr>
+        <th>Signature letter (category)</th>
+        <td>{{ object.signature_letter }}</td>
+    </tr>
+    {% endif %}
+
+    {% if object.signature_number %}
+    <tr>
+        <th>Signature number</th>
+        <td>{{ object.signature_number }}</td>
+    </tr>
+    {% endif %}
+
+    {% if object.drepung_number %}
+    <tr>
+        <th>Drepung catalogue number</th>
+        <td>{{ object.drepung_number }}</td>
+    </tr>
+    {% endif %}
+
+    {% if object.provenance %}
+    <tr>
+        <th>Provenance</th>
+        <td>{{ object.provenance }}</td>
+    </tr>
+    {% endif %}
+    {% if object.item_description %}
+    <tr>
+        <th>Item description</th>
+        <td>{{ object.item_description }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+        <th>Citation</th>
+        <td>
+            {% if object.set_num %}
+            {{ object|cite }}<br/>
+            {% endif %}
+            {{ object.zotero_ref | render_zotero_links | safe}}
+        </td>
+    </tr>
+    {% if object.comments %}
+    <tr>
+        <th>Comments</th>
+        <td>{{ object.comments | parse_comment }}</td>
+    </tr>
+    {% endif %}
+    {% if object.external_links %}
+    <tr>
+        <th>External links</th>
+        <td>{{ object.external_links | render_links | safe }}</td>
+    </tr>
+    {% endif %}
 </table>

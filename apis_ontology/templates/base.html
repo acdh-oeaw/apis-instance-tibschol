@@ -16,14 +16,11 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
             {% block entities-menu-items %}
-                <a class="dropdown-item" href="apis_ontology.person">
-                    Persons </a>
-                <a class="dropdown-item" href="apis_ontology.work">
-                    Works </a>
-                <a class="dropdown-item" href="apis_ontology.instance">
-                    Instances </a>
-                <a class="dropdown-item" href="apis_ontology.place">
-                    Places </a>
+                {% entities_content_types as entities %}
+                {% for content_type in entities %}
+                    <a class="dropdown-item" href="{% url 'apis:generic:list' content_type %}">
+                        {{ content_type|model_meta:"verbose_name_plural" }}</a>
+                {% endfor %}
             {% endblock entities-menu-items %}
 
         </div>

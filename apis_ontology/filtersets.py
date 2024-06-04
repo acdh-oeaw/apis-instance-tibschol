@@ -54,9 +54,6 @@ class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
     external_links = django_filters.CharFilter(
         label="External links contain", lookup_expr="icontains"
     )
-    alternative_names = django_filters.CharFilter(
-        label="Alternative names contain", lookup_expr="icontains"
-    )
 
 
 class PlaceFilterSet(TibScholEntityMixinFilterSet):

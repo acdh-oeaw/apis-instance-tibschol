@@ -33,7 +33,7 @@ class TibscholEntityMixinTable(AbstractEntityTable):
         return render_links(value)
 
     def render_comments(self, value):
-        return render_list_field(value)
+        return mark_safe(parse_comment(value))
 
     id = tables.Column(
         linkify=lambda record: record.get_absolute_url(),

@@ -105,7 +105,7 @@
     {% if object.item_description %}
     <tr>
         <th>Item description</th>
-        <td>{{ object.item_description }}</td>
+        <td>{{ object.item_description | render_list_field }}</td>
     </tr>
     {% endif %}
     <tr>

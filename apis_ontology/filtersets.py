@@ -120,11 +120,13 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
     name = django_filters.CharFilter(method="custom_name_search")
 
     def custom_name_search(self, queryset, name, value):
-        return queryset.filter(
-            models.Q(name__icontains=value)
-            | models.Q(alternative_names__icontains=value)
-            | models.Q(pk=value)
+        name_query = models.Q(name__icontains=value) | models.Q(
+            alternative_names__icontains=value
         )
+        if value.isdigit():
+            name_query = name_query | models.Q(pk=int(value))
+
+        return queryset.filter(name_query)
 
 
 class WorkFilterSet(TibScholEntityMixinFilterSet):

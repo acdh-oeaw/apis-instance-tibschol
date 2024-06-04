@@ -7,53 +7,53 @@
 {% block title %}TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.){% endblock %}
 
 {% block main-menu %}
-<li class="nav-item dropdown">
-    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-        aria-expanded="false">
-        Entities
-        <span class="caret" />
-    </a>
-    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <li class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+           aria-expanded="false">
+            Entities
+            <span class="caret" />
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
-        {% block entities-menu-items %}
-        {% entities_content_types as entities %}
-        {% for content_type in entities %}
-        <a class="dropdown-item" href="{% url 'apis:generic:list' content_type %}">
-            {{ content_type|model_meta:"verbose_name_plural" }}</a>
-        {% endfor %}
-        {% endblock entities-menu-items %}
+            {% block entities-menu-items %}
+                {% entities_content_types as entities %}
+                {% for content_type in entities %}
+                    <a class="dropdown-item" href="{% url 'apis:generic:list' content_type %}">
+                        {{ content_type|model_meta:"verbose_name_plural" }}</a>
+                {% endfor %}
+            {% endblock entities-menu-items %}
 
-    </div>
-</li>
+        </div>
+    </li>
 {% endblock main-menu %}
 
 {% block userlogin-menu %}
-<ul class="navbar-nav">
-    {% if user.is_authenticated %}
-    <li class="nav-item dropdown ml-auto">
-        <a href="" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-            aria-expanded="false">User: {{ user.get_username }}</a>
-        <div class="dropdown-menu dropdown-menu-right">
-            <div class="dropdown-item">
-                <a class="nav-link p-0" href="{% url 'apis:logout' %}?next=/">
-                    <span class="material-symbols-outlined">logout</span>
-                    Logout
+    <ul class="navbar-nav">
+        {% if user.is_authenticated %}
+            <li class="nav-item dropdown ml-auto">
+                <a href="" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                   aria-expanded="false">User: {{ user.get_username }}</a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="dropdown-item">
+                        <a class="nav-link p-0" href="{% url 'apis:logout' %}?next=/">
+                            <span class="material-symbols-outlined">logout</span>
+                            Logout
+                        </a>
+                    </div>
+                    <div class="dropdown-item">
+                        <a class="nav-link p-0" href="{% url "django_action_logger:log" %}">
+                            <span class="material-symbols-outlined">web_stories</span>
+                            Log
+                        </a>
+                    </div>
+                </div>
+            </li>
+        {% else %}
+            <li class="nav-item dropdown ml-auto">
+                <a class="nav-link p-0" href="{% url 'apis:login' %}?next={{ request.path|urlencode }}">
+                    <span class="material-symbols-outlined">login</span>
                 </a>
-            </div>
-            <div class="dropdown-item">
-                <a class="nav-link p-0" href="{% url "django_action_logger:log" %}">
-                    <span class="material-symbols-outlined">web_stories</span>
-                    Log
-                </a>
-            </div>
-        </div>
-    </li>
-    {% else %}
-    <li class="nav-item dropdown ml-auto">
-        <a class="nav-link p-0" href="{% url 'apis:login' %}?next={{ request.path|urlencode }}">
-            <span class="material-symbols-outlined">login</span>
-        </a>
-    </li>
-    {% endif %}
-</ul>
+            </li>
+        {% endif %}
+    </ul>
 {% endblock userlogin-menu %}

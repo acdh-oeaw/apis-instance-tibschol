@@ -2,7 +2,7 @@ from apis_core.apis_entities.filtersets import (
     AbstractEntityFilterSet,
     ABSTRACT_ENTITY_FILTERS_EXCLUDE,
 )
-from apis_ontology.forms import PersonSearchForm, PlaceSearchForm
+from apis_ontology.forms import PersonSearchForm, PlaceSearchForm, WorkSearchForm
 from django.db import models
 import django_filters
 
@@ -125,3 +125,39 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
             | models.Q(alternative_names__icontains=value)
             | models.Q(pk=value)
         )
+
+
+class WorkFilterSet(TibScholEntityMixinFilterSet):
+    class Meta:
+        exclude = [
+            *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
+            "notes",
+            "alternative_names",
+        ]
+
+        form = WorkSearchForm
+        filter_overrides = {
+            models.CharField: {
+                "filter_class": django_filters.CharFilter,
+                "extra": lambda f: {
+                    "lookup_expr": "icontains",
+                },
+            },
+            models.TextField: {
+                "filter_class": django_filters.CharFilter,
+                "extra": lambda f: {
+                    "lookup_expr": "icontains",
+                },
+            },
+        }
+
+    name = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
+
+    def custom_name_search(self, queryset, name, value):
+        name_query = models.Q(name__icontains=value) | models.Q(
+            alternative_names__icontains=value
+        )
+        if value.isdigit():
+            name_query = name_query | models.Q(pk=int(value))
+
+        return queryset.filter(name_query)

@@ -24,3 +24,17 @@ class PersonSearchForm(GenericFilterSetForm):
         "notes",
         "external_links",
     ]
+
+
+class WorkSearchForm(GenericFilterSetForm):
+    field_order = [
+        "columns",
+        "name",
+        "original_language",
+        "subject",
+        "start_date_written",
+        "sde_dge_ref",
+        "isExtant",
+        "comments",
+        "external_links",
+    ]

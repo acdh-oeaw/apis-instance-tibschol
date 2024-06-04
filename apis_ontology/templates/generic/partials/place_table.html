@@ -1,7 +1,6 @@
 {% load apisgeneric %}
 {% load filter_utils %}
 {% load parse_comment %}
-{% load citation %}
 
 <table class="table table-hover">
     {% modeldict object as d %}
@@ -13,50 +12,62 @@
             {{ object.label }}
         </td>
     </tr>
-    <tr>
-        <th>
-            Alternative names
-        </th>
-        <td>
-            {{ object.alternative_names | render_list_field }}
-        </td>
-    </tr>
-    <tr>
-        <th>
-            Date
-        </th>
-        <td>
-            {{ object.start_date_written }}
-        </td>
-    </tr>
+    {% if object.alternative_names %}
+        <tr>
+            <th>
+                Alternative names
+            </th>
+            <td>
+                {{ object.alternative_names | render_list_field }}
+            </td>
+        </tr>
+    {% endif %}
+    {% if object.start_date_written %}
+        <tr>
+            <th>
+                Date
+            </th>
+            <td>
+                {{ object.start_date_written }}
+            </td>
+        </tr>
+    {% endif %}
+    {% if object.latitude or  object.longitude %}
 
-    <tr>
+        <tr>
         <th>
             Coordinates
         </th>
         <td>
             {% if object.latitude %}
-            {{ object.latitude | render_coordinate}},
+                {{ object.latitude | render_coordinate}},
             {% endif %}
             {% if object.longitude %}
-            {{object.longitude | render_coordinate}}
+                {{object.longitude | render_coordinate}}
             {% endif %}
         </td>
-    </tr>
-    <tr>
-        <th>
-            Comments
-        </th>
-        <td>
-            {{ object.comments | parse_comment }}
-        </td>
-    </tr>
-    <tr>
-        <th>
-            External links
-        </th>
-        <td>
-            {{ object.external_links | render_links | safe }}
-        </td>
-    </tr>
+        </tr>
+    {% endif %}
+
+    {% if object.comments %}
+        <tr>
+            <th>
+                Comments
+            </th>
+            <td>
+                {{ object.comments | parse_comment }}
+            </td>
+        </tr>
+    {% endif %}
+    {% if object.external_links %}
+        <tr>
+            <th>
+                External links
+            </th>
+            <td>
+                {{ object.external_links | render_links | safe }}
+            </td>
+        </tr>
+    {% endif %}
+
 </table>

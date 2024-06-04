@@ -3,6 +3,8 @@
 
 {% load apis_templatetags %}
 {% load apiscore %}
+{% load tibschol_entity_ctypes %}
+
 
 {% block title %}TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.){% endblock %}
 
@@ -16,7 +18,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
             {% block entities-menu-items %}
-                {% entities_content_types as entities %}
+                {% tibschol_entity_types as entities %}
                 {% for content_type in entities %}
                     <a class="dropdown-item" href="{% url 'apis:generic:list' content_type %}">
                         {{ content_type|model_meta:"verbose_name_plural" }}</a>

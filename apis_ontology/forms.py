@@ -38,3 +38,26 @@ class WorkSearchForm(GenericFilterSetForm):
         "comments",
         "external_links",
     ]
+
+
+class InstanceSearchForm(GenericFilterSetForm):
+    field_order = [
+        "columns",
+        "name",
+        "start_date_written",
+        "availability",
+        "tibschol_ref",
+        "set_num",
+        "volume",
+        "sb_text_number",
+        "pp_kdsb",
+        "num_folios",
+        "signature_letter",
+        "signature_number",
+        "drepung_number",
+        "provenance",
+        "zotero_ref",
+        "item_description",
+        "comments",
+        "external_links",
+    ]

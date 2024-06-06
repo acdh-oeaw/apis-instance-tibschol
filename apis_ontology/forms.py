@@ -1,4 +1,85 @@
-from apis_core.generic.forms import GenericFilterSetForm
+from django import forms
+from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
+
+
+class TibscholEntityForm(GenericModelForm):
+    class Meta:
+        exclude = ["published"]
+        widgets = {
+            "notes": forms.TextInput(
+                attrs={"placeholder": "Do not use this field, it will be dropped soon."}
+            ),
+        }
+
+
+class PlaceForm(TibscholEntityForm):
+    field_order = [
+        "label",
+        "alternative_names",
+        "start_date_written",
+        "latitude",
+        "longitude",
+        "comments",
+        "notes",
+        "external_links",
+        "review",
+    ]
+
+
+class PersonForm(TibscholEntityForm):
+    field_order = [
+        "name",
+        "alternative_names",
+        "start_date_written",
+        "end_date_written",
+        "gender",
+        "nationality",
+        "comments",
+        "notes",
+        "external_links",
+        "review",
+    ]
+
+
+class WorkForm(TibscholEntityForm):
+    field_order = [
+        "name",
+        "alternative_names",
+        "original_language",
+        "subject",
+        "start_date_written",
+        "sde_dge_ref",
+        "isExtant",
+        "comments",
+        "notes",
+        "external_links",
+        "review",
+    ]
+
+
+class InstanceForm(TibscholEntityForm):
+    field_order = [
+        "name",
+        "alternative_names",
+        "start_date_written",
+        "availability",
+        "tibschol_ref",
+        "set_num",
+        "volume",
+        "sb_text_number",
+        "pp_kdsb",
+        "num_folios",
+        "signature_letter",
+        "signature_number",
+        "drepung_number",
+        "provenance",
+        "zotero_ref",
+        "item_description",
+        "comments",
+        "notes",
+        "external_links",
+        "review",
+    ]
 
 
 class PlaceSearchForm(GenericFilterSetForm):

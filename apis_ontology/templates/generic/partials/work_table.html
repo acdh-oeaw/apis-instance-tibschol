@@ -44,12 +44,10 @@
             <td>{{ object.sde_dge_ref }}</td>
         </tr>
     {% endif %}
-    {% if object.isExtant %}
-        <tr>
-            <th>Is extant</th>
-            <td>{{ object.isExtant }}</td>
-        </tr>
-    {% endif %}
+    <tr>
+        <th>Is extant</th>
+        <td>{{ object.isExtant }}</td>
+    </tr>
 
     {% if object.comments %}
         <tr>

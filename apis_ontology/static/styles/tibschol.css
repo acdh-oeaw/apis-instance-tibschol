@@ -1,0 +1,12 @@
+    .more-content {
+        display: none;
+    }
+    .show-more:checked + .content .more-content {
+        display: inline;
+    }
+    .show-more:checked + .content .more-link {
+        display: none;
+    }
+    .show-more {
+        display: none;
+    }

@@ -38,7 +38,7 @@
             {% for ent_type in related_entity_types %}
             <h5> {{ent_type | model_meta:"verbose_name" | title}}</h5>
             <div>
-                {% entity_relations with_type=ent_type edit=True as entity_relations %}
+                {% entity_relations with_type=ent_type as entity_relations %}
                 {% render_table entity_relations %}
             </div>
             {% endfor %}

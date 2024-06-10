@@ -26,7 +26,7 @@
     <div class="tab-content">
         <div class="tab-pane container active" id="reltypeALL">
             {% for ent_type in related_entity_types %}
-            <h3> {{ent_type | model_meta:"verbose_name" | title}}</h3>
+            <h5> {{ent_type | model_meta:"verbose_name" | title}}</h5>
             <div>
                 {% entity_relations with_type=ent_type edit=True as entity_relations %}
                 {% render_table entity_relations %}

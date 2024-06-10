@@ -1,0 +1,19 @@
+{% if preview_value != field_value %}
+<input type="checkbox" id="show-more-{{ record.id }}-{{ field_name }}" class="show-more">
+{% endif %}
+<div class="content" id="content-{{ record.id }}-{{ field_name }}">
+    <span class="preview">
+        {{preview_value }}
+    </span>
+    <span class="more-content">
+        {{ field_value }}
+    </span>
+    {% if preview_value != field_value %}
+    <label for="show-more-{{ record.id }}-{{ field_name }}" class="more-link linkish">
+        more
+    </label>
+    <label for="show-more-{{ record.id }}-{{ field_name }}" class="less-link linkish">
+        less
+    </label>
+    {% endif %}
+</div>

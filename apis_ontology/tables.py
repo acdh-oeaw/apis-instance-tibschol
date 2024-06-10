@@ -4,9 +4,11 @@ import django_tables2 as tables
 from apis_core.apis_entities.tables import AbstractEntityTable
 from apis_core.generic.tables import GenericTable
 from django_tables2.utils import A
+from django.template.loader import render_to_string
 
 from .models import Excerpts, Instance, Person, Place, TibScholRelationMixin, Work
 from .templatetags.filter_utils import (
+    preview_text,
     render_coordinate,
     render_links,
     render_list_field,
@@ -146,11 +148,32 @@ class RelationsTable(GenericTable):
         else:
             return ""
 
-    def render_support_notes(self, value):
-        return mark_safe(parse_comment(value))
+    def render_support_notes(self, record):
+        notes = parse_comment(render_list_field(record.support_notes))
+        preview = parse_comment(
+            render_list_field(preview_text(record.support_notes, 50))
+        )
+        context = {
+            "record": record,
+            "preview_value": mark_safe(preview),
+            "field_value": mark_safe(notes),
+            "field_name": "support_notes",
+        }
 
-    def render_zotero_refs(self, value):
-        return mark_safe(parse_comment(render_list_field(value)))
+        return mark_safe(render_to_string("apis_ontology/preview_column.html", context))
+
+    def render_zotero_refs(self, record):
+        zotero_refs = mark_safe(parse_comment(render_list_field(record.zotero_refs)))
+        preview = mark_safe(
+            parse_comment(render_list_field(preview_text(record.zotero_refs, 50)))
+        )
+        context = {
+            "record": record,
+            "preview_value": preview,
+            "field_value": zotero_refs,
+            "field_name": "zotero_refs",
+        }
+        return mark_safe(render_to_string("apis_ontology/preview_column.html", context))
 
     def render_obj(self, record):
         # return str(record) + str(self.context["object"].pk)

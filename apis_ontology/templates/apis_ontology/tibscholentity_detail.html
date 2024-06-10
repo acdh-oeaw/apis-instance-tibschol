@@ -18,19 +18,34 @@
 <div class="container">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#reltypeALL">ALL</a>
+        </li>
+
         {% for ent_type in related_entity_types %}
 
         <li class="nav-item">
-            <a class="nav-link {% if forloop.first %}active{% endif %}" data-toggle="tab"
-                href="#reltype{{forloop.counter0}}">{{ent_type |model_meta:"verbose_name" | title}}</a>
+            <a class="nav-link" data-toggle="tab" href="#reltype{{forloop.counter0}}">
+                {{ent_type |model_meta:"verbose_name" | title}}
+            </a>
         </li>
         {% endfor %}
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
+        <div class="tab-pane container active" id="reltypeALL">
+            {% for ent_type in related_entity_types %}
+            <h5> {{ent_type | model_meta:"verbose_name" | title}}</h5>
+            <div>
+                {% entity_relations with_type=ent_type edit=True as entity_relations %}
+                {% render_table entity_relations %}
+            </div>
+            {% endfor %}
+        </div>
+
         {% for ent_type in related_entity_types %}
-        <div class="tab-pane container {% if forloop.first %}active{% endif %}" id="reltype{{forloop.counter0}}">
+        <div class="tab-pane container" id="reltype{{forloop.counter0}}">
             {% entity_relations with_type=ent_type as entity_relations %}
             {% render_table entity_relations %}
         </div>

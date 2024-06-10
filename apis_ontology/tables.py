@@ -226,12 +226,14 @@ class RelationsTableEdit(RelationsTable):
         "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>",
         orderable=False,
         verbose_name="",
+        attrs={"td": {"style": "max-width: 2em"}},
     )
 
     delete = tables.TemplateColumn(
         "<a href='{% url 'apis:relationdelete' record.id %}?next={{ request.GET.next }}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">delete</span></a>",
         orderable=False,
         verbose_name="",
+        attrs={"td": {"style": "max-width: 2em"}},
     )
 
 

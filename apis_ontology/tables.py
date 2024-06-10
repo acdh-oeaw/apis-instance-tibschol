@@ -130,8 +130,11 @@ class InstanceTable(AbstractEntityTable):
 class RelationsTable(GenericTable):
     reverse = False
 
-    name = tables.Column(verbose_name="Relationship")
-    obj = tables.Column(verbose_name="Object")
+    name = tables.Column(verbose_name="Relationship", orderable=False)
+    obj = tables.Column(verbose_name="Object", orderable=False)
+    support_notes = tables.Column(orderable=False)
+    zotero_refs = tables.Column(verbose_name="Zotero", orderable=False)
+    tei_refs = tables.Column(verbose_name="Excerpts", orderable=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -220,11 +223,15 @@ class RelationsTableEdit(RelationsTable):
         exclude = ["view", "desc", "subj"]
 
     edit = tables.TemplateColumn(
-        "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>"
+        "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>",
+        orderable=False,
+        verbose_name="",
     )
 
     delete = tables.TemplateColumn(
-        "<a href='{% url 'apis:relationdelete' record.id %}?next={{ request.GET.next }}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">delete</span></a>"
+        "<a href='{% url 'apis:relationdelete' record.id %}?next={{ request.GET.next }}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">delete</span></a>",
+        orderable=False,
+        verbose_name="",
     )
 
 

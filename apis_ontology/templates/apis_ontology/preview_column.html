@@ -1,0 +1,14 @@
+{% with record|get_attr:field_name as field_value %}
+<input type="checkbox" id="show-more-{{ record.id }}-{{ field_name }}" class="show-more">
+<div class="content">
+    <span class="preview">
+        {{ field_value|truncatechars:50 }}
+    </span>
+    <span class="more-content">
+        {{ field_value|slice:":50" }}
+    </span>
+    <label for="show-more-{{ record.id }}-{{ field_name }}" class="more-link">
+        <button type="button">... more</button>
+    </label>
+</div>
+{% endwith %}

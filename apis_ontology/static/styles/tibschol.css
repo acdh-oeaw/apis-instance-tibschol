@@ -1,12 +1,26 @@
-    .more-content {
-        display: none;
-    }
-    .show-more:checked + .content .more-content {
-        display: inline;
-    }
-    .show-more:checked + .content .more-link {
-        display: none;
-    }
-    .show-more {
-        display: none;
-    }
+.show-more:checked + .content .more-content {
+    display: inline;
+}
+.show-more:checked + .content .preview {
+    display: none;
+}
+.show-more:checked + .content .more-link {
+    display: none;
+}
+.show-more:checked + .content .less-link {
+    display: inline;
+}
+.show-more, .less-link, .more-content {
+    display: none;
+}
+
+.linkish {
+    color: #007BFF;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.linkish:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}

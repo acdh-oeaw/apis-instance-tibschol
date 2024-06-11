@@ -15,14 +15,6 @@ ABSTRACT_ENTITY_FILTERS_EXCLUDE = [
 ]
 
 
-def is_related_property(relation_model, entity_model):
-    if hasattr(relation_model, "subj_model") and hasattr(relation_model, "obj_model"):
-        return (
-            relation_model.obj_model == entity_model
-            or relation_model.subj_model == entity_model
-        )
-
-
 def filter_related_property(queryset, name, value):
     # Implement your filtering logic here based on the selected value
     rel_class = apps.get_model("apis_ontology", value)

@@ -7,7 +7,7 @@ from apis_core.apis_entities.filtersets import (
 from django.db import models
 
 from apis_ontology.forms import PersonSearchForm, PlaceSearchForm, WorkSearchForm
-from apis_ontology.models import Place
+from apis_ontology.models import Instance, Person, Place, Work
 from apis_ontology.utils import get_relavent_relations
 
 ABSTRACT_ENTITY_FILTERS_EXCLUDE = [
@@ -16,15 +16,13 @@ ABSTRACT_ENTITY_FILTERS_EXCLUDE = [
 
 
 def filter_related_property(queryset, name, value):
-    # Implement your filtering logic here based on the selected value
     rel_class = apps.get_model("apis_ontology", value)
     referenced_place_ids = rel_class.objects.values_list("subj", flat=True).union(
         rel_class.objects.values_list("obj", flat=True)
     )
 
-    # Filter places based on the referenced primary keys
     queryset = queryset.filter(pk__in=referenced_place_ids)
-    return queryset  # Return the original queryset if no filtering is required
+    return queryset
 
 
 class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
@@ -140,6 +138,11 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
         }
 
     name = django_filters.CharFilter(method="custom_name_search")
+    related_property = django_filters.ChoiceFilter(
+        choices=get_relavent_relations(Person),
+        label="Related Property",
+        method=filter_related_property,
+    )
 
     def custom_name_search(self, queryset, name, value):
         name_query = models.Q(name__icontains=value) | models.Q(
@@ -176,6 +179,11 @@ class WorkFilterSet(TibScholEntityMixinFilterSet):
         }
 
     name = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
+    related_property = django_filters.ChoiceFilter(
+        choices=get_relavent_relations(Work),
+        label="Related Property",
+        method=filter_related_property,
+    )
 
     def custom_name_search(self, queryset, name, value):
         name_query = models.Q(name__icontains=value) | models.Q(
@@ -213,6 +221,11 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
 
     name = django_filters.CharFilter(
         method="custom_name_search", label="Name or Tibschol reference or ID"
+    )
+    related_property = django_filters.ChoiceFilter(
+        choices=get_relavent_relations(Instance),
+        label="Related Property",
+        method=filter_related_property,
     )
 
     def custom_name_search(self, queryset, name, value):

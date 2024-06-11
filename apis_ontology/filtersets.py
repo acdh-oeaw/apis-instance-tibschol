@@ -25,6 +25,10 @@ def filter_related_property(queryset, name, value):
     return queryset
 
 
+def filter_related_entity(queryset, name, value):
+    return queryset
+
+
 class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
     class Meta(AbstractEntityFilterSet.Meta):
         exclude = ABSTRACT_ENTITY_FILTERS_EXCLUDE
@@ -69,7 +73,9 @@ class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
         label="External links contain", lookup_expr="icontains"
     )
 
-    related_entity = None
+    related_entity = django_filters.CharFilter(
+        method=filter_related_entity, label="Related entity"
+    )
 
 
 class PlaceFilterSet(TibScholEntityMixinFilterSet):

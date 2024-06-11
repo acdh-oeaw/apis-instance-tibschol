@@ -52,9 +52,6 @@ class PlaceTable(TibscholEntityMixinTable):
         ]
         exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
-    def render_external_links(self, value):
-        return render_links(value)
-
     def render_latitude(self, value):
         return render_coordinate(value)
 
@@ -62,7 +59,7 @@ class PlaceTable(TibscholEntityMixinTable):
         return render_coordinate(value)
 
 
-class PersonTable(AbstractEntityTable):
+class PersonTable(TibscholEntityMixinTable):
     class Meta:
         model = Person
         fields = [
@@ -71,19 +68,8 @@ class PersonTable(AbstractEntityTable):
         ]
         exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
-    id = tables.Column(
-        linkify=lambda record: record.get_absolute_url(),
-        empty_values=[],
-    )
 
-    def render_external_links(self, value):
-        return render_links(value)
-
-    def render_alternative_names(self, value):
-        return render_list_field(value)
-
-
-class WorkTable(AbstractEntityTable):
+class WorkTable(TibscholEntityMixinTable):
     class Meta:
         model = Work
         fields = ["id", "name", "author"]
@@ -94,27 +80,16 @@ class WorkTable(AbstractEntityTable):
             else None
         }
 
-    id = tables.Column(
-        linkify=lambda record: record.get_absolute_url(),
-        empty_values=[],
-    )
     author = tables.Column(verbose_name="Author", accessor="author", orderable=False)
 
 
-class InstanceTable(AbstractEntityTable):
+class InstanceTable(TibscholEntityMixinTable):
     class Meta:
         model = Instance
         fields = ["id", "name", "start_date_written", "author"]
         exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
-    id = tables.Column(
-        linkify=lambda record: record.get_absolute_url(),
-        empty_values=[],
-    )
     author = tables.Column(verbose_name="Author", accessor="author", orderable=False)
-
-    def render_external_links(self, value):
-        return render_links(value)
 
     def render_availability(self, value):
         symbol = "indeterminate_question_box"

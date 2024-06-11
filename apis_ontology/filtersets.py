@@ -23,6 +23,18 @@ def is_related_property(relation_model, entity_model):
         )
 
 
+def filter_related_property(queryset, name, value):
+    # Implement your filtering logic here based on the selected value
+    rel_class = apps.get_model("apis_ontology", value)
+    referenced_place_ids = rel_class.objects.values_list("subj", flat=True).union(
+        rel_class.objects.values_list("obj", flat=True)
+    )
+
+    # Filter places based on the referenced primary keys
+    queryset = queryset.filter(pk__in=referenced_place_ids)
+    return queryset  # Return the original queryset if no filtering is required
+
+
 class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
     class Meta(AbstractEntityFilterSet.Meta):
         exclude = ABSTRACT_ENTITY_FILTERS_EXCLUDE
@@ -99,19 +111,8 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
     related_property = django_filters.ChoiceFilter(
         choices=get_relavent_relations(Place),
         label="Related Property",
-        method="filter_related_property",
+        method=filter_related_property,
     )
-
-    def filter_related_property(self, queryset, name, value):
-        # Implement your filtering logic here based on the selected value
-        rel_class = apps.get_model("apis_ontology", value)
-        referenced_place_ids = rel_class.objects.values_list("subj", flat=True).union(
-            rel_class.objects.values_list("obj", flat=True)
-        )
-
-        # Filter places based on the referenced primary keys
-        queryset = queryset.objects.filter(pk__in=referenced_place_ids)
-        return queryset  # Return the original queryset if no filtering is required
 
     def custom_name_search(self, queryset, name, value):
         name_query = models.Q(label__icontains=value) | models.Q(

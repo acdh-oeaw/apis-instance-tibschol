@@ -1,14 +1,25 @@
-from apis_core.apis_entities.filtersets import (
-    AbstractEntityFilterSet,
-    ABSTRACT_ENTITY_FILTERS_EXCLUDE,
-)
-from apis_ontology.forms import PersonSearchForm, PlaceSearchForm, WorkSearchForm
-from django.db import models
 import django_filters
+from apis_core.apis_entities.filtersets import (
+    ABSTRACT_ENTITY_FILTERS_EXCLUDE,
+    AbstractEntityFilterSet,
+)
+from django.db import models
+
+from apis_ontology.forms import PersonSearchForm, PlaceSearchForm, WorkSearchForm
+from apis_ontology.models import Place
+from apis_ontology.utils import get_relavent_relations
 
 ABSTRACT_ENTITY_FILTERS_EXCLUDE = [
     f for f in ABSTRACT_ENTITY_FILTERS_EXCLUDE if f != "notes"
 ]
+
+
+def is_related_property(relation_model, entity_model):
+    if hasattr(relation_model, "subj_model") and hasattr(relation_model, "obj_model"):
+        return (
+            relation_model.obj_model == entity_model
+            or relation_model.subj_model == entity_model
+        )
 
 
 class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
@@ -55,6 +66,8 @@ class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
         label="External links contain", lookup_expr="icontains"
     )
 
+    related_entity = None
+
 
 class PlaceFilterSet(TibScholEntityMixinFilterSet):
     class Meta:
@@ -82,6 +95,16 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
         }
 
     label = django_filters.CharFilter(method="custom_name_search")
+    related_property = django_filters.ChoiceFilter(
+        choices=get_relavent_relations(Place),
+        label="Related Property",
+        method="filter_related_property",
+    )
+
+    def filter_related_property(self, queryset, name, value):
+        # Implement your filtering logic here based on the selected value
+
+        return queryset  # Return the original queryset if no filtering is required
 
     def custom_name_search(self, queryset, name, value):
         name_query = models.Q(label__icontains=value) | models.Q(

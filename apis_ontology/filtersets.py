@@ -17,15 +17,20 @@ ABSTRACT_ENTITY_FILTERS_EXCLUDE = [
 
 def filter_related_property(queryset, name, value):
     rel_class = apps.get_model("apis_ontology", value)
-    referenced_place_ids = rel_class.objects.values_list("subj", flat=True).union(
+    referenced_ids = rel_class.objects.values_list("subj", flat=True).union(
         rel_class.objects.values_list("obj", flat=True)
     )
 
-    queryset = queryset.filter(pk__in=referenced_place_ids)
+    queryset = queryset.filter(pk__in=referenced_ids)
     return queryset
 
 
 def filter_related_entity(queryset, name, value):
+    rel_class = apps.get_model("apis_ontology", value)
+    referenced_ids = rel_class.objects.values_list("subj", flat=True).union(
+        rel_class.objects.values_list("obj", flat=True)
+    )
+
     return queryset
 
 

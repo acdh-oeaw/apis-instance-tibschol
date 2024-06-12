@@ -1,3 +1,5 @@
+from apis_core.apis_entities.models import RootObject
+from apis_core.relations.models import Relation
 from django.apps import apps
 import django_filters
 from apis_core.apis_entities.filtersets import (
@@ -8,7 +10,7 @@ from django.db import models
 
 from apis_ontology.forms import PersonSearchForm, PlaceSearchForm, WorkSearchForm
 from apis_ontology.models import Instance, Person, Place, Work
-from apis_ontology.utils import get_relavent_relations
+from apis_ontology.utils import get_relevant_relations
 
 ABSTRACT_ENTITY_FILTERS_EXCLUDE = [
     f for f in ABSTRACT_ENTITY_FILTERS_EXCLUDE if f != "notes"
@@ -26,10 +28,41 @@ def filter_related_property(queryset, name, value):
 
 
 def filter_related_entity(queryset, name, value):
-    rel_class = apps.get_model("apis_ontology", value)
-    referenced_ids = rel_class.objects.values_list("subj", flat=True).union(
-        rel_class.objects.values_list("obj", flat=True)
+    queryset_pks = queryset.values_list("pk", flat=True)
+    relations = Relation.objects.filter(
+        models.Q(subj__pk__in=queryset_pks) | models.Q(obj__pk__in=queryset_pks)
     )
+
+    related_entities_match_pks = []
+    for r in relations:
+        ent_id = r.subj.id
+        rel_ent_id = r.obj.id
+        if r.subj.id not in queryset_pks:
+            ent_id = r.obj.id
+            rel_ent_id = r.subj.id
+
+        if ent_id in related_entities_match_pks:
+            continue
+
+        rel_ent = RootObject.objects_inheritance.get_subclass(pk=rel_ent_id)
+
+        if (
+            hasattr(rel_ent, "alternative_names")
+            and rel_ent.alternative_names
+            and value in rel_ent.alternative_names
+        ):
+            related_entities_match_pks.append(ent_id)
+            continue
+
+        if hasattr(rel_ent, "name") and value in rel_ent.name:
+            related_entities_match_pks.append(ent_id)
+            continue
+
+        if hasattr(rel_ent, "label") and value in rel_ent.label:
+            related_entities_match_pks.append(ent_id)
+            continue
+
+    queryset = queryset.filter(pk__in=related_entities_match_pks)
 
     return queryset
 
@@ -77,9 +110,8 @@ class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
     external_links = django_filters.CharFilter(
         label="External links contain", lookup_expr="icontains"
     )
-
     related_entity = django_filters.CharFilter(
-        method=filter_related_entity, label="Related entity"
+        label="Related entity", method=filter_related_entity
     )
 
 
@@ -110,7 +142,7 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
 
     label = django_filters.CharFilter(method="custom_name_search")
     related_property = django_filters.ChoiceFilter(
-        choices=get_relavent_relations(Place),
+        choices=get_relevant_relations(Place),
         label="Related Property",
         method=filter_related_property,
     )
@@ -150,7 +182,7 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
 
     name = django_filters.CharFilter(method="custom_name_search")
     related_property = django_filters.ChoiceFilter(
-        choices=get_relavent_relations(Person),
+        choices=get_relevant_relations(Person),
         label="Related Property",
         method=filter_related_property,
     )
@@ -191,7 +223,7 @@ class WorkFilterSet(TibScholEntityMixinFilterSet):
 
     name = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
     related_property = django_filters.ChoiceFilter(
-        choices=get_relavent_relations(Work),
+        choices=get_relevant_relations(Work),
         label="Related Property",
         method=filter_related_property,
     )
@@ -234,7 +266,7 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
         method="custom_name_search", label="Name or Tibschol reference or ID"
     )
     related_property = django_filters.ChoiceFilter(
-        choices=get_relavent_relations(Instance),
+        choices=get_relevant_relations(Instance),
         label="Related Property",
         method=filter_related_property,
     )

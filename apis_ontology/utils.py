@@ -10,7 +10,7 @@ def is_relavent_relation_model(relation_model, entity_model):
         )
 
 
-def get_relavent_relations(any_model):
+def get_relevant_relations(any_model):
     relavent_rels = []
     for ct in ContentType.objects.filter(models.Q(app_label="apis_ontology")):
         rel_model = ct.model_class()

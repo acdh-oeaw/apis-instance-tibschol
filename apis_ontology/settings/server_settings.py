@@ -47,7 +47,6 @@ LOGGING = {
 }
 
 LOG_LIST_NOSTAFF_EXCLUDE_APP_LABELS = ["admin", "sessions", "auth"]
-SIMPLE_HISTORY_ENABLED = False  # disable for now
 
 CACHES = {
     "default": {

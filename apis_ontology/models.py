@@ -301,7 +301,7 @@ class Excerpts(GenericModel, models.Model):
 #######################################################################################
 
 
-class TibScholRelationMixin(Relation, LegacyDateMixin):
+class TibScholRelationMixin(Relation, LegacyDateMixin, GenericModel):
     CONFIDENCE = [
         ("Positive", "Positive"),
         ("Uncertain", "Uncertain"),

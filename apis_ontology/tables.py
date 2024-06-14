@@ -80,7 +80,19 @@ class WorkTable(TibscholEntityMixinTable):
             else None
         }
 
-    author = tables.Column(verbose_name="Author", accessor="author", orderable=False)
+    author = tables.Column(
+        verbose_name="Author", accessor="author_name", orderable=True
+    )
+
+    def render_author(self, record):
+        context = {
+            "entity_id": record.author_id,
+            "entity_name": record.author_name,
+            "entity_uri": f"/apis/apis_ontology.person/{record.author_id}",  # TODO: use urls
+        }
+        return mark_safe(
+            render_to_string("apis_ontology/linked_entity_column.html", context)
+        )
 
 
 class InstanceTable(TibscholEntityMixinTable):

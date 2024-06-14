@@ -101,7 +101,9 @@ class InstanceTable(TibscholEntityMixinTable):
         fields = ["id", "name", "start_date_written", "author"]
         exclude = ["desc", "view", "edit", "noduplicate", "delete"]
 
-    author = tables.Column(verbose_name="Author", accessor="author", orderable=False)
+    author = tables.Column(
+        verbose_name="Author", accessor="author_name", orderable=True
+    )
 
     def render_availability(self, value):
         symbol = "indeterminate_question_box"
@@ -112,6 +114,16 @@ class InstanceTable(TibscholEntityMixinTable):
         elif value == "available":
             symbol = "check"
         return mark_safe(f'<span class="material-symbols-outlined">{symbol}</span>')
+
+    def render_author(self, record):
+        context = {
+            "entity_id": record.author_id,
+            "entity_name": record.author_name,
+            "entity_uri": f"/apis/apis_ontology.person/{record.author_id}",  # TODO: use urls
+        }
+        return mark_safe(
+            render_to_string("apis_ontology/linked_entity_column.html", context)
+        )
 
 
 class RelationsTable(GenericTable):

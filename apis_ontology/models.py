@@ -205,6 +205,32 @@ class Work(
     objects = WorkManager()
 
 
+class InstanceQuerySet(QuerySet):
+    def with_author(self):
+        return self.annotate(
+            # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
+            work_id=Subquery(
+                WorkHasAsAnInstanceInstance.objects.filter(
+                    obj_id=OuterRef("id")
+                ).values("subj_id")[:1]
+            ),
+            author_id=Subquery(
+                PersonAuthorOfWork.objects.filter(obj_id=OuterRef("work_id")).values(
+                    "subj_id"
+                )[:1]
+            ),
+            # Subquery to get the Person's name based on the person_id from above
+            author_name=Subquery(
+                Person.objects.filter(id=OuterRef("author_id")).values("name")[:1]
+            ),
+        )
+
+
+class InstanceManager(models.Manager):
+    def get_queryset(self):
+        return InstanceQuerySet(self.model, using=self._db).with_author()
+
+
 class Instance(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
@@ -281,29 +307,14 @@ class Instance(
         blank=True, null=True, verbose_name="Item description"
     )
 
-    @cached_property
-    def work(self):
-        try:
-            work_has_as_instance = WorkHasAsAnInstanceInstance.objects.filter(obj=self)
-            return work_has_as_instance[0].subj
-        except Exception as e:
-            print("Error while fetching work associated with instance:", e)
-            return
-
-    @cached_property
-    def author(self):
-        try:
-            return Work.objects.get(id=self.work.id).author
-        except Exception as e:
-            print("Error while getting author info for instance", e)
-            return
-
     class Meta:
         verbose_name = _("instance")
         verbose_name_plural = _("Instances")
 
     def __str__(self):
         return f"{self.name} ({self.pk})"
+
+    objects = InstanceManager()
 
 
 class ZoteroEntry(GenericModel, models.Model):

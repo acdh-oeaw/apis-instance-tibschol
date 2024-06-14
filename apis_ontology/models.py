@@ -1,20 +1,22 @@
-from functools import cached_property
 import logging
+from functools import cached_property
 
-logger = logging.getLogger(__name__)
-
+from apis_core.apis_entities.abc import E53_Place
 from apis_core.apis_entities.models import AbstractEntity
 from apis_core.core.models import LegacyDateMixin
+from apis_core.generic.abc import GenericModel
+from apis_core.history.models import VersionMixin
+from apis_core.relations.models import Relation, RootObject
 from apis_core.utils.helpers import create_object_from_uri
 from django.contrib.contenttypes.models import ContentType
-from apis_core.generic.abc import GenericModel
-from apis_core.apis_entities.abc import E53_Place
-from apis_core.history.models import VersionMixin
+from django.db import models
+from django.db.models import F, OuterRef, QuerySet, Subquery, Value
+from django.db.models.functions import Concat, JSONObject
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from django.db import models
-from django.urls import reverse
-from apis_core.relations.models import Relation, RootObject
+
+logger = logging.getLogger(__name__)
 
 
 class TibScholEntityMixin(models.Model):
@@ -124,6 +126,27 @@ class Place(
         return f"{self.label} ({self.pk})"
 
 
+class WorkQuerySet(QuerySet):
+    def with_author(self):
+        return self.annotate(
+            # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
+            author_id=Subquery(
+                PersonAuthorOfWork.objects.filter(obj_id=OuterRef("id")).values(
+                    "subj_id"
+                )[:1]
+            ),
+            # Subquery to get the Person's name based on the person_id from above
+            author_name=Subquery(
+                Person.objects.filter(id=OuterRef("author_id")).values("name")[:1]
+            ),
+        )
+
+
+class WorkManager(models.Manager):
+    def get_queryset(self):
+        return WorkQuerySet(self.model, using=self._db).with_author()
+
+
 class Work(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
@@ -163,14 +186,14 @@ class Work(
         default=True, verbose_name="Is extant", null=True, blank=True
     )
 
-    @cached_property
-    def author(self):
-        try:
-            author = PersonAuthorOfWork.objects.filter(obj=self)
-            return Person.objects.get(pk=author[0].subj.pk)
-        except Exception as e:
-            print(e)
-            return
+    # @cached_property
+    # def author(self):
+    #     try:
+    #         author = PersonAuthorOfWork.objects.filter(obj=self)
+    #         return Person.objects.get(pk=author[0].subj.pk)
+    #     except Exception as e:
+    #         print(e)
+    #         return
 
     class Meta:
         verbose_name = _("work")
@@ -178,6 +201,34 @@ class Work(
 
     def __str__(self):
         return f"{self.name} ({self.pk})"
+
+    objects = WorkManager()
+
+
+class InstanceQuerySet(QuerySet):
+    def with_author(self):
+        return self.annotate(
+            # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
+            work_id=Subquery(
+                WorkHasAsAnInstanceInstance.objects.filter(
+                    obj_id=OuterRef("id")
+                ).values("subj_id")[:1]
+            ),
+            author_id=Subquery(
+                PersonAuthorOfWork.objects.filter(obj_id=OuterRef("work_id")).values(
+                    "subj_id"
+                )[:1]
+            ),
+            # Subquery to get the Person's name based on the person_id from above
+            author_name=Subquery(
+                Person.objects.filter(id=OuterRef("author_id")).values("name")[:1]
+            ),
+        )
+
+
+class InstanceManager(models.Manager):
+    def get_queryset(self):
+        return InstanceQuerySet(self.model, using=self._db).with_author()
 
 
 class Instance(
@@ -256,29 +307,14 @@ class Instance(
         blank=True, null=True, verbose_name="Item description"
     )
 
-    @cached_property
-    def work(self):
-        try:
-            work_has_as_instance = WorkHasAsAnInstanceInstance.objects.filter(obj=self)
-            return work_has_as_instance[0].subj
-        except Exception as e:
-            print("Error while fetching work associated with instance:", e)
-            return
-
-    @cached_property
-    def author(self):
-        try:
-            return Work.objects.get(id=self.work.id).author
-        except Exception as e:
-            print("Error while getting author info for instance", e)
-            return
-
     class Meta:
         verbose_name = _("instance")
         verbose_name_plural = _("Instances")
 
     def __str__(self):
         return f"{self.name} ({self.pk})"
+
+    objects = InstanceManager()
 
 
 class ZoteroEntry(GenericModel, models.Model):

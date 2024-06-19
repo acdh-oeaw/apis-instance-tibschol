@@ -5,6 +5,10 @@
 {% load apiscore %}
 {% load tibschol_entity_ctypes %}
 
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="/static/styles/tibschol.css">
+{% endblock styles%}
 
 {% block title %}TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.){% endblock %}
 
@@ -59,3 +63,8 @@
         {% endif %}
     </ul>
 {% endblock userlogin-menu %}
+
+{% block modal %}
+    {{  block.super }}
+    {% include "excerpts/popup.html" %}
+{% endblock modal %}

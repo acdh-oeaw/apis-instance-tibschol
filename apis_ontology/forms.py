@@ -1,5 +1,7 @@
+from apis_core.relations.models import Relation
 from django import forms
 from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
+from django.forms.models import ModelChoiceField
 
 
 class TibscholEntityForm(GenericModelForm):
@@ -10,6 +12,28 @@ class TibscholEntityForm(GenericModelForm):
                 attrs={"placeholder": "Do not use this field, it will be dropped soon."}
             ),
         }
+
+
+class TibScholRelationMixinForm(GenericModelForm):
+    class Meta:
+        exclude = []
+        model = Relation
+
+    field_order = ["subj", "obj"]
+
+    def __init__(
+        self,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+        self.fields["subj"] = ModelChoiceField(
+            queryset=self._meta.model.subj_model.objects.all().order_by("id")
+        )
+        self.fields["obj"] = ModelChoiceField(
+            queryset=self._meta.model.obj_model.objects.all().order_by("id")
+        )
 
 
 class PlaceForm(TibscholEntityForm):

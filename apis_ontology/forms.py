@@ -12,6 +12,13 @@ class TibscholEntityForm(GenericModelForm):
         }
 
 
+class TibScholRelationMixinForm(GenericModelForm):
+    class Meta:
+        exclude = []
+
+    field_order = ["subj", "obj"]
+
+
 class PlaceForm(TibscholEntityForm):
     field_order = [
         "label",

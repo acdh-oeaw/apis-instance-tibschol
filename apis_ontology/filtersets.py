@@ -1,14 +1,21 @@
-from apis_core.apis_entities.models import RootObject
-from apis_core.relations.models import Relation
-from django.apps import apps
 import django_filters
 from apis_core.apis_entities.filtersets import (
     ABSTRACT_ENTITY_FILTERS_EXCLUDE,
     AbstractEntityFilterSet,
 )
+from apis_core.apis_entities.models import RootObject
+from apis_core.generic.filtersets import GenericFilterSet
+from apis_core.relations.models import Relation
+from django.apps import apps
 from django.db import models
 
-from apis_ontology.forms import PersonSearchForm, PlaceSearchForm, WorkSearchForm
+from apis_ontology.forms import (
+    PersonSearchForm,
+    PlaceSearchForm,
+    TibScholRelationMixinForm,
+    TibScholRelationMixinSearchForm,
+    WorkSearchForm,
+)
 from apis_ontology.models import Instance, Person, Place, Work
 from apis_ontology.utils import get_relevant_relations
 
@@ -86,9 +93,28 @@ class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
         }
 
 
+class TibScholRelationMixinFilterSet(GenericFilterSet):
+    class Meta(GenericFilterSet.Meta):
+        form = TibScholRelationMixinSearchForm
+        exclude = ABSTRACT_ENTITY_FILTERS_EXCLUDE
+        filter_overrides = {
+            models.CharField: {
+                "filter_class": django_filters.CharFilter,
+                "extra": lambda f: {
+                    "lookup_expr": "icontains",
+                },
+            },
+            models.TextField: {
+                "filter_class": django_filters.CharFilter,
+                "extra": lambda f: {
+                    "lookup_expr": "icontains",
+                },
+            },
+        }
+
+
 class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
     class Meta(AbstractEntityFilterSet.Meta):
-        exclude = ABSTRACT_ENTITY_FILTERS_EXCLUDE
         filter_overrides = {
             models.CharField: {
                 "filter_class": django_filters.CharFilter,

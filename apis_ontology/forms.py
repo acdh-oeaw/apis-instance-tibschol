@@ -2,6 +2,7 @@ from apis_core.relations.models import Relation
 from django import forms
 from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
 from django.forms.models import ModelChoiceField
+from django.apps import apps
 
 
 class TibscholEntityForm(GenericModelForm):
@@ -166,3 +167,28 @@ class InstanceSearchForm(GenericFilterSetForm):
         "comments",
         "external_links",
     ]
+
+
+class TibScholRelationMixinSearchForm(GenericFilterSetForm):
+    field_order = ["columns", "subj", "obj"]
+
+    def __init__(
+        self,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+        model = apps.get_model(
+            "apis_ontology", self.__class__.__name__[: -len("FilterSetForm")]
+        )
+
+        self.fields["subj"] = ModelChoiceField(
+            queryset=model.subj_model.objects.all().order_by("id"),
+            required=False,
+            widget=forms.Select(attrs={"class": "form-control"}),
+        )
+        self.fields["obj"] = ModelChoiceField(
+            queryset=model.obj_model.objects.all().order_by("id"),
+            required=False,
+            widget=forms.Select(attrs={"class": "form-control"}),
+        )

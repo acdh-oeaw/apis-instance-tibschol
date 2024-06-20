@@ -215,21 +215,27 @@ class RelationsTable(TibScholRelationMixinTable):
         self.transform = etree.XSLT(xslt)
 
     def render_name(self, record):
-        if self.context["object"].pk == record.subj.pk:
-            return record.name
-        elif self.context["object"].pk == record.obj.pk:
-            return record.reverse_name
-        else:
-            return ""
+        rel_name = record.name
+        try:
+            if self.context["object"].pk == record.obj.pk:
+                rel_name = record.reverse_name
+        except Exception as e:
+            logger.error("Bad relation %s\Error: %s", record, repr(e))
+
+        return rel_name
 
     def render_obj(self, record):
         # return str(record) + str(self.context["object"].pk)
-        if self.context["object"].pk == record.obj.pk:
-            # return str(RootObject.objects_inheritance.get_subclass(pk=record.subj.pk))
-            actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.subj.pk)
+        actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)
 
-        else:
-            actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)
+        try:
+            if self.context["object"].pk == record.obj.pk:
+                # return str(RootObject.objects_inheritance.get_subclass(pk=record.subj.pk))
+                actual_obj = RootObject.objects_inheritance.get_subclass(
+                    pk=record.subj.pk
+                )
+        except Exception as e:
+            logger.error("Bad relation %s\Error: %s", record, repr(e))
 
         return mark_safe(
             "<a href='"
@@ -280,3 +286,26 @@ class RelationsTableView(RelationsTable):
             "tei_refs",
         ]
         exclude = ["view", "edit", "desc", "delete", "subj"]
+
+
+class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = [
+            "subj",
+            "obj",
+            "commentary_author",
+            "edit",
+            "delete",
+        ]
+
+    subj = tables.Column()
+    obj = tables.Column()
+    commentary_author = tables.Column(
+        verbose_name="Author (obj)", orderable=True, accessor="obj"
+    )
+
+    def render_commentary_author(self, value):
+        obj_work = Work.objects.get(pk=value.pk)
+        if obj_work.author_id:
+            return f"{obj_work.author_name} ({obj_work.author_id})"
+        return ""

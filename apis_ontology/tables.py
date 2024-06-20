@@ -126,29 +126,15 @@ class InstanceTable(TibscholEntityMixinTable):
         )
 
 
-class RelationsTable(GenericTable):
-    reverse = False
-
-    name = tables.Column(verbose_name="Relationship", orderable=False)
-    obj = tables.Column(verbose_name="Object", orderable=False)
-    support_notes = tables.Column(orderable=False)
-    zotero_refs = tables.Column(verbose_name="Zotero", orderable=False)
-    tei_refs = tables.Column(verbose_name="Excerpts", orderable=False)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Define the obj attribute based on the value of self.reverse
-        xslt_file = "apis_ontology/xslt/teibp.xsl"
-        xslt = etree.parse(xslt_file)
-        self.transform = etree.XSLT(xslt)
-
-    def render_name(self, record):
-        if self.context["object"].pk == record.subj.pk:
-            return record.name
-        elif self.context["object"].pk == record.obj.pk:
-            return record.reverse_name
-        else:
-            return ""
+class TibScholRelationMixinTable(GenericTable):
+    class Meta(GenericTable.Meta):
+        fields = [
+            "subj",
+            "obj",
+            "edit",
+            "delete",
+        ]
+        exclude = ["view", "desc"]
 
     def render_support_notes(self, record):
         notes = parse_comment(render_list_field(record.support_notes))
@@ -177,6 +163,65 @@ class RelationsTable(GenericTable):
         }
         return mark_safe(render_to_string("apis_ontology/preview_column.html", context))
 
+    def render_tei_refs(self, value):
+        delim = "\n" if "\n" in value else "," if "," in value else " "
+        xml_ids = value.split(delim)
+        links = []
+        for xml_id in xml_ids:
+            true_id = xml_id.replace('"', "").replace("xml:id=", "").strip()
+            links.append(
+                f"""<a href="#" onclick="showPopup('{true_id}'); return false;">{true_id}</a>"""
+            )
+
+        return mark_safe("<br />".join(links))
+
+    def render_obj(self, record):
+        actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)
+
+        return mark_safe(
+            "<a href='"
+            + actual_obj.get_absolute_url()
+            + "' target='_BLANK'>"
+            + str(actual_obj)
+            + "</a>"
+        )
+
+    def render_subj(self, record):
+        actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.subj.pk)
+
+        return mark_safe(
+            "<a href='"
+            + actual_obj.get_absolute_url()
+            + "' target='_BLANK'>"
+            + str(actual_obj)
+            + "</a>"
+        )
+
+
+class RelationsTable(TibScholRelationMixinTable):
+    reverse = False
+
+    name = tables.Column(verbose_name="Relationship", orderable=False)
+    obj = tables.Column(verbose_name="Object", orderable=False)
+    support_notes = tables.Column(orderable=False)
+    zotero_refs = tables.Column(verbose_name="Zotero", orderable=False)
+    tei_refs = tables.Column(verbose_name="Excerpts", orderable=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Define the obj attribute based on the value of self.reverse
+        xslt_file = "apis_ontology/xslt/teibp.xsl"
+        xslt = etree.parse(xslt_file)
+        self.transform = etree.XSLT(xslt)
+
+    def render_name(self, record):
+        if self.context["object"].pk == record.subj.pk:
+            return record.name
+        elif self.context["object"].pk == record.obj.pk:
+            return record.reverse_name
+        else:
+            return ""
+
     def render_obj(self, record):
         # return str(record) + str(self.context["object"].pk)
         if self.context["object"].pk == record.obj.pk:
@@ -193,18 +238,6 @@ class RelationsTable(GenericTable):
             + str(actual_obj)
             + "</a>"
         )
-
-    def render_tei_refs(self, value):
-        delim = "\n" if "\n" in value else "," if "," in value else " "
-        xml_ids = value.split(delim)
-        links = []
-        for xml_id in xml_ids:
-            true_id = xml_id.replace('"', "").replace("xml:id=", "").strip()
-            links.append(
-                f"""<a href="#" onclick="showPopup('{true_id}'); return false;">{true_id}</a>"""
-            )
-
-        return mark_safe("<br />".join(links))
 
 
 class RelationsTableEdit(RelationsTable):

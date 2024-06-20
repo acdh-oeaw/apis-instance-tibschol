@@ -5,6 +5,10 @@
 {% load apiscore %}
 {% load tibschol_entity_ctypes %}
 
+{% block styles %}
+{{ block.super }}
+<link rel="stylesheet" href="/static/styles/tibschol.css">
+{% endblock styles%}
 
 {% block title %}TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.){% endblock %}
 
@@ -16,7 +20,6 @@
             <span class="caret" />
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-
             {% block entities-menu-items %}
                 {% tibschol_entity_types as entities %}
                 {% for content_type in entities %}
@@ -27,35 +30,31 @@
 
         </div>
     </li>
+    <li class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+            id="relationsDropdown"
+           aria-expanded="false">
+            Relations
+            <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="relationsDropdown">
+            {% tibschol_relation_types as relations %}
+            {% for rel_grp, rels in relations.items %}
+                <li>
+                    <a class="dropdown-item" href="#">{{ rel_grp }} &raquo;</a>
+                    <ul class="dropdown-menu dropdown-submenu">
+                        {% for rel in rels %}
+                            <li><a class="dropdown-item" href="{% url 'apis:generic:list' rel %}">{{rel.name}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </li>
 {% endblock main-menu %}
 
-{% block userlogin-menu %}
-    <ul class="navbar-nav">
-        {% if user.is_authenticated %}
-            <li class="nav-item dropdown ml-auto">
-                <a href="" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                   aria-expanded="false">User: {{ user.get_username }}</a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <div class="dropdown-item">
-                        <a class="nav-link p-0" href="{% url 'apis:logout' %}?next=/">
-                            <span class="material-symbols-outlined">logout</span>
-                            Logout
-                        </a>
-                    </div>
-                    <div class="dropdown-item">
-                        <a class="nav-link p-0" href="{% url "django_action_logger:log" %}">
-                            <span class="material-symbols-outlined">web_stories</span>
-                            Log
-                        </a>
-                    </div>
-                </div>
-            </li>
-        {% else %}
-            <li class="nav-item dropdown ml-auto">
-                <a class="nav-link p-0" href="{% url 'apis:login' %}?next={{ request.path|urlencode }}">
-                    <span class="material-symbols-outlined">login</span>
-                </a>
-            </li>
-        {% endif %}
-    </ul>
-{% endblock userlogin-menu %}
+
+{% block modal %}
+    {{  block.super }}
+    {% include "excerpts/popup.html" %}
+{% endblock modal %}

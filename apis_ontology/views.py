@@ -6,7 +6,6 @@ from .models import Excerpts
 
 class ExcerptsView(View):
     def get(self, request, xml_id, render_style, *args, **kwargs):
-        print("You are here!")
         record = get_object_or_404(Excerpts, xml_id=xml_id)
 
         # Generate dynamic content based on link_type

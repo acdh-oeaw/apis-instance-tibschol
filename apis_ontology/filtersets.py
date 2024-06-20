@@ -9,7 +9,13 @@ from apis_core.relations.models import Relation
 from django.apps import apps
 from django.db import models
 
-from apis_ontology.forms import PersonSearchForm, PlaceSearchForm, WorkSearchForm
+from apis_ontology.forms import (
+    PersonSearchForm,
+    PlaceSearchForm,
+    TibScholRelationMixinForm,
+    TibScholRelationMixinSearchForm,
+    WorkSearchForm,
+)
 from apis_ontology.models import Instance, Person, Place, Work
 from apis_ontology.utils import get_relevant_relations
 
@@ -89,6 +95,7 @@ class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
 
 class TibScholRelationMixinFilterSet(GenericFilterSet):
     class Meta(GenericFilterSet.Meta):
+        form = TibScholRelationMixinSearchForm
         exclude = ABSTRACT_ENTITY_FILTERS_EXCLUDE
         filter_overrides = {
             models.CharField: {

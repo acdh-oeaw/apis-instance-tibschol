@@ -309,3 +309,24 @@ class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
         if obj_work.author_id:
             return f"{obj_work.author_name} ({obj_work.author_id})"
         return ""
+
+
+class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = [
+            "subj",
+            "obj",
+            "work_author",
+            "edit",
+            "delete",
+        ]
+
+    subj = tables.Column(verbose_name="Work")
+    work_author = tables.Column(verbose_name="Author", orderable=False, accessor="subj")
+    obj = tables.Column(verbose_name="Place")
+
+    def render_work_author(self, value):
+        work = Work.objects.get(pk=value.pk)
+        if work.author_id:
+            return f"{work.author_name} ({work.author_id})"
+        return ""

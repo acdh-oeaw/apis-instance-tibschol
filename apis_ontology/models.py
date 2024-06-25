@@ -1,5 +1,4 @@
 import logging
-from functools import cached_property
 
 from apis_core.apis_entities.abc import E53_Place
 from apis_core.apis_entities.models import AbstractEntity
@@ -10,8 +9,7 @@ from apis_core.relations.models import Relation, RootObject
 from apis_core.utils.helpers import create_object_from_uri
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models import F, OuterRef, QuerySet, Subquery, Value
-from django.db.models.functions import Concat, JSONObject
+from django.db.models import OuterRef, QuerySet, Subquery
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -185,15 +183,6 @@ class Work(
     isExtant = models.BooleanField(
         default=True, verbose_name="Is extant", null=True, blank=True
     )
-
-    # @cached_property
-    # def author(self):
-    #     try:
-    #         author = PersonAuthorOfWork.objects.filter(obj=self)
-    #         return Person.objects.get(pk=author[0].subj.pk)
-    #     except Exception as e:
-    #         print(e)
-    #         return
 
     class Meta:
         verbose_name = _("work")

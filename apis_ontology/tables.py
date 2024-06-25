@@ -330,3 +330,28 @@ class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
         if work.author_id:
             return f"{work.author_name} ({work.author_id})"
         return ""
+
+
+class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = [
+            "subj",
+            "obj",
+            "author_dates",
+            "edit",
+            "delete",
+        ]
+
+    subj = tables.Column(verbose_name="Person")
+    author_dates = tables.Column(
+        verbose_name="Lifespan", orderable=False, accessor="subj"
+    )
+    obj = tables.Column(verbose_name="Place")
+
+    def render_author_dates(self, value):
+        author = Person.objects.get(pk=value.pk)
+        return (
+            (author.start_date_written if author.start_date_written else "")
+            + " - "
+            + (author.end_date_written if author.end_date_written else "")
+        )

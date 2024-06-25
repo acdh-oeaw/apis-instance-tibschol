@@ -301,7 +301,7 @@ class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
     subj = tables.Column()
     obj = tables.Column()
     commentary_author = tables.Column(
-        verbose_name="Author (obj)", orderable=True, accessor="obj"
+        verbose_name="Author (obj)", orderable=False, accessor="obj"
     )
 
     def render_commentary_author(self, value):

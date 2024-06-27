@@ -1,3 +1,7 @@
+
+body {
+      text-rendering: geometricPrecision;
+}
 .show-more:checked + .content .more-content {
     display: inline;
 }

@@ -164,16 +164,25 @@ class TibScholRelationMixinTable(GenericTable):
         return mark_safe(render_to_string("apis_ontology/preview_column.html", context))
 
     def render_tei_refs(self, value):
-        delim = "\n" if "\n" in value else "," if "," in value else " "
-        xml_ids = value.split(delim)
-        links = []
-        for xml_id in xml_ids:
+        def linkify_excerpt_id(xml_id):
             true_id = xml_id.replace('"', "").replace("xml:id=", "").strip()
-            links.append(
-                f"""<a href="#" onclick="showPopup('{true_id}'); return false;">{true_id}</a>"""
-            )
+            return f"""<a href="#" onclick="showPopup('{true_id}'); return false;">
+            {true_id}
+            </a>"""
 
-        return mark_safe("<br />".join(links))
+        lines = value.split("\n")
+        linked_lines = []
+        for l in lines:
+            words = l.split()
+            linked_words = []
+            for w in words:
+                if w.startswith("xml:id=") or (w.startswith("ex") and "-" in w):
+                    linked_words.append(linkify_excerpt_id(w))
+                else:
+                    linked_words.append(w)
+            linked_lines.append(" ".join(linked_words))
+
+        return mark_safe("<br />".join(linked_lines))
 
     def render_obj(self, record):
         actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)

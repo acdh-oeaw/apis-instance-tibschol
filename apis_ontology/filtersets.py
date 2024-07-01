@@ -166,7 +166,7 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
             },
         }
 
-    label = django_filters.CharFilter(method="custom_name_search")
+    label = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
     related_property = django_filters.ChoiceFilter(
         choices=get_relevant_relations(Place),
         label="Related Property",
@@ -206,7 +206,7 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
             },
         }
 
-    name = django_filters.CharFilter(method="custom_name_search")
+    name = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
     related_property = django_filters.ChoiceFilter(
         choices=get_relevant_relations(Person),
         label="Related Property",

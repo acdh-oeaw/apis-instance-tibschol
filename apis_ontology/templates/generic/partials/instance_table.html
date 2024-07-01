@@ -33,48 +33,33 @@
         <td>{{object.availability}}</td>
     </tr>
     {% endif %}
-
-    {% if object.tibschol_ref %}
     <tr>
-        <th>Tibschol reference</th>
-        <td>{{object.tibschol_ref}}</td>
+        <th>Citation</th>
+        <td>
+            {% if object.set_num %}
+            {{ object|cite }}<br />
+            {% endif %}
+            {{ object.zotero_ref | render_zotero_links | safe}}
+        </td>
+    </tr>
+    {% if object.external_links %}
+    <tr>
+        <th>External links</th>
+        <td>{{ object.external_links | render_links | safe }}</td>
     </tr>
     {% endif %}
-
-    {% if object.set_num %}
+    {% if object.comments %}
     <tr>
-        <th>Set</th>
-        <td>{{ object.set_num }}</td>
+        <th>Comments</th>
+        <td>{{ object.comments | parse_comment }}</td>
     </tr>
     {% endif %}
-
-    {% if object.volume %}
-    <tr>
-        <th>Volume</th>
-        <td>{{ object.volume }}</td>
-    </tr>
-    {% endif %}
-
-    {% if object.sb_text_number %}
-    <tr>
-        <th>Number ascribed to item by Tibschol</th>
-        <td>{{ object.sb_text_number }}</td>
-    </tr>
-    {% endif %}
-    {% if object.pp_kdsb %}
-    <tr>
-        <th>Page numbers in print</th>
-        <td>{{ object.pp_kdsb }}</td>
-    </tr>
-    {% endif %}
-
     {% if object.num_folios %}
     <tr>
         <th>Number of folios</th>
         <td>{{ object.num_folios }}</td>
     </tr>
     {% endif %}
-
     {% if object.signature_letter %}
     <tr>
         <th>Signature letter (category)</th>
@@ -88,7 +73,6 @@
         <td>{{ object.signature_number }}</td>
     </tr>
     {% endif %}
-
     {% if object.drepung_number %}
     <tr>
         <th>Drepung catalogue number</th>
@@ -96,10 +80,10 @@
     </tr>
     {% endif %}
 
-    {% if object.provenance %}
+    {% if object.tibschol_ref %}
     <tr>
-        <th>Provenance</th>
-        <td>{{ object.provenance }}</td>
+        <th>Tibschol reference</th>
+        <td>{{object.tibschol_ref}}</td>
     </tr>
     {% endif %}
     {% if object.item_description %}
@@ -108,25 +92,10 @@
         <td>{{ object.item_description | render_list_field }}</td>
     </tr>
     {% endif %}
+    {% if object.provenance %}
     <tr>
-        <th>Citation</th>
-        <td>
-            {% if object.set_num %}
-            {{ object|cite }}<br/>
-            {% endif %}
-            {{ object.zotero_ref | render_zotero_links | safe}}
-        </td>
-    </tr>
-    {% if object.comments %}
-    <tr>
-        <th>Comments</th>
-        <td>{{ object.comments | parse_comment }}</td>
-    </tr>
-    {% endif %}
-    {% if object.external_links %}
-    <tr>
-        <th>External links</th>
-        <td>{{ object.external_links | render_links | safe }}</td>
+        <th>Provenance</th>
+        <td>{{ object.provenance }}</td>
     </tr>
     {% endif %}
 </table>

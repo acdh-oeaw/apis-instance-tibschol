@@ -17,6 +17,17 @@ from django.utils.translation import gettext_lazy as _
 logger = logging.getLogger(__name__)
 
 
+class Subject(GenericModel, models.Model):
+    name = models.CharField(max_length=255, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("Subject")
+        verbose_name_plural = _("Subjects")
+
+
 class TibScholEntityMixin(models.Model):
     class Meta:
         abstract = True
@@ -167,12 +178,10 @@ class Work(
         ("Other", "Other"),
     ]
     subject = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="subject",
+        max_length=255, blank=True, null=True, verbose_name="subject", editable=False
     )  # should be a controlled vocabulary field
 
+    subject_vocab = models.ManyToManyField(Subject, verbose_name="Subject", blank=True)
     name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
     sde_dge_ref = models.CharField(
         max_length=25, blank=True, null=True, verbose_name="Derge reference"

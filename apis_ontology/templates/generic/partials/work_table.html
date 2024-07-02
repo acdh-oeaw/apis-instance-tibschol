@@ -19,10 +19,16 @@
             <td>{{ object.original_language }}</td>
         </tr>
     {% endif %}
-    {% if object.subject %}
+    {% if object.subject_vocab.exists %}
         <tr>
             <th>Subject</th>
-            <td>{{ object.subject }}</td>
+            <td>
+                <ul>
+                    {% for sub in object.subject_vocab.all %}
+                        <li>{{ sub.name }}</li>
+                    {% endfor %}
+                </ul>
+            </td>
         </tr>
     {% endif %}
 

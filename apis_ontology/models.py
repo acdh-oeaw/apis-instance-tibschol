@@ -500,7 +500,11 @@ class PersonDirectPredecessorInLineageOfPerson(TibScholRelationMixin):
             blank=True,
             null=True,
             verbose_name="subject of teaching",
+            editable=False,
         )
+    )
+    subject_of_teaching_vocab = models.ManyToManyField(
+        Subject, verbose_name="Subject of teaching", blank=True
     )
 
 
@@ -517,7 +521,11 @@ class PersonDiscipleOfPerson(TibScholRelationMixin):
             blank=True,
             null=True,
             verbose_name="subject of teaching",
+            editable=False,
         )
+    )
+    subject_of_teaching_vocab = models.ManyToManyField(
+        Subject, verbose_name="Subject of teaching", blank=True
     )
 
 
@@ -714,7 +722,11 @@ class PersonRefersWithNameToTheViewsOfPerson(TibScholRelationMixin):
             blank=True,
             null=True,
             verbose_name="subject of teaching",
+            editable=False,
         )
+    )
+    subject_of_teaching_vocab = models.ManyToManyField(
+        Subject, verbose_name="Subject of teaching", blank=True
     )
 
 
@@ -731,7 +743,11 @@ class PersonRefersWithoutNameToTheViewsOfPerson(TibScholRelationMixin):
             blank=True,
             null=True,
             verbose_name="subject of teaching",
+            editable=False,
         )
+    )
+    subject_of_teaching_vocab = models.ManyToManyField(
+        Subject, verbose_name="Subject of teaching", blank=True
     )
 
 
@@ -749,6 +765,9 @@ class PersonRequestorOfPerson(TibScholRelationMixin):
             null=True,
             verbose_name="subject of teaching",
         )
+    )
+    subject_of_teaching_vocab = models.ManyToManyField(
+        Subject, verbose_name="Subject of teaching", blank=True
     )
 
 
@@ -801,6 +820,7 @@ class PersonStudentOfPerson(TibScholRelationMixin):
             blank=True,
             null=True,
             verbose_name="subject of teaching",
+            editable=False,
         )
     )
 

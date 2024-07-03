@@ -177,9 +177,6 @@ class Work(
         ("Tangut", "Tangut"),
         ("Other", "Other"),
     ]
-    subject = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="subject", editable=False
-    )  # should be a controlled vocabulary field
 
     subject_vocab = models.ManyToManyField(Subject, verbose_name="Subject", blank=True)
     name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
@@ -494,15 +491,6 @@ class PersonDirectPredecessorInLineageOfPerson(TibScholRelationMixin):
     reverse_name = "direct successor (in lineage) of"
     temptriple_name = "direct predecessor (in lineage) of"
     temptriple_name_reverse = "direct successor (in lineage) of"
-    subject_of_teaching = (
-        models.CharField(  # TODO: Controlled vocabulary with Work.Subject
-            max_length=255,
-            blank=True,
-            null=True,
-            verbose_name="subject of teaching",
-            editable=False,
-        )
-    )
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -515,15 +503,6 @@ class PersonDiscipleOfPerson(TibScholRelationMixin):
     reverse_name = "spiritual teacher of"
     temptriple_name = "disciple of"
     temptriple_name_reverse = "spiritual teacher of"
-    subject_of_teaching = (
-        models.CharField(  # TODO: Controlled vocabulary with Work.Subject
-            max_length=255,
-            blank=True,
-            null=True,
-            verbose_name="subject of teaching",
-            editable=False,
-        )
-    )
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -716,15 +695,6 @@ class PersonRefersWithNameToTheViewsOfPerson(TibScholRelationMixin):
     reverse_name = "has views referred to (with name) by"
     temptriple_name = "refers (with name) to the views of"
     temptriple_name_reverse = "has views referred to (with name) by"
-    subject_of_teaching = (
-        models.CharField(  # TODO: Controlled vocabulary with Work.Subject
-            max_length=255,
-            blank=True,
-            null=True,
-            verbose_name="subject of teaching",
-            editable=False,
-        )
-    )
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -737,15 +707,6 @@ class PersonRefersWithoutNameToTheViewsOfPerson(TibScholRelationMixin):
     reverse_name = "has views referred to (without name) by"
     temptriple_name = "refers (without name) to the views of"
     temptriple_name_reverse = "has views referred to (without name) by"
-    subject_of_teaching = (
-        models.CharField(  # TODO: Controlled vocabulary with Work.Subject
-            max_length=255,
-            blank=True,
-            null=True,
-            verbose_name="subject of teaching",
-            editable=False,
-        )
-    )
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -758,14 +719,6 @@ class PersonRequestorOfPerson(TibScholRelationMixin):
     reverse_name = "requested by"
     temptriple_name = "requestor of"
     temptriple_name_reverse = "requested by"
-    subject_of_teaching = (
-        models.CharField(  # TODO: Controlled vocabulary with Work.Subject
-            max_length=255,
-            blank=True,
-            null=True,
-            verbose_name="subject of teaching",
-        )
-    )
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -814,15 +767,6 @@ class PersonStudentOfPerson(TibScholRelationMixin):
     reverse_name = "teacher of"
     temptriple_name = "student of"
     temptriple_name_reverse = "teacher of"
-    subject_of_teaching = (
-        models.CharField(  # TODO: Controlled vocabulary with Work.Subject
-            max_length=255,
-            blank=True,
-            null=True,
-            verbose_name="subject of teaching",
-            editable=False,
-        )
-    )
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )

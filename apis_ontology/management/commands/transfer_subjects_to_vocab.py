@@ -1,9 +1,9 @@
 from django.core.management.base import BaseCommand
 
 from apis_ontology.models import Subject, Work
-from apis_core.relations.models import Relation
 import re
 from tqdm.auto import tqdm
+from django.apps import apps
 
 DELIMITERS = [",", ";", "+", "/"]
 PATTERN = "|".join(map(re.escape, DELIMITERS))
@@ -27,15 +27,25 @@ class Command(BaseCommand):
                     w.subject_vocab.add(new_sub)
 
         rels_updated = 0
-        for rel in tqdm(Relation.objects.all()):
-            if hasattr(rel, "subject_of_teaching"):
-                if rel.subject_of_teaching:
-                    subject_list = split_subjects(rel.subject_of_teaching)
-                    for si in subject_list:
-                        new_sub, _ = Subject.objects.get_or_create(name=si)
-                        rel.skip_history_when_saving = True
-                        rel.subject_vocab.add(new_sub)
-                        rels_updated += 1
+        relation_models = [
+            "PersonDirectPredecessorInLineageOfPerson",
+            "PersonDiscipleOfPerson",
+            "PersonRefersWithNameToTheViewsOfPerson",
+            "PersonRefersWithoutNameToTheViewsOfPerson",
+            "PersonRequestorOfPerson",
+            "PersonStudentOfPerson",
+        ]
+        for rel_model in relation_models:
+            model_class = apps.get_model("apis_ontology", rel_model)
+            for rel in model_class.objects.all():
+                if hasattr(rel, "subject_of_teaching"):
+                    if rel.subject_of_teaching:
+                        subject_list = split_subjects(rel.subject_of_teaching)
+                        for si in subject_list:
+                            new_sub, _ = Subject.objects.get_or_create(name=si)
+                            rel.skip_history_when_saving = True
+                            rel.subject_of_teaching_vocab.add(new_sub)
+                            rels_updated += 1
 
         self.stdout.write(
             self.style.SUCCESS(

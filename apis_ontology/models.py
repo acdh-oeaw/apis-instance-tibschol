@@ -823,6 +823,9 @@ class PersonStudentOfPerson(TibScholRelationMixin):
             editable=False,
         )
     )
+    subject_of_teaching_vocab = models.ManyToManyField(
+        Subject, verbose_name="Subject of teaching", blank=True
+    )
 
 
 class PersonStudiedWork(TibScholRelationMixin):

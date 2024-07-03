@@ -392,6 +392,9 @@ class PersonActiveAtPlace(TibScholRelationMixin):
     reverse_name = "place of activity of"
     temptriple_name = "active at"
     temptriple_name_reverse = "place of activity of"
+    subject_of_teaching_vocab = models.ManyToManyField(
+        Subject, verbose_name="Subject of teaching", blank=True
+    )
 
 
 class PersonAddresseeOfWork(TibScholRelationMixin):

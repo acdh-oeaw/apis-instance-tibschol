@@ -13,6 +13,7 @@ from django.db import models
 from django.db.models import OuterRef, QuerySet, Subquery
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from apis_core.collections.models import SkosCollection, SkosCollectionContentObject
 
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,14 @@ class TibScholEntityMixin(models.Model):
         blank=True, null=True, verbose_name="External links"
     )
 
+    def tibschol_collections(self):
+        parent = SkosCollection.objects.get(name="tibschol")
+        content_type = ContentType.objects.get_for_model(self)
+        sccos = SkosCollectionContentObject.objects.filter(
+            collection__parent=parent, content_type=content_type, object_id=self.pk
+        ).values_list("collection")
+        return SkosCollection.objects.filter(id__in=sccos)
+
 
 class LegacyStuffMixin(models.Model):
     class Meta:
@@ -53,7 +62,6 @@ class LegacyStuffMixin(models.Model):
         "standards.",
     )
     notes = models.TextField(blank=True, null=True, verbose_name="Notes")
-    # published = models.BooleanField(default=False)
     published = None
 
     @classmethod

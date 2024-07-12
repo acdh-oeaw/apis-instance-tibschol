@@ -568,7 +568,7 @@ class PersonIllustratorOfInstance(TibScholRelationMixin):
 class InstanceIsCopiedFromInstance(TibScholRelationMixin):
     subj_model = Instance
     obj_model = Instance
-    name = "is copied from"
+    name = "has as its source"
     reverse_name = "is source for"
     temptriple_name = "is copied from"
     temptriple_name_reverse = "is source for"

@@ -1,12 +1,15 @@
-from django.utils.html import escape
+import logging
 
 import django_tables2 as tables
 from apis_core.apis_entities.tables import AbstractEntityTable
+from apis_core.apis_metainfo.models import RootObject
 from apis_core.generic.tables import GenericTable
-from django_tables2.utils import A
 from django.template.loader import render_to_string
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
+from lxml import etree
 
-from .models import Excerpts, Instance, Person, Place, TibScholRelationMixin, Work
+from .models import Instance, Person, Place, TibScholRelationMixin, Work
 from .templatetags.filter_utils import (
     preview_text,
     render_coordinate,
@@ -14,15 +17,6 @@ from .templatetags.filter_utils import (
     render_list_field,
 )
 from .templatetags.parse_comment import parse_comment
-
-import django_tables2 as tables
-import logging
-from apis_core.apis_metainfo.models import RootObject
-
-from django.utils.safestring import mark_safe
-from django.urls import reverse
-
-from lxml import etree
 
 logger = logging.getLogger(__name__)
 
@@ -187,10 +181,13 @@ class TibScholRelationMixinTable(GenericTable):
         return mark_safe("<br />".join(linked_lines))
 
     def render_obj(self, record):
+        highlight_style = ""
         actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)
+        if hasattr(actual_obj, "isExtant") and not actual_obj.isExtant:
+            highlight_style = "background-color: lightgray;"
 
         return mark_safe(
-            "<a href='"
+            f"<a style='{highlight_style}' href='"
             + actual_obj.get_absolute_url()
             + "' target='_BLANK'>"
             + str(actual_obj)
@@ -199,9 +196,12 @@ class TibScholRelationMixinTable(GenericTable):
 
     def render_subj(self, record):
         actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.subj.pk)
+        highlight_style = ""
+        if hasattr(actual_obj, "isExtant") and not actual_obj.isExtant:
+            highlight_style = "background-color: lightgray;"
 
         return mark_safe(
-            "<a href='"
+            f"<a style='{highlight_style}' href='"
             + actual_obj.get_absolute_url()
             + "' target='_BLANK'>"
             + str(actual_obj)

@@ -33,6 +33,7 @@
         <td>{{object.availability}}</td>
     </tr>
     {% endif %}
+    {% if object.set_num or object.zotero_ref%}
     <tr>
         <th>Citation</th>
         <td>
@@ -42,6 +43,7 @@
             {{ object.zotero_ref | render_zotero_links | safe}}
         </td>
     </tr>
+    {% endif %}
     {% if object.external_links %}
     <tr>
         <th>External links</th>

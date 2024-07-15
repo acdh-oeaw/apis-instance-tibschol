@@ -573,6 +573,9 @@ class InstanceIsCopiedFromInstance(TibScholRelationMixin):
     temptriple_name = "is copied from"
     temptriple_name_reverse = "is source for"
 
+    class Meta:
+        verbose_name = _("instance has as its source")
+
 
 class PlaceIsLocatedWithinPlace(TibScholRelationMixin):
     subj_model = Place

@@ -181,10 +181,13 @@ class TibScholRelationMixinTable(GenericTable):
         return mark_safe("<br />".join(linked_lines))
 
     def render_obj(self, record):
+        highlight_style = ""
         actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)
+        if hasattr(actual_obj, "isExtant") and not actual_obj.isExtant:
+            highlight_style = "background-color: lightgray;"
 
         return mark_safe(
-            "<a href='"
+            f"<a style='{highlight_style}' href='"
             + actual_obj.get_absolute_url()
             + "' target='_BLANK'>"
             + str(actual_obj)

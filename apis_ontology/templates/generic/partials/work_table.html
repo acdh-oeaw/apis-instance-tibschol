@@ -23,11 +23,9 @@
         <tr>
             <th>Subject</th>
             <td>
-                <ul>
-                    {% for sub in object.subject_vocab.all %}
-                        <li>{{ sub.name }}</li>
-                    {% endfor %}
-                </ul>
+                {% for sub in object.subject_vocab.all %}
+                    {{ sub.name }}<br/>
+                {% endfor %}
             </td>
         </tr>
     {% endif %}

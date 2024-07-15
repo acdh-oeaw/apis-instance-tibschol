@@ -97,7 +97,7 @@
     {% if object.provenance %}
     <tr>
         <th>Provenance</th>
-        <td>{{ object.provenance }}</td>
+        <td>{{ object.provenance | render_list_field}}</td>
     </tr>
     {% endif %}
 </table>

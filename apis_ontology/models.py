@@ -284,9 +284,7 @@ class Instance(
     drepung_number = models.CharField(
         max_length=255, blank=True, null=True, verbose_name="Drepung catalogue number"
     )
-    provenance = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="Provenance"
-    )
+    provenance = models.TextField(blank=True, null=True, verbose_name="Provenance")
     zotero_ref = models.TextField(blank=True, null=True, verbose_name="Zotero")
     tibschol_ref = models.TextField(
         blank=True, null=True, verbose_name="Tibschol reference"

@@ -44,3 +44,8 @@ body {
 .dropdown-menu > li:hover > .dropdown-submenu {
     display: block;
 }
+
+
+textarea.form-control{
+    height: 5em;
+}

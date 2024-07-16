@@ -2,6 +2,9 @@ import os
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.contrib.auth.models import Group
+from django.db.models.signals import pre_delete
+from apis_core.apis_entities.models import RootObject
+from apis_core.relations.models import Relation
 
 
 @receiver(user_logged_in)
@@ -10,3 +13,9 @@ def add_to_group(sender, user, request, **kwargs):
     g1, _ = Group.objects.get_or_create(name="redaktion")
     if user.username in user_list:
         g1.user_set.add(user)
+
+
+@receiver(pre_delete, sender=RootObject)
+def cascade_delete_related(sender, instance, **kwargs):
+    Relation.objects.filter(subj=instance).delete()
+    Relation.objects.filter(obj=instance).delete()

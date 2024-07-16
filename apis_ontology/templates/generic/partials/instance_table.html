@@ -88,6 +88,12 @@
         <td>{{object.tibschol_ref}}</td>
     </tr>
     {% endif %}
+    {% if object.dimension %}
+    <tr>
+        <th>WxH size in cm</th>
+        <td>{{ object.dimension }}</td>
+        </tr>
+    {% endif %}
     {% if object.item_description %}
     <tr>
         <th>Item description</th>

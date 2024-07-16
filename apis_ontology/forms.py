@@ -99,6 +99,7 @@ class InstanceForm(TibscholEntityForm):
         "drepung_number",
         "provenance",
         "zotero_ref",
+        "dimension",
         "item_description",
         "comments",
         "notes",

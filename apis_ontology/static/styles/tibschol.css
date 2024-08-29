@@ -28,6 +28,10 @@ body {
     color: #0056b3;
     text-decoration: underline;
 }
+
+.dropdown-menu{
+    z-index: 1000;
+}
 .dropdown-menu li {
     position: relative;
 }
@@ -36,6 +40,7 @@ body {
     position: absolute;
     left: 100%;
     top: -7px;
+    z-index: 1001;
 }
 .dropdown-menu .dropdown-submenu-left {
     right: 100%;

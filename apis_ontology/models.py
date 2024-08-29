@@ -820,8 +820,8 @@ class PersonTranslatorOfWork(TibScholRelationMixin):
     reverse_name = "translated by"
 
 
-class PersonAnnotatorOfWork(TibScholRelationMixin):
+class PersonAnnotatorOfInstance(TibScholRelationMixin):
     subj_model = Person
-    obj_model = Work
+    obj_model = Instance
     name = "annotator of"
     reverse_name = "annotated by"

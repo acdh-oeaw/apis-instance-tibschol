@@ -5,9 +5,9 @@ from apis_core.apis_entities.tables import AbstractEntityTable
 from apis_core.apis_metainfo.models import RootObject
 from apis_core.generic.tables import GenericTable
 from django.template.loader import render_to_string
-from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from lxml import etree
+import re
 
 from .models import Instance, Person, Place, TibScholRelationMixin, Work
 from .templatetags.filter_utils import (
@@ -170,7 +170,7 @@ class TibScholRelationMixinTable(GenericTable):
             words = l.split()
             linked_words = []
             for w in words:
-                if w.startswith("xml:id=") or (w.startswith("ex") and "-" in w):
+                if w.startswith("xml:id=") or bool(re.search(r"\bex\d\w*", w)):
                     linked_words.append(linkify_excerpt_id(w))
                 else:
                     linked_words.append(w)

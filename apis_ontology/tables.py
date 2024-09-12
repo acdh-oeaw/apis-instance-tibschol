@@ -159,7 +159,7 @@ class TibScholRelationMixinTable(GenericTable):
 
     def render_tei_refs(self, value):
         def linkify_excerpt_id(xml_id):
-            true_id = xml_id.replace('"', "").replace("xml:id=", "").strip()
+            true_id = xml_id.replace('"', "").replace("xml:id=", "").strip().rstrip(".")
             return f"""<a href="#" onclick="showPopup('{true_id}'); return false;">
             {true_id}
             </a>"""

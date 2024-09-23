@@ -29,22 +29,29 @@ class Command(BaseCommand):
         models = TibScholRelationMixin.__subclasses__()
         unique_refs = defaultdict(list)
         for m in tqdm(models):
+            model_name = str(m).split("'")[1].split(".")[-1]
             if not hasattr(m, "tei_refs"):
                 break
             for rel in m.objects.all():
                 if rel.tei_refs:
                     all_tei_refs = get_all_tei_ids(rel.tei_refs)
                     for ref in all_tei_refs:
-                        unique_refs[ref].append(f"{rel.pk},{m},{rel.subj},{rel.obj}")
+                        unique_refs[ref].append(
+                            f"{rel.pk}|{model_name}|{rel.subj.pk}|{rel.obj.pk}"
+                        )
 
         missing_refs = []
         for ref in unique_refs.keys():
             try:
                 Excerpts.objects.get(xml_id=ref)
             except Excerpts.DoesNotExist as e:
-                missing_refs.append(f"{ref},{unique_refs[ref]}")
+                for support in unique_refs[ref]:
+                    missing_refs.append(f"|{ref}|{support}|")
 
-        with open(f"missing_refs_{datetime.now():%Y%M%d_%H%m%S}.csv", "w") as f:
+        with open(f"missing_refs_{datetime.now():%Y%m%d_%H%M%S}.md", "w") as f:
+            f.writelines(
+                "|TEI ID|RELATION PK|Relation|Subject PK|Object PK|\n|--|--|--|--|--|\n"
+            )
             f.writelines("\n".join(missing_refs))
 
         self.stdout.write(self.style.SUCCESS("Done."))

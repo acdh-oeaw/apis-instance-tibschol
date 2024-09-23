@@ -3,6 +3,8 @@ from apis_ontology.models import TibScholRelationMixin
 from tqdm.auto import tqdm
 import re
 from pprint import pprint
+from apis_ontology.models import Excerpts
+from datetime import datetime
 
 
 class Command(BaseCommand):
@@ -32,7 +34,15 @@ class Command(BaseCommand):
                 if obj.tei_refs:
                     unique_refs.extend(get_all_tei_ids(obj.tei_refs))
 
-        unique_refs = set(list(unique_refs))
-        pprint(unique_refs)
+        unique_refs = list(set(unique_refs))
+        missing_refs = []
+        for ref in unique_refs:
+            try:
+                Excerpts.objects.get(xml_id=ref)
+            except Excerpts.DoesNotExist as e:
+                missing_refs.append(ref)
+
+        with open(f"missing_refs_{datetime.now():%Y%M%d_%H%m%S}.txt", "w") as f:
+            f.writelines("\n".join(missing_refs))
 
         self.stdout.write(self.style.SUCCESS("Done."))

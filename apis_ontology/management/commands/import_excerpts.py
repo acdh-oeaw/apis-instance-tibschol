@@ -27,4 +27,4 @@ class Command(BaseCommand):
             create_record(row)
 
         self.stdout.write(self.style.SUCCESS(f"Processed {df.shape[0]} excerpts."))
-        print("There are f{len(Excerpts.objects.all())} in the database now.")
+        print(f"There are {len(Excerpts.objects.all())} in the database now.")

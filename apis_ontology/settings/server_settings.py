@@ -12,7 +12,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 INSTALLED_APPS += [
-    "apis_core.relations",
     "apis_highlighter",
     "django.contrib.postgres",
     "apis_core.collections",
@@ -23,6 +22,7 @@ INSTALLED_APPS += [
 ]
 INSTALLED_APPS.remove("apis_ontology")
 INSTALLED_APPS.insert(0, "apis_ontology")
+INSTALLED_APPS = ["apis_core.relations"] + INSTALLED_APPS
 
 
 LOGGING = {

@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/static/styles/tei.css">
+<script src="/static/scripts/CETEI.js"></script>
 <script src="/static/scripts/show_popup.js"></script>
 
 <div class="modal" id="popupModal" style="display:none;" tabindex="-1" role="dialog">
@@ -9,9 +11,17 @@
             <div class="modal-body">
 
                 <span id="popupContent"></span>
-            </div>
+                <details>
+                    <summary>
+                        View raw excerpt data in xml
+                    </summary>
+                    <!-- element to show code style text -->
+                    <pre id="rawTEI">
+                    </pre>
+                </details>
+                    </div>
             <div class="modal-footer">
-
+                <!--expandable element in pure HTML-->
                 <button onclick="closePopup()">Close</button>
             </div>
         </div>

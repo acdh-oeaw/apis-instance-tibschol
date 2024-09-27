@@ -54,3 +54,11 @@ body {
 textarea.form-control{
     height: 5em;
 }
+
+
+pre#rawTEI{
+  width: 90%;
+  white-space: break-spaces;
+  line-break: anywhere;
+  margin-left: 2em;
+}

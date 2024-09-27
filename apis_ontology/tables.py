@@ -6,7 +6,6 @@ from apis_core.apis_metainfo.models import RootObject
 from apis_core.generic.tables import GenericTable
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
-from lxml import etree
 import re
 
 from .models import Instance, Person, Place, TibScholRelationMixin, Work
@@ -219,9 +218,6 @@ class RelationsTable(TibScholRelationMixinTable):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Define the obj attribute based on the value of self.reverse
-        xslt_file = "apis_ontology/xslt/teibp.xsl"
-        xslt = etree.parse(xslt_file)
-        self.transform = etree.XSLT(xslt)
 
     def render_name(self, record):
         rel_name = record.name

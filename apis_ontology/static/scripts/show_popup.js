@@ -83,3 +83,9 @@ document.onkeydown = function(evt) {
     closePopup();
   }
 };
+
+// allow vertical scroll to popup
+document.getElementById('popupModal').addEventListener('wheel', function(e) {
+  e.preventDefault();
+  this.scrollTop += e.deltaY;
+}, false);

@@ -75,3 +75,11 @@ function showPopup(recordId, renderStyle) {
 function closePopup() {
   document.getElementById('popupModal').style.display = 'none';
 }
+
+// allow popup to close on pressing escape
+document.onkeydown = function(evt) {
+  evt = evt || window.event;
+  if (evt.keyCode == 27) {
+    closePopup();
+  }
+};

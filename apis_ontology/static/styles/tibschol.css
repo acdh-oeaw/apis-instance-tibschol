@@ -62,3 +62,8 @@ pre#rawTEI{
   line-break: anywhere;
   margin-left: 2em;
 }
+
+.modal-content{
+     max-height: 90vh;
+    overflow-y: auto;
+}

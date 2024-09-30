@@ -57,6 +57,7 @@ function showPopup(recordId, renderStyle) {
       // show 404 error if the respose is 404
       if (teidata.includes("Page not found")) {
         document.getElementById("popupContent").innerHTML = "Excerpt Not Found";
+        document.getElementById("rawTEI").innerText = "";
         document.getElementById('popupModal').style.display = 'block';
         return;
       }

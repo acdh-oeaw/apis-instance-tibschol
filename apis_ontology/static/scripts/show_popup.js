@@ -11,8 +11,7 @@ let behaviors = {
       }
       return result;
     },
-    "lb": ["<br/><span class=\"break\">$@n&nbsp;</span>"],
-    "pb": ["<p class=\"break\">$@n</p>"],
+    "lb": ["<span class=\"break\">$@n&nbsp;</span>"],
 
     // Hyperlink the rs tag and include type and ref in its title
     "rs": function(e) {

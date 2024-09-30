@@ -17,6 +17,8 @@ let behaviors = {
     // Hyperlink the rs tag and include type and ref in its title
     "rs": function(e) {
       let result = document.createElement("a");
+      // make link open in a new page
+      result.setAttribute("target", "_BLANK");
       result.setAttribute("href", "/apis/apis_ontology."+e.getAttribute("type")+"/"+e.getAttribute("ref").split(":")[1]);
       result.setAttribute("title", "type: " + e.getAttribute("type") + ", id: " + e.getAttribute("ref"));
       for (let n of Array.from(e.childNodes)) {

@@ -5,7 +5,8 @@ from apis_core.apis_entities.models import AbstractEntity
 from apis_core.core.models import LegacyDateMixin
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
-from apis_core.relations.models import Relation, RootObject
+from apis_core.relations.models import Relation
+from apis_core.apis_metainfo.models import RootObject
 from apis_core.utils.helpers import create_object_from_uri
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -53,7 +54,6 @@ class LegacyStuffMixin(models.Model):
     )
     notes = models.TextField(blank=True, null=True, verbose_name="Notes")
     # published = models.BooleanField(default=False)
-    collection = models.ManyToManyField("apis_metainfo.Collection", editable=False)
     published = None
 
     @classmethod

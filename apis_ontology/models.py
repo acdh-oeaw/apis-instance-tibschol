@@ -54,7 +54,6 @@ class LegacyStuffMixin(models.Model):
     )
     notes = models.TextField(blank=True, null=True, verbose_name="Notes")
     # published = models.BooleanField(default=False)
-    collection = models.ManyToManyField("apis_metainfo.Collection", editable=False)
     published = None
 
     @classmethod

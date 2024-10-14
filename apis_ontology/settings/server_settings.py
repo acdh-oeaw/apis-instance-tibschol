@@ -12,11 +12,9 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 INSTALLED_APPS += [
-    "apis_highlighter",
     "django.contrib.postgres",
     "apis_core.collections",
     "apis_core.history",
-    "django_action_logger",
     "django_acdhch_functions",
     "django_select2",
 ]

@@ -127,7 +127,7 @@ class TibScholRelationMixinTable(GenericTable):
             "edit",
             "delete",
         ]
-        exclude = ["view", "desc"]
+        exclude = ["desc"]
 
     def render_support_notes(self, record):
         notes = parse_comment(render_list_field(record.support_notes))

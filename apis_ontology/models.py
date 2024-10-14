@@ -140,8 +140,8 @@ class WorkQuerySet(QuerySet):
         return self.annotate(
             # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
             author_id=Subquery(
-                PersonAuthorOfWork.objects.filter(obj_id=OuterRef("id")).values(
-                    "subj_id"
+                PersonAuthorOfWork.objects.filter(obj_object_id=OuterRef("id")).values(
+                    "subj_object_id"
                 )[:1]
             ),
             # Subquery to get the Person's name based on the person_id from above
@@ -206,13 +206,13 @@ class InstanceQuerySet(QuerySet):
             # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
             work_id=Subquery(
                 WorkHasAsAnInstanceInstance.objects.filter(
-                    obj_id=OuterRef("id")
-                ).values("subj_id")[:1]
+                    obj_object_id=OuterRef("id")
+                ).values("subj_object_id")[:1]
             ),
             author_id=Subquery(
-                PersonAuthorOfWork.objects.filter(obj_id=OuterRef("work_id")).values(
-                    "subj_id"
-                )[:1]
+                PersonAuthorOfWork.objects.filter(
+                    obj_object_id=OuterRef("work_id")
+                ).values("subj_object_id")[:1]
             ),
             # Subquery to get the Person's name based on the person_id from above
             author_name=Subquery(

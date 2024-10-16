@@ -8,7 +8,7 @@ APIS_BASE_URI = "https://tibschol.acdh-ch.oeaw.ac.at/"
 ROOT_URLCONF = "apis_ontology.urls"
 CSRF_TRUSTED_ORIGINS = [
     "https://tibschol.acdh-ch.oeaw.ac.at",
-    "https://tibschol-test.acdh-ch-dev.oeaw.ac.at",
+    "https://tibschol.acdh-ch-dev.oeaw.ac.at",
 ]
 
 INSTALLED_APPS += [

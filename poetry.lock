@@ -92,17 +92,17 @@ resolved_reference = "99d1111f049b9622360e6f7bce42d6c7b3bc2885"
 
 [[package]]
 name = "apis-highlighter-ng"
-version = "0.3.2"
+version = "0.4.2"
 description = "Highlighter for the APIS project"
 optional = false
 python-versions = "<4.0,>=3.11"
 files = [
-    {file = "apis_highlighter_ng-0.3.2-py3-none-any.whl", hash = "sha256:6364f41c1c9aa5f31ad68bf5f6312934d6728668240807ddec8029fee636b151"},
-    {file = "apis_highlighter_ng-0.3.2.tar.gz", hash = "sha256:190718e4e18503a5528335689acf15a304af1db4eab00a42b6c33a539f0072ae"},
+    {file = "apis_highlighter_ng-0.4.2-py3-none-any.whl", hash = "sha256:8ddedcbeacacd0ad32eef58de6bdae8e7f75166ecc0e4e3f6ca2c5f1082e25ff"},
+    {file = "apis_highlighter_ng-0.4.2.tar.gz", hash = "sha256:32406ad9d27375cfeb18edef679349de477c4ff8af6283399e64515340d8455e"},
 ]
 
 [package.dependencies]
-Django = ">=4.1,<5.0"
+Django = ">4.1"
 
 [[package]]
 name = "apis-override-select2js"
@@ -3252,4 +3252,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "f0779631228b24361afc463e706f82c4063d1d0544ca519da21d9ea5040e496f"
+content-hash = "56fb959b26dccff05853224dd954944d3bb0862b9aeca1a1692983f648a37649"

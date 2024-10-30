@@ -22,7 +22,7 @@ lxml = "^5.2.2"
 sqlparse = "^0.5.1"
 
 [tool.poetry.group.dev.dependencies]
-ipython = "^8.24.0"
+ipython = "^8.29.0"
 jupyter = "^1.0.0"
 notebook = "^7.2.0"
 jupyterlab = "^4.2.1"

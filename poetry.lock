@@ -98,17 +98,47 @@ reference = "gythaogg/relations-ng-updated"
 resolved_reference = "99d1111f049b9622360e6f7bce42d6c7b3bc2885"
 
 [[package]]
+name = "apis-core-rdf"
+version = "0.29.0"
+description = "Base package for the APIS framework"
+optional = false
+python-versions = "<4.0,>=3.11"
+files = [
+    {file = "apis_core_rdf-0.29.0-py3-none-any.whl", hash = "sha256:daf2a17ca9aa0d442cce757c6e7b482787bec081f5e887b8f3198d19d2e55c1f"},
+    {file = "apis_core_rdf-0.29.0.tar.gz", hash = "sha256:d59344f253659faecb7df73b1bc713e48613b76055af856fbf5f015975100dc7"},
+]
+
+[package.dependencies]
+apis-override-select2js = ">=0.1,<0.3"
+crispy-bootstrap4 = ">=2023.1,<2025.0"
+Django = ">5"
+django-admin-csvexport = ">=2.2,<3.0"
+django-autocomplete-light = ">=3.9.4,<3.12.0"
+django-crispy-forms = ">=2,<3"
+django-crum = ">=0.7.9,<0.8.0"
+django-filter = ">=24.1"
+django-model-utils = ">=4.1.1,<6.0.0"
+django-simple-history = ">=3.6"
+django-tables2 = ">=2.3.3,<3.0.0"
+djangorestframework = ">=3.14.0,<4.0.0"
+drf-spectacular = ">=0.26.1,<0.28.0"
+pydot = ">=3.0.2,<4.0.0"
+rdflib = ">=6.0.2,<8.0.0"
+requests = ">=2.25.0,<3.0.0"
+
+[[package]]
 name = "apis-highlighter-ng"
-version = "0.4.2"
+version = "0.5.0"
 description = "Highlighter for the APIS project"
 optional = false
 python-versions = "<4.0,>=3.11"
 files = [
-    {file = "apis_highlighter_ng-0.4.2-py3-none-any.whl", hash = "sha256:8ddedcbeacacd0ad32eef58de6bdae8e7f75166ecc0e4e3f6ca2c5f1082e25ff"},
-    {file = "apis_highlighter_ng-0.4.2.tar.gz", hash = "sha256:32406ad9d27375cfeb18edef679349de477c4ff8af6283399e64515340d8455e"},
+    {file = "apis_highlighter_ng-0.5.0-py3-none-any.whl", hash = "sha256:1b02f66e4117f245e1c0b3e766c2d54af1be89abd2977ff24e3ee6800194a5ef"},
+    {file = "apis_highlighter_ng-0.5.0.tar.gz", hash = "sha256:1fa53105911c16f6585162ea9b6e419eeb3255246b391f0695e4edd9a63e5b82"},
 ]
 
 [package.dependencies]
+apis-core-rdf = ">=0.29.0"
 Django = ">4.1"
 
 [[package]]
@@ -2754,6 +2784,25 @@ files = [
 ]
 
 [[package]]
+name = "pydot"
+version = "3.0.2"
+description = "Python interface to Graphviz's Dot"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pydot-3.0.2-py3-none-any.whl", hash = "sha256:99cedaa55d04abb0b2bc56d9981a6da781053dd5ac75c428e8dd53db53f90b14"},
+    {file = "pydot-3.0.2.tar.gz", hash = "sha256:9180da540b51b3aa09fbf81140b3edfbe2315d778e8589a7d0a4a69c41332bae"},
+]
+
+[package.dependencies]
+pyparsing = ">=3.0.9"
+
+[package.extras]
+dev = ["chardet", "parameterized", "ruff"]
+release = ["zest.releaser[recommended]"]
+tests = ["chardet", "parameterized", "pytest", "pytest-cov", "pytest-xdist[psutil]", "ruff", "tox"]
+
+[[package]]
 name = "pygments"
 version = "2.18.0"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -3768,4 +3817,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "51c4fe7549a3febfb2e4800bdacf1d6a11e570e3303d3a0f1e2b6df55b100d0f"
+content-hash = "7c0d316ecb8cd60c8c9bdc8299383284deed6c30840bcff49bfb2ee2160796e1"

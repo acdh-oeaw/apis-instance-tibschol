@@ -11,7 +11,7 @@ packages = [{include = "apis_ontology"}]
 python = "^3.11"
 psycopg2 = "^2.9"
 apis-core = { git = "https://github.com/acdh-oeaw/apis-core-rdf.git", branch = "gythaogg/relations-ng-updated" }
-apis-highlighter-ng = "^0.5.0"
+apis-highlighter-ng = "^0.4.2"
 apis-acdhch-default-settings = "1.4.0"
 django-acdhch-functions = "^0.1.3"
 django-extensions = "^3.1.3"

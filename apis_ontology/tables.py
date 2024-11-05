@@ -68,9 +68,9 @@ class WorkTable(TibscholEntityMixinTable):
         fields = ["id", "name", "author"]
         exclude = ["desc", "view", "edit", "noduplicate", "delete"]
         row_attrs = {
-            "style": lambda record: "background-color: lightgray;"
-            if not record.isExtant
-            else None
+            "style": lambda record: (
+                "background-color: lightgray;" if not record.isExtant else None
+            )
         }
 
     author = tables.Column(

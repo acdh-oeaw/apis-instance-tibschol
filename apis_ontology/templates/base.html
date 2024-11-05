@@ -1,60 +1,8 @@
-<!DOCTYPE html>
 {% extends "base.html" %}
 
-{% load apis_templatetags %}
-{% load apiscore %}
-{% load tibschol_entity_ctypes %}
+{% load static %}
 
 {% block styles %}
+<link href="{% static 'styles/tibschol.css' %}" rel="stylesheet" />
 {{ block.super }}
-<link rel="stylesheet" href="/static/styles/tibschol.css">
-{% endblock styles%}
-
-{% block title %}TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.){% endblock %}
-
-{% block main-menu %}
-    <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-           aria-expanded="false">
-            Entities
-            <span class="caret" />
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            {% block entities-menu-items %}
-                {% tibschol_entity_types as entities %}
-                {% for content_type in entities %}
-                    <a class="dropdown-item" href="{% url 'apis:generic:list' content_type %}">
-                        {{ content_type|model_meta:"verbose_name_plural" }}</a>
-                {% endfor %}
-            {% endblock entities-menu-items %}
-
-        </div>
-    </li>
-    <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-            id="relationsDropdown"
-           aria-expanded="false">
-            Relations
-            <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu" aria-labelledby="relationsDropdown">
-            {% tibschol_relation_types as relations %}
-            {% for rel_grp, rels in relations.items %}
-                <li>
-                    <a class="dropdown-item" href="#">{{ rel_grp }} &raquo;</a>
-                    <ul class="dropdown-menu dropdown-submenu">
-                        {% for rel in rels %}
-                            <li><a class="dropdown-item" href="{% url 'apis:generic:list' rel %}">{{rel.name}}</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
-            {% endfor %}
-        </ul>
-    </li>
-{% endblock main-menu %}
-
-
-{% block modal %}
-    {{  block.super }}
-    {% include "excerpts/popup.html" %}
-{% endblock modal %}
+{% endblock styles %}

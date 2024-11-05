@@ -61,41 +61,33 @@ sentry-sdk = ">=1.26.0,<2.0.0"
 whitenoise = ">=5.2.0,<6.0.0"
 
 [[package]]
-name = "apis-core"
-version = "0.18.0"
+name = "apis-core-rdf"
+version = "0.29.0"
 description = "Base package for the APIS framework"
 optional = false
-python-versions = "^3.11"
-files = []
-develop = false
+python-versions = "<4.0,>=3.11"
+files = [
+    {file = "apis_core_rdf-0.29.0-py3-none-any.whl", hash = "sha256:daf2a17ca9aa0d442cce757c6e7b482787bec081f5e887b8f3198d19d2e55c1f"},
+    {file = "apis_core_rdf-0.29.0.tar.gz", hash = "sha256:d59344f253659faecb7df73b1bc713e48613b76055af856fbf5f015975100dc7"},
+]
 
 [package.dependencies]
-apis-override-select2js = "^0.1.0"
+apis-override-select2js = ">=0.1,<0.3"
 crispy-bootstrap4 = ">=2023.1,<2025.0"
-Django = ">=4.1,<6.0"
-django-admin-csvexport = "^2.2"
+Django = ">5"
+django-admin-csvexport = ">=2.2,<3.0"
 django-autocomplete-light = ">=3.9.4,<3.12.0"
-django-crispy-forms = "^2"
-django-crum = "^0.7.9"
-django-filter = ">=23.5,<25.0"
-django-model-utils = "^4.1.1"
-django-select2 = "^8.1.2"
-django-simple-history = "^3.5.0"
-django-tables2 = "^2.3.3"
-djangorestframework = "^3.14.0"
-djangorestframework-csv = ">=2.1,<4.0"
-djangorestframework-xml = "^2.0.0"
+django-crispy-forms = ">=2,<3"
+django-crum = ">=0.7.9,<0.8.0"
+django-filter = ">=24.1"
+django-model-utils = ">=4.1.1,<6.0.0"
+django-simple-history = ">=3.6"
+django-tables2 = ">=2.3.3,<3.0.0"
+djangorestframework = ">=3.14.0,<4.0.0"
 drf-spectacular = ">=0.26.1,<0.28.0"
-python-dateutil = "^2.8.2"
+pydot = ">=3.0.2,<4.0.0"
 rdflib = ">=6.0.2,<8.0.0"
-requests = "^2.25.0"
-tablib = "^3.5.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/acdh-oeaw/apis-core-rdf.git"
-reference = "gythaogg/relations-ng-updated"
-resolved_reference = "99d1111f049b9622360e6f7bce42d6c7b3bc2885"
+requests = ">=2.25.0,<3.0.0"
 
 [[package]]
 name = "apis-highlighter-ng"
@@ -113,13 +105,13 @@ Django = ">4.1"
 
 [[package]]
 name = "apis-override-select2js"
-version = "0.1"
+version = "0.2.1"
 description = "Override select2js files in APIS Django projects"
 optional = false
 python-versions = "*"
 files = [
-    {file = "apis_override_select2js-0.1-py2.py3-none-any.whl", hash = "sha256:8b52d13d7200f3771ad6d5d6746a836b2d81cfa90efe65111214d57e11517765"},
-    {file = "apis_override_select2js-0.1.tar.gz", hash = "sha256:ee6d4b4f8968e17319c90b8285a6e8733ad970368f5147e58d48e654c9be1a49"},
+    {file = "apis_override_select2js-0.2.1-py2.py3-none-any.whl", hash = "sha256:d42e92194ac4dbfc0225b42f4c18ae0c0bb6a6b295f3f7051ae35c62bb3b68e8"},
+    {file = "apis_override_select2js-0.2.1.tar.gz", hash = "sha256:9afed572e9ceec28e74cdf03da27e6288b284d3431da664ef0996bcf50f3e55f"},
 ]
 
 [package.dependencies]
@@ -850,13 +842,13 @@ Django = ">=4.2"
 
 [[package]]
 name = "django-model-utils"
-version = "4.5.1"
+version = "5.0.0"
 description = "Django model mixins and utilities"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_model_utils-4.5.1-py3-none-any.whl", hash = "sha256:f1141fc71796242edeffed5ad53a8cc57f00d345eb5a3a63e3f69401cd562ee2"},
-    {file = "django_model_utils-4.5.1.tar.gz", hash = "sha256:1220f22d9a467d53a1e0f4cda4857df0b2f757edf9a29955c42461988caa648a"},
+    {file = "django_model_utils-5.0.0-py3-none-any.whl", hash = "sha256:fec78e6c323d565a221f7c4edc703f4567d7bb1caeafe1acd16a80c5ff82056b"},
+    {file = "django_model_utils-5.0.0.tar.gz", hash = "sha256:041cdd6230d2fbf6cd943e1969318bce762272077f4ecd333ab2263924b4e5eb"},
 ]
 
 [package.dependencies]
@@ -941,39 +933,6 @@ files = [
 
 [package.dependencies]
 django = ">=4.2"
-
-[[package]]
-name = "djangorestframework-csv"
-version = "3.0.2"
-description = "CSV Tools for Django REST Framework"
-optional = false
-python-versions = "*"
-files = [
-    {file = "djangorestframework-csv-3.0.2.tar.gz", hash = "sha256:b269b692feda1971e1342f395a21d339c6a16d2961ff64357a9a6188f27af10f"},
-    {file = "djangorestframework_csv-3.0.2-py3-none-any.whl", hash = "sha256:d1bcfbaaeaa5145af6bb0985a36a5bbf2f853d9961c722f69c7b0c9c3bcc269a"},
-]
-
-[package.dependencies]
-djangorestframework = "*"
-
-[[package]]
-name = "djangorestframework-xml"
-version = "2.0.0"
-description = "XML support for Django REST Framework"
-optional = false
-python-versions = ">=3.5"
-files = [
-    {file = "djangorestframework-xml-2.0.0.tar.gz", hash = "sha256:35f6c811d0ab8c8466b26db234e16a2ed32d76381715257aebf4c7be2c202ca1"},
-    {file = "djangorestframework_xml-2.0.0-py2.py3-none-any.whl", hash = "sha256:975955fbb0d49ac44a90bdeb33b7923d95b79884d283f983e116c80a936ef4d0"},
-]
-
-[package.dependencies]
-defusedxml = ">=0.6.0"
-
-[package.extras]
-dev = ["Django (>=1.6)", "djangorestframework (>=2.4.3)", "flake8", "mkdocs (>=0.11.1)", "pre-commit", "pytest", "pytest-django", "tox"]
-docs = ["mkdocs (>=0.11.1)"]
-tests = ["Django (>=1.6)", "djangorestframework (>=2.4.3)", "flake8", "pytest", "pytest-django"]
 
 [[package]]
 name = "drf-spectacular"
@@ -2738,6 +2697,25 @@ files = [
 ]
 
 [[package]]
+name = "pydot"
+version = "3.0.2"
+description = "Python interface to Graphviz's Dot"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pydot-3.0.2-py3-none-any.whl", hash = "sha256:99cedaa55d04abb0b2bc56d9981a6da781053dd5ac75c428e8dd53db53f90b14"},
+    {file = "pydot-3.0.2.tar.gz", hash = "sha256:9180da540b51b3aa09fbf81140b3edfbe2315d778e8589a7d0a4a69c41332bae"},
+]
+
+[package.dependencies]
+pyparsing = ">=3.0.9"
+
+[package.extras]
+dev = ["chardet", "parameterized", "ruff"]
+release = ["zest.releaser[recommended]"]
+tests = ["chardet", "parameterized", "pytest", "pytest-cov", "pytest-xdist[psutil]", "ruff", "tox"]
+
+[[package]]
 name = "pygments"
 version = "2.18.0"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -3385,26 +3363,6 @@ pure-eval = "*"
 tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
-name = "tablib"
-version = "3.7.0"
-description = "Format agnostic tabular data library (XLS, JSON, YAML, CSV, etc.)"
-optional = false
-python-versions = ">=3.9"
-files = [
-    {file = "tablib-3.7.0-py3-none-any.whl", hash = "sha256:9a6930037cfe0f782377963ca3f2b1dae3fd4cdbf0883848f22f1447e7bb718b"},
-    {file = "tablib-3.7.0.tar.gz", hash = "sha256:f9db84ed398df5109bd69c11d46613d16cc572fb9ad3213f10d95e2b5f12c18e"},
-]
-
-[package.extras]
-all = ["odfpy", "openpyxl (>=2.6.0)", "pandas", "pyyaml", "tabulate", "xlrd", "xlwt"]
-cli = ["tabulate"]
-ods = ["odfpy"]
-pandas = ["pandas"]
-xls = ["xlrd", "xlwt"]
-xlsx = ["openpyxl (>=2.6.0)"]
-yaml = ["pyyaml"]
-
-[[package]]
 name = "terminado"
 version = "0.18.1"
 description = "Tornado websocket backend for the Xterm.js Javascript terminal emulator library."
@@ -3752,4 +3710,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "9556987123c9429ef4cea7f8d19eed03f102e7d6791863e314c7df09c09c80f5"
+content-hash = "7885bc1d2c36ffd64b685b04e6f906ec0b6849ec43c5835d715cbd6521122c91"

@@ -17,8 +17,8 @@ class TibscholEntityForm(GenericModelForm):
 
 
 class TibScholRelationMixinForm(RelationForm):
-
-    field_order = ["subj", "obj"]
+    # position the subject/object field on top
+    field_order = ["subj", "subj_ct_and_id", "obj", "obj_ct_and_id"]
 
 
 class PlaceForm(TibscholEntityForm):

@@ -2,15 +2,13 @@ import logging
 
 import django_tables2 as tables
 from apis_core.apis_entities.tables import AbstractEntityTable
-from apis_core.apis_metainfo.models import RootObject
-from apis_core.generic.tables import GenericTable
+from apis_core.generic.tables import CustomTemplateColumn, GenericTable, MoreLessColumn
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 import re
 
-from .models import Instance, Person, Place, TibScholRelationMixin, Work
+from .models import Instance, Person, Place, Work
 from .templatetags.filter_utils import (
-    preview_text,
     render_coordinate,
     render_links,
     render_list_field,
@@ -20,7 +18,18 @@ from .templatetags.parse_comment import parse_comment
 logger = logging.getLogger(__name__)
 
 
+def preview_text(text, n=50):
+    if not text:
+        return ""
+    if len(text) <= n:
+        return text
+    truncated_text = text[:n].rsplit(" ", 1)[0]
+    return truncated_text + "…"
+
+
 class TibscholEntityMixinTable(AbstractEntityTable):
+    paginate_by = 100
+
     def render_alternative_names(self, value):
         return render_list_field(value)
 
@@ -119,50 +128,59 @@ class InstanceTable(TibscholEntityMixinTable):
         )
 
 
-class TibScholRelationMixinTable(GenericTable):
-    class Meta(GenericTable.Meta):
-        fields = [
-            "subj",
-            "obj",
-            "edit",
-            "delete",
-        ]
-        exclude = ["view", "desc"]
+class TibScholRelationColumn(tables.Column):
+    template_name = None
+    orderable = False
+    exclude_from_export = False
+    verbose_name = None
 
-    def render_support_notes(self, record):
-        notes = parse_comment(render_list_field(record.support_notes))
-        preview = parse_comment(
-            render_list_field(preview_text(record.support_notes, 50))
+    def __init__(self, *args, **kwargs):
+        super().__init__(
+            orderable=self.orderable,
+            exclude_from_export=self.exclude_from_export,
+            verbose_name=self.verbose_name,
+            *args,
+            **kwargs,
         )
-        context = {
-            "record": record,
-            "preview_value": mark_safe(preview),
-            "field_value": mark_safe(notes),
-            "field_name": "support_notes",
-        }
 
-        return mark_safe(render_to_string("apis_ontology/preview_column.html", context))
 
-    def render_zotero_refs(self, record):
-        zotero_refs = mark_safe(parse_comment(render_list_field(record.zotero_refs)))
-        preview = mark_safe(
-            parse_comment(render_list_field(preview_text(record.zotero_refs, 50)))
+class RelationNameColumn(CustomTemplateColumn):
+    template_name = "columns/relation_name.html"
+    verbose_name = "Relation"
+    orderable = False
+
+
+class RelationPredicateColumn(CustomTemplateColumn):
+    template_name = "columns/relation_predicate.html"
+    verbose_name = "Object"
+    orderable = False
+
+    def render(self, record, **kwargs):
+        # Check if `record.subj` has `isExtant` and if it's False
+        predicate = record.obj if record.forward else record.subj
+        highlight_style = (
+            "background-color: lightgray;"
+            if hasattr(predicate, "isExtant") and not predicate.isExtant
+            else ""
         )
-        context = {
-            "record": record,
-            "preview_value": preview,
-            "field_value": zotero_refs,
-            "field_name": "zotero_refs",
-        }
-        return mark_safe(render_to_string("apis_ontology/preview_column.html", context))
+        print(predicate, highlight_style)
+        # Render the template with the additional context
+        self.extra_context["highlight_style"] = highlight_style
+        # Render template with updated context
+        return super().render(record, **kwargs)
 
-    def render_tei_refs(self, value):
+
+class TEIRefColumn(TibScholRelationColumn):
+    verbose_name = "TEI REfs"
+
+    def render(self, record, *args, **kwargs):
         def linkify_excerpt_id(xml_id):
             true_id = xml_id.replace('"', "").replace("xml:id=", "").strip().rstrip(".")
             return f"""<a href="#" onclick="showPopup('{true_id}'); return false;">
             {true_id}
             </a>"""
 
+        value = record.tei_refs
         lines = value.split("\n")
         linked_lines = []
         for l in lines:
@@ -177,36 +195,37 @@ class TibScholRelationMixinTable(GenericTable):
 
         return mark_safe("<br />".join(linked_lines))
 
-    def render_obj(self, record):
-        highlight_style = ""
-        actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)
-        if hasattr(actual_obj, "isExtant") and not actual_obj.isExtant:
-            highlight_style = "background-color: lightgray;"
 
-        return mark_safe(
-            f"<a style='{highlight_style}' href='"
-            + actual_obj.get_absolute_url()
-            + "' target='_BLANK'>"
-            + str(actual_obj)
-            + "</a>"
-        )
+class TibScholEntityMixinRelationsTable(GenericTable):
+    paginate_by = 1000
+    relation = RelationNameColumn()
+    predicate = RelationPredicateColumn()
+    support_notes = MoreLessColumn(
+        orderable=False,
+        preview=lambda x: mark_safe(
+            parse_comment(render_list_field(preview_text(x.support_notes, 50)))
+        ),
+        fulltext=lambda x: mark_safe(parse_comment(render_list_field(x.support_notes))),
+    )
+    zotero_refs = MoreLessColumn(
+        orderable=False,
+        preview=lambda x: mark_safe(
+            parse_comment(render_list_field(preview_text(x.zotero_refs, 50)))
+        ),
+        fulltext=lambda x: mark_safe(parse_comment(render_list_field(x.zotero_refs))),
+    )
+    tei_refs = TEIRefColumn()
 
-    def render_subj(self, record):
-        actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.subj.pk)
-        highlight_style = ""
-        if hasattr(actual_obj, "isExtant") and not actual_obj.isExtant:
-            highlight_style = "background-color: lightgray;"
-
-        return mark_safe(
-            f"<a style='{highlight_style}' href='"
-            + actual_obj.get_absolute_url()
-            + "' target='_BLANK'>"
-            + str(actual_obj)
-            + "</a>"
-        )
+    class Meta(GenericTable.Meta):
+        fields = [
+            "support_notes",
+            "zotero_refs",
+            "tei_refs",
+        ]
+        exclude = ["desc"]
 
 
-class RelationsTable(TibScholRelationMixinTable):
+class RelationsTable(TibScholEntityMixinRelationsTable):
     reverse = False
 
     name = tables.Column(verbose_name="Relationship", orderable=False)
@@ -219,144 +238,113 @@ class RelationsTable(TibScholRelationMixinTable):
         super().__init__(*args, **kwargs)
         # Define the obj attribute based on the value of self.reverse
 
-    def render_name(self, record):
-        rel_name = record.name
-        try:
-            if self.context["object"].pk == record.obj.pk:
-                rel_name = record.reverse_name
-        except Exception as e:
-            logger.error("Bad relation %s\Error: %s", record, repr(e))
 
-        return rel_name
+# class RelationsTableEdit(RelationsTable):
+#     class Meta(GenericTable.Meta):
+#         model = TibScholRelationMixin
+#         fields = [
+#             "name",
+#             "obj",
+#             "support_notes",
+#             "zotero_refs",
+#             "tei_refs",
+#             "edit",
+#             "delete",
+#         ]
+#         exclude = ["view", "desc", "subj"]
 
-    def render_obj(self, record):
-        # return str(record) + str(self.context["object"].pk)
-        actual_obj = RootObject.objects_inheritance.get_subclass(pk=record.obj.pk)
+#     edit = tables.TemplateColumn(
+#         "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>",
+#         orderable=False,
+#         verbose_name="",
+#         attrs={"td": {"style": "max-width: 2em"}},
+#     )
 
-        try:
-            if self.context["object"].pk == record.obj.pk:
-                # return str(RootObject.objects_inheritance.get_subclass(pk=record.subj.pk))
-                actual_obj = RootObject.objects_inheritance.get_subclass(
-                    pk=record.subj.pk
-                )
-        except Exception as e:
-            logger.error("Bad relation %s\Error: %s", record, repr(e))
-
-        return mark_safe(
-            "<a href='"
-            + actual_obj.get_absolute_url()
-            + "' target='_BLANK'>"
-            + str(actual_obj)
-            + "</a>"
-        )
+#     delete = tables.TemplateColumn(
+#         "<a href='{% url 'apis:relationdelete' record.id %}?next={{ request.GET.next }}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">delete</span></a>",
+#         orderable=False,
+#         verbose_name="",
+#         attrs={"td": {"style": "max-width: 2em"}},
+#     )
 
 
-class RelationsTableEdit(RelationsTable):
-    class Meta(GenericTable.Meta):
-        model = TibScholRelationMixin
-        fields = [
-            "name",
-            "obj",
-            "support_notes",
-            "zotero_refs",
-            "tei_refs",
-            "edit",
-            "delete",
-        ]
-        exclude = ["view", "desc", "subj"]
-
-    edit = tables.TemplateColumn(
-        "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>",
-        orderable=False,
-        verbose_name="",
-        attrs={"td": {"style": "max-width: 2em"}},
-    )
-
-    delete = tables.TemplateColumn(
-        "<a href='{% url 'apis:relationdelete' record.id %}?next={{ request.GET.next }}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">delete</span></a>",
-        orderable=False,
-        verbose_name="",
-        attrs={"td": {"style": "max-width: 2em"}},
-    )
+# class RelationsTableView(RelationsTable):
+#     class Meta(GenericTable.Meta):
+#         model = TibScholRelationMixin
+#         fields = [
+#             "name",
+#             "obj",
+#             "support_notes",
+#             "zotero_refs",
+#             "tei_refs",
+#         ]
+#         exclude = ["view", "edit", "desc", "delete", "subj"]
 
 
-class RelationsTableView(RelationsTable):
-    class Meta(GenericTable.Meta):
-        model = TibScholRelationMixin
-        fields = [
-            "name",
-            "obj",
-            "support_notes",
-            "zotero_refs",
-            "tei_refs",
-        ]
-        exclude = ["view", "edit", "desc", "delete", "subj"]
+# class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
+#     class Meta(TibScholRelationMixinTable.Meta):
+#         fields = [
+#             "subj",
+#             "obj",
+#             "commentary_author",
+#             "edit",
+#             "delete",
+#         ]
+
+#     subj = tables.Column()
+#     obj = tables.Column()
+#     commentary_author = tables.Column(
+#         verbose_name="Author (obj)", orderable=False, accessor="obj"
+#     )
+
+#     def render_commentary_author(self, value):
+#         obj_work = Work.objects.get(pk=value.pk)
+#         if obj_work.author_id:
+#             return f"{obj_work.author_name} ({obj_work.author_id})"
+#         return ""
 
 
-class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
-    class Meta(TibScholRelationMixinTable.Meta):
-        fields = [
-            "subj",
-            "obj",
-            "commentary_author",
-            "edit",
-            "delete",
-        ]
+# class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
+#     class Meta(TibScholRelationMixinTable.Meta):
+#         fields = [
+#             "subj",
+#             "obj",
+#             "work_author",
+#             "edit",
+#             "delete",
+#         ]
 
-    subj = tables.Column()
-    obj = tables.Column()
-    commentary_author = tables.Column(
-        verbose_name="Author (obj)", orderable=False, accessor="obj"
-    )
+#     subj = tables.Column(verbose_name="Work")
+#     work_author = tables.Column(verbose_name="Author", orderable=False, accessor="subj")
+#     obj = tables.Column(verbose_name="Place")
 
-    def render_commentary_author(self, value):
-        obj_work = Work.objects.get(pk=value.pk)
-        if obj_work.author_id:
-            return f"{obj_work.author_name} ({obj_work.author_id})"
-        return ""
+#     def render_work_author(self, value):
+#         work = Work.objects.get(pk=value.pk)
+#         if work.author_id:
+#             return f"{work.author_name} ({work.author_id})"
+#         return ""
 
 
-class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
-    class Meta(TibScholRelationMixinTable.Meta):
-        fields = [
-            "subj",
-            "obj",
-            "work_author",
-            "edit",
-            "delete",
-        ]
+# class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
+#     class Meta(TibScholRelationMixinTable.Meta):
+#         fields = [
+#             "subj",
+#             "obj",
+#             "author_dates",
+#             "edit",
+#             "delete",
+#         ]
 
-    subj = tables.Column(verbose_name="Work")
-    work_author = tables.Column(verbose_name="Author", orderable=False, accessor="subj")
-    obj = tables.Column(verbose_name="Place")
+#     subj = tables.Column(verbose_name="Person")
+#     author_dates = tables.Column(
+#         verbose_name="Lifespan", orderable=False, accessor="subj"
+#     )
+#     obj = tables.Column(verbose_name="Place")
 
-    def render_work_author(self, value):
-        work = Work.objects.get(pk=value.pk)
-        if work.author_id:
-            return f"{work.author_name} ({work.author_id})"
-        return ""
-
-
-class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
-    class Meta(TibScholRelationMixinTable.Meta):
-        fields = [
-            "subj",
-            "obj",
-            "author_dates",
-            "edit",
-            "delete",
-        ]
-
-    subj = tables.Column(verbose_name="Person")
-    author_dates = tables.Column(
-        verbose_name="Lifespan", orderable=False, accessor="subj"
-    )
-    obj = tables.Column(verbose_name="Place")
-
-    def render_author_dates(self, value):
-        author = Person.objects.get(pk=value.pk)
-        return (
-            (author.start_date_written if author.start_date_written else "")
-            + " - "
-            + (author.end_date_written if author.end_date_written else "")
-        )
+#     def render_author_dates(self, value):
+#         author = Person.objects.get(pk=value.pk)
+#         return (
+#             (author.start_date_written if author.start_date_written else "")
+#             + " - "
+#             + (author.end_date_written if author.end_date_written else "")
+#         )

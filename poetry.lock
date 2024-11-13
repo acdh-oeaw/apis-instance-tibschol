@@ -95,16 +95,17 @@ resolved_reference = "e14c8060672744076248a20438fdfe9fe95c3947"
 
 [[package]]
 name = "apis-highlighter-ng"
-version = "0.4.2"
+version = "0.5.0"
 description = "Highlighter for the APIS project"
 optional = false
 python-versions = "<4.0,>=3.11"
 files = [
-    {file = "apis_highlighter_ng-0.4.2-py3-none-any.whl", hash = "sha256:8ddedcbeacacd0ad32eef58de6bdae8e7f75166ecc0e4e3f6ca2c5f1082e25ff"},
-    {file = "apis_highlighter_ng-0.4.2.tar.gz", hash = "sha256:32406ad9d27375cfeb18edef679349de477c4ff8af6283399e64515340d8455e"},
+    {file = "apis_highlighter_ng-0.5.0-py3-none-any.whl", hash = "sha256:1b02f66e4117f245e1c0b3e766c2d54af1be89abd2977ff24e3ee6800194a5ef"},
+    {file = "apis_highlighter_ng-0.5.0.tar.gz", hash = "sha256:1fa53105911c16f6585162ea9b6e419eeb3255246b391f0695e4edd9a63e5b82"},
 ]
 
 [package.dependencies]
+apis-core-rdf = ">=0.29.0"
 Django = ">4.1"
 
 [[package]]
@@ -3706,4 +3707,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "682fa602ad5dfb9714f68be68b40b79a0c6cc08e6914ff89067636280e6fdcab"
+content-hash = "1c51380e1a8615c46f7935f7933d08a2b78d78542602be03b25f67a96c013d9f"

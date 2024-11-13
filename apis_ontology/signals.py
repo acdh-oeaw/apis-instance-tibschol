@@ -17,5 +17,5 @@ def add_to_group(sender, user, request, **kwargs):
 
 @receiver(pre_delete, sender=RootObject)
 def cascade_delete_related(sender, instance, **kwargs):
-    Relation.objects.filter(subj=instance).delete()
-    Relation.objects.filter(obj=instance).delete()
+    Relation.objects.filter(subj_object_id=instance.pk).delete()
+    Relation.objects.filter(obj_object_id=instance.pk).delete()

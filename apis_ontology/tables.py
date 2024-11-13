@@ -163,7 +163,6 @@ class RelationPredicateColumn(CustomTemplateColumn):
             if hasattr(predicate, "isExtant") and not predicate.isExtant
             else ""
         )
-        print(predicate, highlight_style)
         # Render the template with the additional context
         self.extra_context["highlight_style"] = highlight_style
         # Render template with updated context

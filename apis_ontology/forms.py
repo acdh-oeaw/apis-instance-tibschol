@@ -1,4 +1,5 @@
 from apis_core.relations.models import Relation
+from apis_core.relations.forms import RelationForm
 from django import forms
 from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
 from django.forms.models import ModelChoiceField
@@ -15,26 +16,9 @@ class TibscholEntityForm(GenericModelForm):
         }
 
 
-class TibScholRelationMixinForm(GenericModelForm):
-    class Meta:
-        exclude = []
-        model = Relation
-
-    field_order = ["subj", "obj"]
-
-    def __init__(
-        self,
-        *args,
-        **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-
-        self.fields["subj"] = ModelChoiceField(
-            queryset=self._meta.model.subj_model.objects.all().order_by("id")
-        )
-        self.fields["obj"] = ModelChoiceField(
-            queryset=self._meta.model.obj_model.objects.all().order_by("id")
-        )
+class TibScholRelationMixinForm(RelationForm):
+    # position the subject/object field on top
+    field_order = ["subj", "subj_ct_and_id", "obj", "obj_ct_and_id"]
 
 
 class PlaceForm(TibscholEntityForm):
@@ -168,28 +152,3 @@ class InstanceSearchForm(GenericFilterSetForm):
         "comments",
         "external_links",
     ]
-
-
-class TibScholRelationMixinSearchForm(GenericFilterSetForm):
-    field_order = ["columns", "subj", "obj"]
-
-    def __init__(
-        self,
-        *args,
-        **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-        model = apps.get_model(
-            "apis_ontology", self.__class__.__name__[: -len("FilterSetForm")]
-        )
-
-        self.fields["subj"] = ModelChoiceField(
-            queryset=model.subj_model.objects.all().order_by("id"),
-            required=False,
-            widget=forms.Select(attrs={"class": "form-control"}),
-        )
-        self.fields["obj"] = ModelChoiceField(
-            queryset=model.obj_model.objects.all().order_by("id"),
-            required=False,
-            widget=forms.Select(attrs={"class": "form-control"}),
-        )

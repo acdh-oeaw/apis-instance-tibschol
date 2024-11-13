@@ -2,23 +2,28 @@ from django import template
 from django.contrib.contenttypes.models import ContentType
 from django.apps import apps
 from apis_core.relations.utils import relation_content_types
+from apis_core.apis_entities.utils import get_entity_classes
 
 register = template.Library()
 
 
 @register.simple_tag
 def tibschol_entity_types():
-    models = [
-        "person",
-        "work",
-        "instance",
-        "place",
+    custom_order = [
+        "Persons",
+        "Works",
+        "Instances",
+        "Places",
     ]
-    ctypes = [
-        ContentType.objects.get_for_model(apps.get_model("apis_ontology", m))
-        for m in models
+    ent_classes = {
+        entity._meta.verbose_name_plural: entity.get_listview_url()
+        for entity in get_entity_classes()
+    }
+    sorted_entities = [
+        (key, ent_classes[key]) for key in custom_order if key in ent_classes
     ]
-    return ctypes
+
+    return sorted_entities
 
 
 @register.simple_tag

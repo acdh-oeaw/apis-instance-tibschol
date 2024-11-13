@@ -140,8 +140,8 @@ class WorkQuerySet(QuerySet):
         return self.annotate(
             # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
             author_id=Subquery(
-                PersonAuthorOfWork.objects.filter(obj_id=OuterRef("id")).values(
-                    "subj_id"
+                PersonAuthorOfWork.objects.filter(obj_object_id=OuterRef("id")).values(
+                    "subj_object_id"
                 )[:1]
             ),
             # Subquery to get the Person's name based on the person_id from above
@@ -206,13 +206,13 @@ class InstanceQuerySet(QuerySet):
             # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
             work_id=Subquery(
                 WorkHasAsAnInstanceInstance.objects.filter(
-                    obj_id=OuterRef("id")
-                ).values("subj_id")[:1]
+                    obj_object_id=OuterRef("id")
+                ).values("subj_object_id")[:1]
             ),
             author_id=Subquery(
-                PersonAuthorOfWork.objects.filter(obj_id=OuterRef("work_id")).values(
-                    "subj_id"
-                )[:1]
+                PersonAuthorOfWork.objects.filter(
+                    obj_object_id=OuterRef("work_id")
+                ).values("subj_object_id")[:1]
             ),
             # Subquery to get the Person's name based on the person_id from above
             author_name=Subquery(
@@ -364,24 +364,6 @@ class TibScholRelationMixin(Relation, LegacyDateMixin, GenericModel):
     def object_type(self):
         return str(self.obj_model.__name__).lower()
 
-    @property
-    def subj_to_obj_text(self):
-        try:
-            return f"{RootObject.objects_inheritance.get_subclass(pk=self.subj.pk)} {self.name} {RootObject.objects_inheritance.get_subclass(pk=self.obj.pk)}"
-        except Exception as e:
-            logger.error(e)
-
-        return f"{self.subj} relation to {self.obj}"
-
-    @property
-    def obj_to_subj_text(self):
-        try:
-            return f"{self.subj} {self.reverse_name} {self.obj}"
-        except:
-            logger.error(e)
-
-        return f"{self.obj} relation to {self.subj}"
-
     class Meta:
         abstract = True
 
@@ -389,112 +371,161 @@ class TibScholRelationMixin(Relation, LegacyDateMixin, GenericModel):
 class PersonActiveAtPlace(TibScholRelationMixin):
     subj_model = Person
     obj_model = Place
-    name = "active at"
-    reverse_name = "place of activity of"
-    temptriple_name = "active at"
-    temptriple_name_reverse = "place of activity of"
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
+
+    @classmethod
+    def name(cls) -> str:
+        return "active at"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "place of activity of"
 
 
 class PersonAddresseeOfWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
-    name = "addressee of"
-    reverse_name = "addressed to"
-    temptriple_name = "addressee of"
-    temptriple_name_reverse = "addressed to"
+
+    @classmethod
+    def name(cls) -> str:
+        return "addressee of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "addressed to"
 
 
 class PersonAuntMaternalPaternalOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "aunt (maternal/paternal) of"
-    reverse_name = "nephew (maternal/paternal) of"
-    temptriple_name = "aunt (maternal/paternal) of"
-    temptriple_name_reverse = "nephew (maternal/paternal) of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "aunt (maternal/paternal) of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "nephew (maternal/paternal) of"
 
 
 class PersonAuthorOfWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
-    name = "author of"
-    reverse_name = "composed by"
-    temptriple_name = "author of"
-    temptriple_name_reverse = "composed by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "author of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "composed by"
 
 
 class PersonBiographedInWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
-    name = "biographed in"
-    reverse_name = "biography of"
-    temptriple_name = "biographed in"
-    temptriple_name_reverse = "biography of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "biographed in"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "biography of"
 
 
 class PersonBiographerOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "biographer of"
-    reverse_name = "biographed by"
-    temptriple_name = "biographer of"
-    temptriple_name_reverse = "biographed by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "biographer of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "biographed by"
 
 
 class PersonCitesWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
-    name = "cites"
-    reverse_name = "is cited by"
-    temptriple_name = "cites"
-    temptriple_name_reverse = "is cited by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "cites"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "is cited by"
 
 
 class WorkCommentaryOnWork(TibScholRelationMixin):
     subj_model = Work
     obj_model = Work
-    name = "commentary on"
-    reverse_name = "has as a commentary"
-    temptriple_name = "commentary on"
-    temptriple_name_reverse = "has as a commentary"
+
+    @classmethod
+    def name(cls) -> str:
+        return "commentary on"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has as a commentary"
 
 
 class WorkComposedAtPlace(TibScholRelationMixin):
     subj_model = Work
     obj_model = Place
-    name = "composed at"
-    reverse_name = "place of composition for"
-    temptriple_name = "composed at"
-    temptriple_name_reverse = "place of composition for"
+
+    @classmethod
+    def name(cls) -> str:
+        return "composed at"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "place of composition for"
 
 
 class WorkContainsCitationsOfWork(TibScholRelationMixin):
     subj_model = Work
     obj_model = Work
-    name = "contains citations of"
-    reverse_name = "is cited in"
-    temptriple_name = "contains citations of"
-    temptriple_name_reverse = "is cited in"
+
+    @classmethod
+    def name(cls) -> str:
+        return "contains citations of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "is cited in"
 
 
 class InstanceCopiedWrittenDownAtPlace(TibScholRelationMixin):
     subj_model = Instance
     obj_model = Place
-    name = "copied/written down at"
-    reverse_name = "place of scribing for"
-    temptriple_name = "copied/written down at"
-    temptriple_name_reverse = "place of scribing for"
+
+    @classmethod
+    def name(cls) -> str:
+        return "copied/written down at"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "place of scribing for"
 
 
 class PersonDirectPredecessorInLineageOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "direct predecessor (in lineage) of"
-    reverse_name = "direct successor (in lineage) of"
-    temptriple_name = "direct predecessor (in lineage) of"
-    temptriple_name_reverse = "direct successor (in lineage) of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "direct predecessor (in lineage) of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "direct successor (in lineage) of"
+
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -503,10 +534,15 @@ class PersonDirectPredecessorInLineageOfPerson(TibScholRelationMixin):
 class PersonDiscipleOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "disciple of"
-    reverse_name = "spiritual teacher of"
-    temptriple_name = "disciple of"
-    temptriple_name_reverse = "spiritual teacher of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "disciple of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "spiritual teacher of"
+
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -515,193 +551,278 @@ class PersonDiscipleOfPerson(TibScholRelationMixin):
 class PersonEditorOfInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance
-    name = "editor of"
-    reverse_name = "edited by"
-    temptriple_name = "editor of"
-    temptriple_name_reverse = "edited by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "editor of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "edited by"
 
 
 class PersonFellowMonkOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "fellow monk of"
-    reverse_name = "fellow monk of"
-    temptriple_name = "fellow monk of"
-    temptriple_name_reverse = "fellow monk of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "fellow monk of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "fellow monk of"
 
 
 class PersonFellowStudentOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "fellow student of"
-    reverse_name = "fellow student of"
-    temptriple_name = "fellow student of"
-    temptriple_name_reverse = "fellow student of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "fellow student of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "fellow student of"
 
 
 class WorkHasAsAnInstanceInstance(TibScholRelationMixin):
     subj_model = Work
     obj_model = Instance
-    name = "has as an instance"
-    reverse_name = "instance of"
-    temptriple_name = "has as an instance"
-    temptriple_name_reverse = "instance of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "has as an instance"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "instance of"
 
 
 class PersonHasOtherTypeOfPersonalRelationToPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "has other type of personal relation to"
-    reverse_name = "has other type of personal relation to"
-    temptriple_name = "has other type of personal relation to"
-    temptriple_name_reverse = "has other type of personal relation to"
+
+    @classmethod
+    def name(cls) -> str:
+        return "has other type of personal relation to"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has other type of personal relation to"
 
 
 class PersonIllustratorOfInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance
-    name = "illustrator of"
-    reverse_name = "illustrated by"
-    temptriple_name = "illustrator of"
-    temptriple_name_reverse = "illustrated by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "illustrator of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "illustrated by"
 
 
 class InstanceIsCopiedFromInstance(TibScholRelationMixin):
     subj_model = Instance
     obj_model = Instance
-    name = "has as its source"
-    reverse_name = "is source for"
-    temptriple_name = "is copied from"
-    temptriple_name_reverse = "is source for"
+
+    @classmethod
+    def name(cls) -> str:
+        return "has as its source"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "is source for"
 
     class Meta:
-        verbose_name = _("instance has as its source")
+        verbose_name = "instance has as its source"
 
 
 class PlaceIsLocatedWithinPlace(TibScholRelationMixin):
     subj_model = Place
     obj_model = Place
-    name = "is located within"
-    reverse_name = "contains"
-    temptriple_name = "is located within"
-    temptriple_name_reverse = "contains"
+
+    @classmethod
+    def name(cls) -> str:
+        return "is located within"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "contains"
 
 
 class PersonLenderOfInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance
-    name = "lender of"
-    reverse_name = "lent by"
-    temptriple_name = "lender of"
-    temptriple_name_reverse = "lent by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "lender of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "lent by"
 
 
 class WorkNamesPerson(TibScholRelationMixin):
     subj_model = Work
     obj_model = Person
-    name = "names"
-    reverse_name = "is named in"
-    temptriple_name = "names"
-    temptriple_name_reverse = "is named in"
+
+    @classmethod
+    def name(cls) -> str:
+        return "names"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "is named in"
 
 
 class WorkNamesWork(TibScholRelationMixin):
     subj_model = Work
     obj_model = Work
-    name = "names"
-    reverse_name = "is named in"
-    temptriple_name = "names"
-    temptriple_name_reverse = "is named in"
+
+    @classmethod
+    def name(cls) -> str:
+        return "names"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "is named in"
 
 
 class PersonOrdinatorOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "ordinator of"
-    reverse_name = "ordained by"
-    temptriple_name = "ordinator of"
-    temptriple_name_reverse = "ordained by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "ordinator of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "ordained by"
 
 
 class PersonOwnerOfInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance
-    name = "owner of"
-    reverse_name = "owned by"
-    temptriple_name = "owner of"
-    temptriple_name_reverse = "owned by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "owner of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "owned by"
 
 
 class PersonParentOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "parent of"
-    reverse_name = "child of"
-    temptriple_name = "parent of"
-    temptriple_name_reverse = "child of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "parent of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "child of"
 
 
 class PersonPatronOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "patron of"
-    reverse_name = "protegee of"
-    temptriple_name = "patron of"
-    temptriple_name_reverse = "protegee of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "patron of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "protegee of"
 
 
 class PersonPromoterOfWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
-    name = "promoter of"
-    reverse_name = "promoted by"
-    temptriple_name = "promoter of"
-    temptriple_name_reverse = "promoted by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "promoter of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "promoted by"
 
 
 class PersonPrompterOfWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
-    name = "prompter of"
-    reverse_name = "prompted by"
-    temptriple_name = "prompter of"
-    temptriple_name_reverse = "prompted by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "prompter of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "prompted by"
 
 
 class WorkQuotesWithNameTheViewsOfPerson(TibScholRelationMixin):
     subj_model = Work
     obj_model = Person
-    name = "quotes (with name) the views of"
-    reverse_name = "has views quoted (with name) in"
-    temptriple_name = "quotes (with name) the views of"
-    temptriple_name_reverse = "has views quoted (with name) in"
+
+    @classmethod
+    def name(cls) -> str:
+        return "quotes (with name) the views of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has views quoted (with name) in"
 
 
 class WorkQuotesWithoutNameTheViewsOfPerson(TibScholRelationMixin):
     subj_model = Work
     obj_model = Person
-    name = "quotes (without name) the views of"
-    reverse_name = "has views quoted (without name) in"
-    temptriple_name = "quotes (without name) the views of"
-    temptriple_name_reverse = "has views quoted (without name) in"
+
+    @classmethod
+    def name(cls) -> str:
+        return "quotes (without name) the views of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has views quoted (without name) in"
 
 
 class WorkRecordsTheTeachingOfPerson(TibScholRelationMixin):
     subj_model = Work
     obj_model = Person
-    name = "records the teaching of"
-    reverse_name = "has their teaching recorded in"
-    temptriple_name = "records the teaching of"
-    temptriple_name_reverse = "has their teaching recorded in"
+
+    @classmethod
+    def name(cls) -> str:
+        return "records the teaching of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has their teaching recorded in"
 
 
 class PersonRefersWithNameToTheViewsOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "refers (with name) to the views of"
-    reverse_name = "has views referred to (with name) by"
-    temptriple_name = "refers (with name) to the views of"
-    temptriple_name_reverse = "has views referred to (with name) by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "refers (with name) to the views of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has views referred to (with name) by"
+
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -710,10 +831,15 @@ class PersonRefersWithNameToTheViewsOfPerson(TibScholRelationMixin):
 class PersonRefersWithoutNameToTheViewsOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "refers (without name) to the views of"
-    reverse_name = "has views referred to (without name) by"
-    temptriple_name = "refers (without name) to the views of"
-    temptriple_name_reverse = "has views referred to (without name) by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "refers (without name) to the views of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has views referred to (without name) by"
+
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -722,10 +848,15 @@ class PersonRefersWithoutNameToTheViewsOfPerson(TibScholRelationMixin):
 class PersonRequestorOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "requestor of"
-    reverse_name = "requested by"
-    temptriple_name = "requestor of"
-    temptriple_name_reverse = "requested by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "requestor of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "requested by"
+
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -734,46 +865,67 @@ class PersonRequestorOfPerson(TibScholRelationMixin):
 class PersonScribeOfInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance
-    name = "scribe of"
-    reverse_name = "copied/written down by"
-    temptriple_name = "scribe of"
-    temptriple_name_reverse = "copied/written down by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "scribe of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "copied/written down by"
 
 
 class PersonSiblingOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "sibling of"
-    reverse_name = "sibling of"
-    temptriple_name = "sibling of"
-    temptriple_name_reverse = "sibling of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "sibling of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "sibling of"
 
 
 class PersonSpiritualFriendOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "spiritual friend of"
-    reverse_name = "has as spiritual friend"
-    temptriple_name = "spiritual friend of"
-    temptriple_name_reverse = "has as spiritual friend"
+
+    @classmethod
+    def name(cls) -> str:
+        return "spiritual friend of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has as spiritual friend"
 
 
 class PersonSponsorOfInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance
-    name = "sponsor of"
-    reverse_name = "sponsored by"
-    temptriple_name = "sponsor of"
-    temptriple_name_reverse = "sponsored by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "sponsor of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "sponsored by"
 
 
 class PersonStudentOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "student of"
-    reverse_name = "teacher of"
-    temptriple_name = "student of"
-    temptriple_name_reverse = "teacher of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "student of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "teacher of"
+
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True
     )
@@ -782,46 +934,76 @@ class PersonStudentOfPerson(TibScholRelationMixin):
 class PersonStudiedWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
-    name = "studied"
-    reverse_name = "studied by"
-    temptriple_name = "studied"
-    temptriple_name_reverse = "studied by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "studied"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "studied by"
 
 
 class PersonTeachesWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
-    name = "teaches"
-    reverse_name = "taught by"
-    temptriple_name = "teaches"
-    temptriple_name_reverse = "taught by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "teaches"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "taught by"
 
 
 class PersonUncleMaternalPaternalOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
-    name = "uncle (maternal/paternal) of"
-    reverse_name = "nephew (maternal/paternal) of"
-    temptriple_name = "uncle (maternal/paternal) of"
-    temptriple_name_reverse = "nephew (maternal/paternal) of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "uncle (maternal/paternal) of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "nephew (maternal/paternal) of"
 
 
 class WorkTaughtAtPlace(TibScholRelationMixin):
     subj_model = Work
     obj_model = Place
-    name = "taught at"
-    reverse_name = "place of teaching of"
+
+    @classmethod
+    def name(cls) -> str:
+        return "taught at"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "place of teaching of"
 
 
 class PersonTranslatorOfWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
-    name = "translator of"
-    reverse_name = "translated by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "translator of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "translated by"
 
 
 class PersonAnnotatorOfInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance
-    name = "annotator of"
-    reverse_name = "annotated by"
+
+    @classmethod
+    def name(cls) -> str:
+        return "annotator of"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "annotated by"

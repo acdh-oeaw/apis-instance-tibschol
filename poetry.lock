@@ -925,6 +925,17 @@ files = [
 django = ">=4.2"
 
 [[package]]
+name = "dot"
+version = "0.3.0"
+description = "Providing context to models..."
+optional = false
+python-versions = "<4.0,>=3.11"
+files = [
+    {file = "dot-0.3.0-py3-none-any.whl", hash = "sha256:9f43c4ed466315803a354908486c67a7f981b10f1fdb55cb45aeac6ddd2dd0de"},
+    {file = "dot-0.3.0.tar.gz", hash = "sha256:3543921eefa82923870fc752ebdadc593962e0d0db507d27daab9528c05ceb58"},
+]
+
+[[package]]
 name = "drf-spectacular"
 version = "0.27.2"
 description = "Sane and flexible OpenAPI 3 schema generation for Django REST framework"
@@ -3708,4 +3719,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "2fb0f1cdb44db5592242770f728725fbeef8c7bc481f61e888d3f862ecf61d40"
+content-hash = "3ce1261cc6e6f5d885b8f39bcf2c71828d7361c01ec647feb321456a86658715"

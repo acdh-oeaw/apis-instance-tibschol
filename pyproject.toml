@@ -20,6 +20,7 @@ django-select2 = "^8.1.2"
 lxml = "^5.2.2"
 sqlparse = "^0.5.1"
 graphviz = "^0.20.3"
+dot = "^0.3.0"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.29.0"

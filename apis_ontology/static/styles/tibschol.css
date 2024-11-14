@@ -2,21 +2,6 @@
 body {
       text-rendering: geometricPrecision;
 }
-.show-more:checked + .content .more-content {
-    display: inline;
-}
-.show-more:checked + .content .preview {
-    display: none;
-}
-.show-more:checked + .content .more-link {
-    display: none;
-}
-.show-more:checked + .content .less-link {
-    display: inline;
-}
-.show-more, .less-link, .more-content {
-    display: none;
-}
 
 .linkish {
     color: #007BFF;
@@ -27,27 +12,6 @@ body {
 .linkish:hover {
     color: #0056b3;
     text-decoration: underline;
-}
-
-.dropdown-menu{
-    z-index: 1000;
-}
-.dropdown-menu li {
-    position: relative;
-}
-.dropdown-menu .dropdown-submenu {
-    display: none;
-    position: absolute;
-    left: 100%;
-    top: -7px;
-    z-index: 1001;
-}
-.dropdown-menu .dropdown-submenu-left {
-    right: 100%;
-    left: auto;
-}
-.dropdown-menu > li:hover > .dropdown-submenu {
-    display: block;
 }
 
 

@@ -196,7 +196,6 @@ class TEIRefColumn(TibScholRelationColumn):
 
 
 class TibScholEntityMixinRelationsTable(GenericTable):
-    paginate_by = 1000
     relation = RelationNameColumn()
     predicate = RelationPredicateColumn()
     support_notes = MoreLessColumn(
@@ -222,6 +221,7 @@ class TibScholEntityMixinRelationsTable(GenericTable):
             "tei_refs",
         ]
         exclude = ["desc"]
+        per_page = 1000
 
 
 class RelationsTable(TibScholEntityMixinRelationsTable):

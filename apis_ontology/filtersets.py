@@ -5,6 +5,7 @@ from apis_core.apis_entities.filtersets import (
 )
 from apis_core.apis_entities.models import RootObject
 from apis_core.generic.filtersets import GenericFilterSet
+from apis_core.relations.filtersets import RelationFilterSet
 from apis_core.relations.models import Relation
 from django.apps import apps
 from django.db import models
@@ -12,8 +13,6 @@ from django.db import models
 from apis_ontology.forms import (
     PersonSearchForm,
     PlaceSearchForm,
-    TibScholRelationMixinForm,
-    TibScholRelationMixinSearchForm,
     WorkSearchForm,
 )
 from apis_ontology.models import Instance, Person, Place, Work
@@ -93,10 +92,9 @@ class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
         }
 
 
-class TibScholRelationMixinFilterSet(GenericFilterSet):
-    class Meta(GenericFilterSet.Meta):
-        form = TibScholRelationMixinSearchForm
-        exclude = ABSTRACT_ENTITY_FILTERS_EXCLUDE
+class TibScholRelationMixinFilterSet(RelationFilterSet):
+    class Meta(RelationFilterSet.Meta):
+        exclude = RelationFilterSet.Meta.exclude + ABSTRACT_ENTITY_FILTERS_EXCLUDE
         filter_overrides = {
             models.CharField: {
                 "filter_class": django_filters.CharFilter,

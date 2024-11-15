@@ -1,4 +1,7 @@
+import os
 from apis_acdhch_default_settings.settings import *
+from django.utils.translation import gettext_lazy as _
+from django.conf.locale import LANG_INFO
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -17,6 +20,7 @@ INSTALLED_APPS += [
     "apis_core.history",
     "django_acdhch_functions",
     "django_select2",
+    "parler",
 ]
 INSTALLED_APPS.remove("apis_ontology")
 INSTALLED_APPS.insert(0, "apis_ontology")
@@ -65,6 +69,9 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE += [
     "simple_history.middleware.HistoryRequestMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",  # Enables language switching based on session
+    # "apis_ontology.middleware.language_change_middleware.LanguageChangeMiddleware",
 ]
 
 
@@ -90,3 +97,45 @@ APIS_LIST_VIEW_OBJECT_FILTER = apis_list_view_object_filter
 
 APIS_DETAIL_VIEWS_ALLOWED = True
 APIS_VIEW_PASSES_TEST = apis_view_passes_test
+LANG_INFO.update(
+    {
+        "bo": {
+            "bidi": False,  # Set to True if the language is written right-to-left
+            "code": "bo",
+            "name": "Tibetan",
+            "name_local": "བོད་ཡིག",  # Native name
+        },
+    }
+)
+
+LANGUAGE_CODE = "en"  # This will be the default language
+
+# Locale paths (optional if you store translations in a custom directory)
+# We currently use only model translations on specific fields
+# LOCALE_PATHS = [
+#     BASE_DIR / 'locale',
+# ]
+
+PARLER_LANGUAGES = {
+    None: (  # Site ID 1
+        {"code": "en"},
+        {"code": "es"},
+    ),
+    "default": {
+        "fallback": "en",  # Use English if translation is missing
+        "hide_untranslated": False,  # Show default values for missing translations
+    },
+}
+
+
+## List of available languages in the app
+LANGUAGES = [
+    ("en", _("English")),
+    ("es", _("Tibetan")),
+]
+
+LOCALE_PATHS = (os.path.join(BASE_DIR, "apis_ontology", "locale/"),)
+
+USE_I18N = True
+USE_L10N = True
+USE_TZ = True

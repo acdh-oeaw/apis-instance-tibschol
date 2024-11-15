@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% load static %}
 {% load tibschol_entity_ctypes %}
@@ -32,8 +33,31 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
         <a class="dropdown-item" href="{% url 'apis_core:documentation' %}">Data model</a>
     </div>
 </li>
-{{ block.super }}
-{% endblock main-menu %}
+
+            {{ block.super }}
+<ul class="navbar-nav">
+    <li class="nav-item dropdown-right m-auto">
+        {% load i18n %}
+
+<form action="{% url 'set_language' %}" method="post">{% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}">
+    <select name="language">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+            <option value="en" {% if LANGUAGE_CODE == "en" %}selected {% endif %}>
+                English
+            </option>
+            <option value="es" {% if LANGUAGE_CODE == "es" %}selected {% endif %}>
+                Tibetan
+            </option>
+            </select>
+            <input type="submit" value="Go">
+            </form>
+            </li>
+            </ul>
+
+            {% endblock main-menu %}
 
 {% block modal %}
 {{ block.super }}

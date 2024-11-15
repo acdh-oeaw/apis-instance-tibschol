@@ -14,6 +14,10 @@ from django.db.models import OuterRef, QuerySet, Subquery
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+from parler.models import TranslatableModel, TranslatedFields
+
+from apis_ontology.querysets import PersonQuerySet
+from django.utils.translation import get_language
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +73,12 @@ class LegacyStuffMixin(models.Model):
 
 
 class Person(
-    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
+    VersionMixin,
+    LegacyStuffMixin,
+    LegacyDateMixin,
+    TibScholEntityMixin,
+    AbstractEntity,
+    TranslatableModel,
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Person"
 
@@ -92,18 +101,27 @@ class Person(
     ]
     NATIONALITY = [("Indic", "Indic"), ("Tibetan", "Tibetan")]
 
-    name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
+    name_latin = models.CharField(
+        max_length=255, blank=True, default="", verbose_name="Name"
+    )
+    translations = TranslatedFields(
+        name=models.CharField(
+            max_length=255, blank=True, default="", verbose_name="Name"
+        )
+    )
     gender = models.CharField(max_length=6, choices=GENDERS, default="male")
     nationality = models.CharField(
         max_length=10, choices=NATIONALITY, blank=True, null=True
     )
 
+    def __str__(self):
+        return f"{self.name} ({self.pk})"
+
     class Meta:
         verbose_name = _("person")
         verbose_name_plural = _("Persons")
 
-    def __str__(self):
-        return f"{self.name} ({self.pk})"
+    objects = PersonQuerySet.as_manager()
 
 
 class Place(
@@ -137,6 +155,8 @@ class Place(
 
 class WorkQuerySet(QuerySet):
     def with_author(self):
+        current_language = get_language()
+
         return self.annotate(
             # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
             author_id=Subquery(
@@ -146,7 +166,9 @@ class WorkQuerySet(QuerySet):
             ),
             # Subquery to get the Person's name based on the person_id from above
             author_name=Subquery(
-                Person.objects.filter(id=OuterRef("author_id")).values("name")[:1]
+                Person.objects.filter(id=OuterRef("author_id"))
+                .filter(translations__language_code=current_language)
+                .values("translations__name")[:1]
             ),
         )
 
@@ -202,6 +224,7 @@ class Work(
 
 class InstanceQuerySet(QuerySet):
     def with_author(self):
+        current_language = get_language()
         return self.annotate(
             # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
             work_id=Subquery(
@@ -216,7 +239,9 @@ class InstanceQuerySet(QuerySet):
             ),
             # Subquery to get the Person's name based on the person_id from above
             author_name=Subquery(
-                Person.objects.filter(id=OuterRef("author_id")).values("name")[:1]
+                Person.objects.filter(id=OuterRef("author_id"))
+                .filter(translations__language_code=current_language)
+                .values("translations__name")[:1]
             ),
         )
 

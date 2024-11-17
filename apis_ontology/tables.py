@@ -90,7 +90,7 @@ class WorkTable(TibscholEntityMixinTable):
         context = {
             "entity_id": record.author_id,
             "entity_name": record.author_name,
-            "entity_uri": f"/apis/apis_ontology.person/{record.author_id}",  # TODO: use urls
+            "entity_uri": Person.objects.get(pk=record.author_id).uri,
         }
         return mark_safe(
             render_to_string("apis_ontology/linked_entity_column.html", context)
@@ -121,7 +121,7 @@ class InstanceTable(TibscholEntityMixinTable):
         context = {
             "entity_id": record.author_id,
             "entity_name": record.author_name,
-            "entity_uri": f"/apis/apis_ontology.person/{record.author_id}",  # TODO: use urls
+            "entity_uri": Person.objects.get(pk=record.author_id).uri,
         }
         return mark_safe(
             render_to_string("apis_ontology/linked_entity_column.html", context)

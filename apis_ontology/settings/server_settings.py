@@ -66,3 +66,6 @@ REST_FRAMEWORK = {
 MIDDLEWARE += [
     "simple_history.middleware.HistoryRequestMiddleware",
 ]
+
+APIS_LIST_VIEWS_ALLOWED = True
+APIS_DETAIL_VIEWS_ALLOWED = True

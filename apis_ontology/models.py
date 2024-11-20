@@ -13,7 +13,7 @@ from django.db import models
 from django.db.models import OuterRef, QuerySet, Subquery
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
+from crum import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +68,15 @@ class LegacyStuffMixin(models.Model):
         return uri
 
 
+class TibScholEntityManager(models.Manager):
+    def get_queryset(self):
+        user = get_current_user()
+        if user and user.is_authenticated:
+            return super().get_queryset()
+
+        return super().get_queryset().filter(review=True)
+
+
 class Person(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
@@ -97,6 +106,8 @@ class Person(
     nationality = models.CharField(
         max_length=10, choices=NATIONALITY, blank=True, null=True
     )
+
+    objects = TibScholEntityManager()
 
     class Meta:
         verbose_name = _("person")
@@ -134,6 +145,8 @@ class Place(
     def __str__(self):
         return f"{self.label} ({self.pk})"
 
+    objects = TibScholEntityManager()
+
 
 class WorkQuerySet(QuerySet):
     def with_author(self):
@@ -151,9 +164,13 @@ class WorkQuerySet(QuerySet):
         )
 
 
-class WorkManager(models.Manager):
+class WorkManager(TibScholEntityManager):
     def get_queryset(self):
-        return WorkQuerySet(self.model, using=self._db).with_author()
+        return (
+            WorkQuerySet(self.model, using=self._db)
+            .filter(id__in=super().get_queryset().values_list("id", flat=True))
+            .with_author()
+        )
 
 
 class Work(
@@ -221,9 +238,13 @@ class InstanceQuerySet(QuerySet):
         )
 
 
-class InstanceManager(models.Manager):
+class InstanceManager(TibScholEntityManager):
     def get_queryset(self):
-        return InstanceQuerySet(self.model, using=self._db).with_author()
+        return (
+            InstanceQuerySet(self.model, using=self._db)
+            .filter(id__in=super().get_queryset().values_list("id", flat=True))
+            .with_author()
+        )
 
 
 class Instance(

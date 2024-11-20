@@ -6,7 +6,7 @@ from apis_core.generic.tables import CustomTemplateColumn, GenericTable, MoreLes
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 import re
-
+from apis_core.history.tables import HistoryGenericTable
 from .models import Instance, Person, Place, Work
 from .templatetags.filter_utils import (
     render_coordinate,
@@ -347,3 +347,9 @@ class RelationsTable(TibScholEntityMixinRelationsTable):
 #             + " - "
 #             + (author.end_date_written if author.end_date_written else "")
 #         )
+
+
+class PersonHistoryTable(tables.Table):
+    # There is a problem in accessing Name
+    # TODO: FInd out how to modiy this to use HistoryGenericTable
+    fields_changed = None

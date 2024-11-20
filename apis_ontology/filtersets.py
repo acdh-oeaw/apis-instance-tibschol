@@ -1,3 +1,4 @@
+from django.conf.global_settings import LANGUAGE_CODE
 import django_filters
 from apis_core.apis_entities.filtersets import (
     ABSTRACT_ENTITY_FILTERS_EXCLUDE,
@@ -9,6 +10,7 @@ from apis_core.relations.filtersets import RelationFilterSet
 from apis_core.relations.models import Relation
 from django.apps import apps
 from django.db import models
+from django.utils.translation import get_language
 
 from apis_ontology.forms import (
     PersonSearchForm,
@@ -212,9 +214,10 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
     )
 
     def custom_name_search(self, queryset, name, value):
-        name_query = models.Q(name__icontains=value) | models.Q(
-            alternative_names__icontains=value
-        )
+        name_query = models.Q(
+            translations__name__icontains=value,
+            translations__language_code=get_language(),
+        ) | models.Q(alternative_names__icontains=value)
         if value.isdigit():
             name_query = name_query | models.Q(pk=int(value))
 

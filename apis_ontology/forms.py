@@ -1,9 +1,9 @@
-from apis_core.relations.models import Relation
 from apis_core.relations.forms import RelationForm
 from django import forms
 from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
-from django.forms.models import ModelChoiceField
 from django.apps import apps
+from parler.fields import TranslatedField
+from parler.forms import TranslatableModelForm
 
 
 class TibscholEntityForm(GenericModelForm):
@@ -35,7 +35,9 @@ class PlaceForm(TibscholEntityForm):
     ]
 
 
-class PersonForm(TibscholEntityForm):
+class PersonForm(TranslatableModelForm, TibscholEntityForm):
+    name = TranslatedField()
+
     field_order = [
         "name",
         "alternative_names",
@@ -48,6 +50,13 @@ class PersonForm(TibscholEntityForm):
         "external_links",
         "review",
     ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["name"].help_text = (
+            "Equivalent transliterations in Tibetan/English inputs will be automatically provided at the time of creation. However, updates to this field will NOT trigger any updates to the values in other languages."
+        )
 
 
 class WorkForm(TibscholEntityForm):

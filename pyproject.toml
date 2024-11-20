@@ -19,6 +19,9 @@ pandas = "^2.2.2"
 django-select2 = "^8.1.2"
 lxml = "^5.2.2"
 sqlparse = "^0.5.2"
+pyewts = "^0.2.0"
+django-parler = "^2.3"
+transliterate = "^1.10.2"
 
 
 [tool.poetry.group.dev.dependencies]

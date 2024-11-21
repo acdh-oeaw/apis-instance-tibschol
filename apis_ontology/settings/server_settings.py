@@ -70,7 +70,8 @@ MIDDLEWARE += [
 
 def apis_view_passes_test(view) -> bool:
     # Temporary hack
-    return True
+    if view.permission_action_required == "view":
+        return True
 
 
 APIS_LIST_VIEWS_ALLOWED = True

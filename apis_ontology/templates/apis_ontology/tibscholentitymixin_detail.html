@@ -1,4 +1,23 @@
 {% extends "apis_core/apis_entities/abstractentity_detail.html" %}
+{% block card-header-content %}
+<div class="row">
+    <div class="col-md-2">{% include "apis_entities/partials/prev_url.html" %}</div>
+    <div class="col-md-8">
+        <h2 style="text-align: center;">
+            {% include "apis_entities/partials/listview_url.html" %}
+            {{ object }}
+            {% if object.review %}
+            <span class="material-symbols-outlined">
+                done_all
+            </span>
+            {% endif %}
+            {% block object-actions %}
+            {% endblock object-actions %}
+        </h2>
+    </div>
+    <div class="col-md-2">{% include "apis_entities/partials/next_url.html" %}</div>
+</div>
+{% endblock card-header-content %}
 
 {% block relations-include %}
 {% include "relations/list_relations_include_tabs.html" %}

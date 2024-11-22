@@ -1,0 +1,109 @@
+{% load generic %}
+{% load filter_utils %}
+{% load parse_comment %}
+{% load citation %}
+
+<table class="table table-hover">
+    <tr>
+        <th>Name</th>
+        <td>{{ object.name }}</td>
+    </tr>
+    {% if object.alternative_names %}
+    <tr>
+        <th>Alternative names</th>
+        <td>{{ object.alternative_names | render_list_field }}</td>
+    </tr>
+    {% endif %}
+
+    {% if object.start_date_written %}
+    <tr>
+        <th>Date</th>
+        <td>
+            {% if object.start_date_written %}
+            {{ object.start_date_written }}
+            {% else %}
+            Unknown
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+    {% if object.availability %}
+    <tr>
+        <th>Availability</th>
+        <td>{{object.availability}}</td>
+    </tr>
+    {% endif %}
+    {% if object.set_num or object.zotero_ref%}
+    <tr>
+        <th>Citation</th>
+        <td>
+            {% if object.set_num %}
+            {{ object|cite }}<br />
+            {% endif %}
+            {{ object.zotero_ref | render_zotero_links | safe}}
+        </td>
+    </tr>
+    {% endif %}
+    {% if object.external_links %}
+    <tr>
+        <th>External links</th>
+        <td>{{ object.external_links | render_links | safe }}</td>
+    </tr>
+    {% endif %}
+    {% if object.comments %}
+    <tr>
+        <th>Comments</th>
+        <td>{{ object.comments | parse_comment }}</td>
+    </tr>
+    {% endif %}
+    {% if object.num_folios %}
+    <tr>
+        <th>Number of folios</th>
+        <td>{{ object.num_folios }}</td>
+    </tr>
+    {% endif %}
+    {% if object.signature_letter %}
+    <tr>
+        <th>Signature letter (category)</th>
+        <td>{{ object.signature_letter }}</td>
+    </tr>
+    {% endif %}
+
+    {% if object.signature_number %}
+    <tr>
+        <th>Signature number</th>
+        <td>{{ object.signature_number }}</td>
+    </tr>
+    {% endif %}
+    {% if object.drepung_number %}
+    <tr>
+        <th>Drepung catalogue number</th>
+        <td>{{ object.drepung_number }}</td>
+    </tr>
+    {% endif %}
+
+    {% if object.tibschol_ref %}
+    <tr>
+        <th>Tibschol reference</th>
+        <td>{{object.tibschol_ref}}</td>
+    </tr>
+    {% endif %}
+    {% if object.dimension %}
+    <tr>
+        <th>WxH size in cm</th>
+        <td>{{ object.dimension }}</td>
+        </tr>
+    {% endif %}
+    {% if object.item_description %}
+    <tr>
+        <th>Item description</th>
+        <td>{{ object.item_description | render_list_field }}</td>
+    </tr>
+    {% endif %}
+    {% if object.provenance %}
+    <tr>
+        <th>Provenance</th>
+        <td>{{ object.provenance | render_list_field}}</td>
+    </tr>
+    {% endif %}
+</table>

@@ -97,7 +97,7 @@
     {% if object.item_description %}
     <tr>
         <th>Item description</th>
-        <td>{{ object.item_description | render_list_field }}</td>
+        <td>{{ object.item_description | parse_comment }}</td>
     </tr>
     {% endif %}
     {% if object.provenance %}

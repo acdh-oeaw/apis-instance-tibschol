@@ -39,20 +39,28 @@ class TibscholEntityMixinTable(AbstractEntityTable):
     def render_comments(self, value):
         return mark_safe(parse_comment(value))
 
-    id = tables.Column(
+    name = tables.Column(
         linkify=lambda record: record.get_absolute_url(),
         empty_values=[],
     )
+
+    def render_name(self, record):
+        return str(record)
 
 
 class PlaceTable(TibscholEntityMixinTable):
     class Meta:
         model = Place
-        fields = [
-            "id",
-            "label",
-        ]
-        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
+        fields = ["label", "longitude", "latitude"]
+        exclude = ["name", "desc", "view", "edit", "noduplicate", "delete"]
+
+    label = tables.Column(
+        linkify=lambda record: record.get_absolute_url(),
+        empty_values=[],
+    )
+
+    def render_label(self, record):
+        return str(record)
 
     def render_latitude(self, value):
         return render_coordinate(value)
@@ -64,18 +72,18 @@ class PlaceTable(TibscholEntityMixinTable):
 class PersonTable(TibscholEntityMixinTable):
     class Meta:
         model = Person
-        fields = [
-            "id",
-            "name",
-        ]
-        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
+        fields = ["name"]
+        exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
+
+    def render_name(self, record):
+        return str(record)
 
 
 class WorkTable(TibscholEntityMixinTable):
     class Meta:
         model = Work
-        fields = ["id", "name", "author"]
-        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
+        fields = ["name", "author"]
+        exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
         row_attrs = {
             "style": lambda record: (
                 "background-color: lightgray;" if not record.isExtant else None
@@ -100,8 +108,8 @@ class WorkTable(TibscholEntityMixinTable):
 class InstanceTable(TibscholEntityMixinTable):
     class Meta:
         model = Instance
-        fields = ["id", "name", "start_date_written", "author"]
-        exclude = ["desc", "view", "edit", "noduplicate", "delete"]
+        fields = ["name", "start_date_written", "author"]
+        exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
 
     author = tables.Column(
         verbose_name="Author", accessor="author_name", orderable=True

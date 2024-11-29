@@ -22,7 +22,7 @@ sqlparse = "^0.5.2"
 
 
 [tool.poetry.group.dev.dependencies]
-ipython = "^8.29.0"
+ipython = "^8.30.0"
 jupyter = "^1.0.0"
 notebook = "^7.3.0rc0"
 jupyterlab = "^4.3.0"

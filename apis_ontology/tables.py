@@ -158,6 +158,12 @@ class RelationNameColumn(CustomTemplateColumn):
     orderable = False
 
 
+class RelationSubjectColumn(CustomTemplateColumn):
+    template_name = "columns/relation_subject.html"
+    verbose_name = "Subject"
+    orderable = False
+
+
 class RelationPredicateColumn(CustomTemplateColumn):
     template_name = "columns/relation_predicate.html"
     verbose_name = "Object"
@@ -230,6 +236,22 @@ class TibScholEntityMixinRelationsTable(GenericTable):
         ]
         exclude = ["desc"]
         per_page = 1000
+
+
+class PlaceRelationsTable(TibScholEntityMixinRelationsTable):
+    subject = RelationSubjectColumn()
+
+    class Meta(TibScholEntityMixinRelationsTable.Meta):
+        pass
+
+    field_order = [
+        "subject",
+        "relation",
+        "predicate",
+        "support_notes",
+        "zotero_refs",
+        "tei_refs",
+    ]
 
 
 class RelationsTable(TibScholEntityMixinRelationsTable):

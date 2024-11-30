@@ -1,0 +1,9 @@
+{% extends "relations/list_relations_include_tabs.html" %}
+
+{% load nested_relations %}
+
+
+{% block display-relations %}
+{% relations_from_place from_obj=object include_places_within=True as relations %}
+    {{ block.super }}
+{% endblock display-relations %}

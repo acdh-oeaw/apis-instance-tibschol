@@ -15,8 +15,9 @@ body {
 }
 
 
-textarea.form-control{
-    height: 5em !important;
+#content textarea.form-control{
+    height: 5em;
+    resize: vertical;
 }
 
 

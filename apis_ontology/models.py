@@ -911,3 +911,16 @@ class PersonAnnotatorOfInstance(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "annotated by"
+
+
+class PersonHasOtherRelationWithInstance(TibScholRelationMixin):
+    subj_model = Person
+    obj_model = Instance
+
+    @classmethod
+    def name(cls) -> str:
+        return "has other relation with"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has other relation with"

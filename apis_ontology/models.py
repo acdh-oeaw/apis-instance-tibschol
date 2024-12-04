@@ -650,19 +650,6 @@ class PlaceIsLocatedWithinPlace(TibScholRelationMixin):
         return "contains"
 
 
-class PersonLenderOfInstance(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Instance
-
-    @classmethod
-    def name(cls) -> str:
-        return "lender of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "lent by"
-
-
 class WorkNamesPerson(TibScholRelationMixin):
     subj_model = Work
     obj_model = Person

@@ -621,19 +621,6 @@ class PersonHasOtherTypeOfPersonalRelationToPerson(TibScholRelationMixin):
         return "has other type of personal relation to"
 
 
-class PersonIllustratorOfInstance(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Instance
-
-    @classmethod
-    def name(cls) -> str:
-        return "illustrator of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "illustrated by"
-
-
 class InstanceIsCopiedFromInstance(TibScholRelationMixin):
     subj_model = Instance
     obj_model = Instance

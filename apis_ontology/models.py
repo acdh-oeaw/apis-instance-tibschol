@@ -870,19 +870,6 @@ class PersonSiblingOfPerson(TibScholRelationMixin):
         return "sibling of"
 
 
-class PersonSpiritualFriendOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "spiritual friend of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "has as spiritual friend"
-
-
 class PersonSponsorOfInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance

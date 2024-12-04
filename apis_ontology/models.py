@@ -556,19 +556,6 @@ class PersonDiscipleOfPerson(TibScholRelationMixin):
     )
 
 
-class PersonFellowMonkOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "fellow monk of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "fellow monk of"
-
-
 class WorkHasAsAnInstanceInstance(TibScholRelationMixin):
     subj_model = Work
     obj_model = Instance

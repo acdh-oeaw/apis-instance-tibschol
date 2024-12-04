@@ -728,19 +728,6 @@ class PersonPatronOfPerson(TibScholRelationMixin):
         return "protegee of"
 
 
-class PersonPromoterOfWork(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Work
-
-    @classmethod
-    def name(cls) -> str:
-        return "promoter of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "promoted by"
-
-
 class PersonPrompterOfWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work

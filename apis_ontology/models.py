@@ -689,19 +689,6 @@ class PersonPrompterOfWork(TibScholRelationMixin):
         return "prompted by"
 
 
-class WorkQuotesWithNameTheViewsOfPerson(TibScholRelationMixin):
-    subj_model = Work
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "quotes (with name) the views of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "has views quoted (with name) in"
-
-
 class WorkQuotesWithoutNameTheViewsOfPerson(TibScholRelationMixin):
     subj_model = Work
     obj_model = Person

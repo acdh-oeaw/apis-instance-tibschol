@@ -418,19 +418,6 @@ class PersonAddresseeOfWork(TibScholRelationMixin):
         return "addressed to"
 
 
-class PersonAuntMaternalPaternalOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "aunt (maternal/paternal) of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "nephew (maternal/paternal) of"
-
-
 class PersonAuthorOfWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
@@ -569,45 +556,6 @@ class PersonDiscipleOfPerson(TibScholRelationMixin):
     )
 
 
-class PersonEditorOfInstance(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Instance
-
-    @classmethod
-    def name(cls) -> str:
-        return "editor of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "edited by"
-
-
-class PersonFellowMonkOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "fellow monk of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "fellow monk of"
-
-
-class PersonFellowStudentOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "fellow student of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "fellow student of"
-
-
 class WorkHasAsAnInstanceInstance(TibScholRelationMixin):
     subj_model = Work
     obj_model = Instance
@@ -632,19 +580,6 @@ class PersonHasOtherTypeOfPersonalRelationToPerson(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "has other type of personal relation to"
-
-
-class PersonIllustratorOfInstance(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Instance
-
-    @classmethod
-    def name(cls) -> str:
-        return "illustrator of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "illustrated by"
 
 
 class InstanceIsCopiedFromInstance(TibScholRelationMixin):
@@ -674,19 +609,6 @@ class PlaceIsLocatedWithinPlace(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "contains"
-
-
-class PersonLenderOfInstance(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Instance
-
-    @classmethod
-    def name(cls) -> str:
-        return "lender of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "lent by"
 
 
 class WorkNamesPerson(TibScholRelationMixin):
@@ -754,32 +676,6 @@ class PersonParentOfPerson(TibScholRelationMixin):
         return "child of"
 
 
-class PersonPatronOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "patron of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "protegee of"
-
-
-class PersonPromoterOfWork(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Work
-
-    @classmethod
-    def name(cls) -> str:
-        return "promoter of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "promoted by"
-
-
 class PersonPrompterOfWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
@@ -791,32 +687,6 @@ class PersonPrompterOfWork(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "prompted by"
-
-
-class WorkQuotesWithNameTheViewsOfPerson(TibScholRelationMixin):
-    subj_model = Work
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "quotes (with name) the views of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "has views quoted (with name) in"
-
-
-class WorkQuotesWithoutNameTheViewsOfPerson(TibScholRelationMixin):
-    subj_model = Work
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "quotes (without name) the views of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "has views quoted (without name) in"
 
 
 class WorkRecordsTheTeachingOfPerson(TibScholRelationMixin):
@@ -907,19 +777,6 @@ class PersonSiblingOfPerson(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "sibling of"
-
-
-class PersonSpiritualFriendOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "spiritual friend of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "has as spiritual friend"
 
 
 class PersonSponsorOfInstance(TibScholRelationMixin):
@@ -1028,3 +885,16 @@ class PersonAnnotatorOfInstance(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "annotated by"
+
+
+class PersonHasOtherRelationWithInstance(TibScholRelationMixin):
+    subj_model = Person
+    obj_model = Instance
+
+    @classmethod
+    def name(cls) -> str:
+        return "has other relation with"
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return "has other relation with"

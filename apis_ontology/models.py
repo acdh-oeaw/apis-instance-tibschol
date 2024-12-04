@@ -569,19 +569,6 @@ class PersonDiscipleOfPerson(TibScholRelationMixin):
     )
 
 
-class PersonEditorOfInstance(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Instance
-
-    @classmethod
-    def name(cls) -> str:
-        return "editor of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "edited by"
-
-
 class PersonFellowMonkOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person

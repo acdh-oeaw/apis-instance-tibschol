@@ -418,19 +418,6 @@ class PersonAddresseeOfWork(TibScholRelationMixin):
         return "addressed to"
 
 
-class PersonAuntMaternalPaternalOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "aunt (maternal/paternal) of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "nephew (maternal/paternal) of"
-
-
 class PersonAuthorOfWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work

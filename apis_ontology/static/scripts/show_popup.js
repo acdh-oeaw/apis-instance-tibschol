@@ -100,6 +100,11 @@ let behaviors = {
       return result;
     },
 
+    // Discard milestone
+    "milestone": function(e) {
+      return null;
+    },
+
   }
 };
 

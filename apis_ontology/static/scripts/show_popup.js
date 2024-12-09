@@ -43,6 +43,17 @@ let behaviors = {
       }
       return result;
     },
+
+    // Handle the unclear element
+    "unclear": function(e) {
+      let result = document.createElement("span");
+      result.classList.add("unclear");
+      result.textContent = e.textContent;
+      // using CSS instead
+      // result.textContent = `(${e.textContent})`;
+
+      return result;
+    },
   }
 };
 

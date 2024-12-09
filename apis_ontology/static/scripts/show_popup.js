@@ -11,6 +11,42 @@ let behaviors = {
       }
       return result;
     },
+    // Handle the LG element
+    "lg": function(e) {
+      let result = document.createElement("quote"); // Use a <div> for segments
+      result.classList.add("lg");
+
+      // Process child nodes and append
+      for (let n of Array.from(e.childNodes)) {
+        // Call the appropriate behavior for each child node
+        let behavior = behaviors.tei[n.nodeName.toLowerCase()];
+        if (behavior) {
+          result.appendChild(behavior(n)); // Process child nodes based on their type
+        } else {
+          result.appendChild(n.cloneNode(true)); // Clone nodes that don't have specific behavior
+        }
+      }
+      return result;
+    },
+
+    // Handle the LG element
+    "l": function(e) {
+      let result = document.createElement("div"); // Use a <div> for segments
+      result.classList.add("l");
+
+      // Process child nodes and append
+      for (let n of Array.from(e.childNodes)) {
+        // Call the appropriate behavior for each child node
+        let behavior = behaviors.tei[n.nodeName.toLowerCase()];
+        if (behavior) {
+          result.appendChild(behavior(n)); // Process child nodes based on their type
+        } else {
+          result.appendChild(n.cloneNode(true)); // Clone nodes that don't have specific behavior
+        }
+      }
+      return result;
+    },
+
     "lb": ["<span class=\"break\">$@n&nbsp;</span>"],
 
     // Hyperlink the rs tag and include type and ref in its title
@@ -43,6 +79,32 @@ let behaviors = {
       }
       return result;
     },
+
+    // Handle the unclear element
+    "unclear": function(e) {
+      let result = document.createElement("span");
+      result.classList.add("unclear");
+      result.textContent = e.textContent;
+      // using CSS instead
+      // result.textContent = `(${e.textContent})`;
+
+      return result;
+    },
+
+    // Show foreign tag in italics
+    "foreign": function(e) {
+      let result = document.createElement("span");
+      result.classList.add("foreign");
+      result.textContent = e.textContent;
+      result.title = e.getAttribute("xml:lang")
+      return result;
+    },
+
+    // Discard milestone
+    "milestone": function(e) {
+      return null;
+    },
+
   }
 };
 

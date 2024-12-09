@@ -1,3 +1,6 @@
+.foreign{
+  font-style: italic;
+}
 .unclear::before {
   content: "(";
 }

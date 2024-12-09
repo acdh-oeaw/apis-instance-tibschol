@@ -54,6 +54,16 @@ let behaviors = {
 
       return result;
     },
+
+    // Show foreign tag in italics
+    "foreign": function(e) {
+      let result = document.createElement("span");
+      result.classList.add("foreign");
+      result.textContent = e.textContent;
+      result.title = e.getAttribute("xml:lang")
+      return result;
+    },
+
   }
 };
 

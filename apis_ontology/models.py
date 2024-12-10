@@ -594,19 +594,6 @@ class PlaceIsLocatedWithinPlace(TibScholRelationMixin):
         return "contains"
 
 
-class WorkNamesWork(TibScholRelationMixin):
-    subj_model = Work
-    obj_model = Work
-
-    @classmethod
-    def name(cls) -> str:
-        return "names"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "is named in"
-
-
 class PersonOrdinatorOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person

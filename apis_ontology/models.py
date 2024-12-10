@@ -457,19 +457,6 @@ class PersonBiographerOfPerson(TibScholRelationMixin):
         return "biographed by"
 
 
-class PersonCitesWork(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Work
-
-    @classmethod
-    def name(cls) -> str:
-        return "cites"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "is cited by"
-
-
 class WorkCommentaryOnWork(TibScholRelationMixin):
     subj_model = Work
     obj_model = Work
@@ -539,23 +526,6 @@ class PersonDirectPredecessorInLineageOfPerson(TibScholRelationMixin):
     )
 
 
-class PersonDiscipleOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "disciple of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "spiritual teacher of"
-
-    subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Subject of teaching", blank=True
-    )
-
-
 class WorkHasAsAnInstanceInstance(TibScholRelationMixin):
     subj_model = Work
     obj_model = Instance
@@ -609,32 +579,6 @@ class PlaceIsLocatedWithinPlace(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "contains"
-
-
-class WorkNamesPerson(TibScholRelationMixin):
-    subj_model = Work
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "names"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "is named in"
-
-
-class WorkNamesWork(TibScholRelationMixin):
-    subj_model = Work
-    obj_model = Work
-
-    @classmethod
-    def name(cls) -> str:
-        return "names"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "is named in"
 
 
 class PersonOrdinatorOfPerson(TibScholRelationMixin):
@@ -872,19 +816,6 @@ class PersonTranslatorOfWork(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return "translated by"
-
-
-class PersonAnnotatorOfInstance(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Instance
-
-    @classmethod
-    def name(cls) -> str:
-        return "annotator of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "annotated by"
 
 
 class PersonHasOtherRelationWithInstance(TibScholRelationMixin):

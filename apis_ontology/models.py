@@ -457,19 +457,6 @@ class PersonBiographerOfPerson(TibScholRelationMixin):
         return "biographed by"
 
 
-class PersonCitesWork(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Work
-
-    @classmethod
-    def name(cls) -> str:
-        return "cites"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "is cited by"
-
-
 class WorkCommentaryOnWork(TibScholRelationMixin):
     subj_model = Work
     obj_model = Work

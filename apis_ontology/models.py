@@ -857,19 +857,6 @@ class PersonTranslatorOfWork(TibScholRelationMixin):
         return "translated by"
 
 
-class PersonAnnotatorOfInstance(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Instance
-
-    @classmethod
-    def name(cls) -> str:
-        return "annotator of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "annotated by"
-
-
 class PersonHasOtherRelationWithInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance

@@ -539,23 +539,6 @@ class PersonDirectPredecessorInLineageOfPerson(TibScholRelationMixin):
     )
 
 
-class PersonDiscipleOfPerson(TibScholRelationMixin):
-    subj_model = Person
-    obj_model = Person
-
-    @classmethod
-    def name(cls) -> str:
-        return "disciple of"
-
-    @classmethod
-    def reverse_name(cls) -> str:
-        return "spiritual teacher of"
-
-    subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Subject of teaching", blank=True
-    )
-
-
 class WorkHasAsAnInstanceInstance(TibScholRelationMixin):
     subj_model = Work
     obj_model = Instance

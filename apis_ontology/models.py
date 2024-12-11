@@ -657,17 +657,17 @@ class WorkRecordsTheTeachingOfPerson(TibScholRelationMixin):
         return "has their teaching recorded in"
 
 
-class PersonRefersWithNameToTheViewsOfPerson(TibScholRelationMixin):
+class PersonQuotesWithNamePerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
 
     @classmethod
     def name(cls) -> str:
-        return "refers (with name) to the views of"
+        return "quotes with name"
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "has views referred to (with name) by"
+        return "is quoted with name by"
 
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True

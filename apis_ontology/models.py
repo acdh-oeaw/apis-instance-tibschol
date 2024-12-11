@@ -569,14 +569,14 @@ class InstanceIsCopiedFromInstance(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "has as its source"
+        return "has source"
 
     @classmethod
     def reverse_name(cls) -> str:
         return "is source for"
 
     class Meta:
-        verbose_name = "instance has as its source"
+        verbose_name = "instance has source"
 
 
 class PlaceIsLocatedWithinPlace(TibScholRelationMixin):

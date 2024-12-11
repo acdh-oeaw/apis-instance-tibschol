@@ -11,6 +11,7 @@ from apis_core.utils.helpers import create_object_from_uri
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import OuterRef, QuerySet, Subquery
+from django.db.models.signals import class_prepared
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from crum import get_current_user
@@ -387,6 +388,16 @@ class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericMode
 
     class Meta:
         abstract = True
+
+
+def enforce_plural_name(sender, **kwargs):
+    if issubclass(sender, TibScholRelationMixin):
+        meta = sender._meta
+        # set verbose_name_plural to verbose_name
+        meta.verbose_name_plural = meta.verbose_name or sender.__name__.lower()
+
+
+class_prepared.connect(enforce_plural_name)
 
 
 class PersonActiveAtPlace(TibScholRelationMixin):

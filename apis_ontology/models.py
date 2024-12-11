@@ -674,17 +674,17 @@ class PersonQuotesWithNamePerson(TibScholRelationMixin):
     )
 
 
-class PersonRefersWithoutNameToTheViewsOfPerson(TibScholRelationMixin):
+class PersonQuotesWithoutNamePerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
 
     @classmethod
     def name(cls) -> str:
-        return "refers (without name) to the views of"
+        return "quotes without name"
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "has views referred to (without name) by"
+        return "is quoted without name by"
 
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True

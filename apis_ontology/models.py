@@ -764,13 +764,13 @@ class PersonStudentOfPerson(TibScholRelationMixin):
     )
 
 
-class PersonStudiedWork(TibScholRelationMixin):
+class PersonStudiesWork(TibScholRelationMixin):
     subj_model = Person
     obj_model = Work
 
     @classmethod
     def name(cls) -> str:
-        return "studied"
+        return "studies"
 
     @classmethod
     def reverse_name(cls) -> str:

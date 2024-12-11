@@ -579,13 +579,13 @@ class InstanceIsCopiedFromInstance(TibScholRelationMixin):
         verbose_name = "instance has source"
 
 
-class PlaceIsLocatedWithinPlace(TibScholRelationMixin):
+class PlaceLocatedWithinPlace(TibScholRelationMixin):
     subj_model = Place
     obj_model = Place
 
     @classmethod
     def name(cls) -> str:
-        return "is located within"
+        return "located within"
 
     @classmethod
     def reverse_name(cls) -> str:

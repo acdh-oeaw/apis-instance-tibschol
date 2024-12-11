@@ -691,13 +691,13 @@ class PersonQuotesWithoutNamePerson(TibScholRelationMixin):
     )
 
 
-class PersonRequestorOfPerson(TibScholRelationMixin):
+class PersonRequestsPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
 
     @classmethod
     def name(cls) -> str:
-        return "requestor of"
+        return "requests"
 
     @classmethod
     def reverse_name(cls) -> str:

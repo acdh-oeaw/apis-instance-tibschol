@@ -507,13 +507,13 @@ class WorkContainsCitationsOfWork(TibScholRelationMixin):
         return "is cited in"
 
 
-class InstanceCopiedWrittenDownAtPlace(TibScholRelationMixin):
+class InstanceWrittenAtPlace(TibScholRelationMixin):
     subj_model = Instance
     obj_model = Place
 
     @classmethod
     def name(cls) -> str:
-        return "copied/written down at"
+        return "written at"
 
     @classmethod
     def reverse_name(cls) -> str:

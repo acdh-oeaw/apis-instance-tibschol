@@ -18,7 +18,7 @@ tqdm = "^4.67.1"
 pandas = "^2.2.2"
 django-select2 = "^8.1.2"
 lxml = "^5.2.2"
-sqlparse = "^0.5.2"
+sqlparse = "^0.5.3"
 
 
 [tool.poetry.group.dev.dependencies]

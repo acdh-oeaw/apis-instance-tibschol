@@ -520,17 +520,17 @@ class InstanceWrittenAtPlace(TibScholRelationMixin):
         return "place of scribing for"
 
 
-class PersonDirectPredecessorInLineageOfPerson(TibScholRelationMixin):
+class PersonLineagePredecessorOfPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
 
     @classmethod
     def name(cls) -> str:
-        return "direct predecessor (in lineage) of"
+        return "lineage predecessor of"
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "direct successor (in lineage) of"
+        return "lineage successor of"
 
     subject_of_teaching_vocab = models.ManyToManyField(
         Subject, verbose_name="Subject of teaching", blank=True

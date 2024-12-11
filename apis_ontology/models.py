@@ -550,17 +550,17 @@ class WorkHasAsAnInstanceInstance(TibScholRelationMixin):
         return "instance of"
 
 
-class PersonHasOtherTypeOfPersonalRelationToPerson(TibScholRelationMixin):
+class PersonOtherRelationToPerson(TibScholRelationMixin):
     subj_model = Person
     obj_model = Person
 
     @classmethod
     def name(cls) -> str:
-        return "has other type of personal relation to"
+        return "other relation to"
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "has other type of personal relation to"
+        return "other relation to"
 
 
 class InstanceIsCopiedFromInstance(TibScholRelationMixin):

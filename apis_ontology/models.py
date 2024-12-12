@@ -394,14 +394,15 @@ class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericMode
         abstract = True
 
 
-def enforce_plural_name(sender, **kwargs):
+def enforce_meta_attributes(sender, **kwargs):
     if issubclass(sender, TibScholRelationMixin):
         meta = sender._meta
         # set verbose_name_plural to verbose_name
         meta.verbose_name_plural = meta.verbose_name or sender.__name__.lower()
+        meta.ordering = ["subj_object_id", "obj_object_id"]
 
 
-class_prepared.connect(enforce_plural_name)
+class_prepared.connect(enforce_meta_attributes)
 
 
 class PersonActiveAtPlace(TibScholRelationMixin):

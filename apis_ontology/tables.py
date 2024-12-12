@@ -250,27 +250,27 @@ class TibScholRelationMixinTable(GenericTable):
         return format_html('<a href="{}" target="_blank">{}</a>', url, value)
 
 
-# class WorkCommentaryOnWorkTable(TibScholEntityMixinRelationsTable):
-#     class Meta(TibScholEntityMixinRelationsTable.Meta):
-#         fields = [
-#             "subj",
-#             "obj",
-#             "commentary_author",
-#             "edit",
-#             "delete",
-#         ]
+class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = [
+            "subj",
+            "obj",
+            "commentary_author",
+        ]
+        sequence = ("subj", "obj", "commentary_author", "...")
 
-#     subj = tables.Column()
-#     obj = tables.Column()
-#     commentary_author = tables.Column(
-#         verbose_name="Author (obj)", orderable=False, accessor="obj"
-#     )
+    commentary_author = tables.Column(
+        verbose_name="Author (obj)", orderable=False, accessor="obj"
+    )
 
-#     def render_commentary_author(self, value):
-#         obj_work = Work.objects.get(pk=value.pk)
-#         if obj_work.author_id:
-#             return f"{obj_work.author_name} ({obj_work.author_id})"
-#         return ""
+    def render_commentary_author(self, value):
+        obj_work = Work.objects.get(pk=value.pk)
+        if obj_work.author_id:
+            author = Person.objects.get(pk=obj_work.author_id)
+            return format_html(
+                '<a href="{}" target="_blank">{}</a>', author.get_absolute_url(), author
+            )
+        return ""
 
 
 # class WorkComposedAtPlaceTable(TibScholRelationMixinTable):

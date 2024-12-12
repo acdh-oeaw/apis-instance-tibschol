@@ -331,6 +331,7 @@ class Instance(
     class Meta:
         verbose_name = _("instance")
         verbose_name_plural = _("Instances")
+        ordering = ["name", "pk"]
 
     def __str__(self):
         return f"{self.name} ({self.pk})"

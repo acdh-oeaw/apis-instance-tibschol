@@ -28,6 +28,7 @@ class Subject(GenericModel, models.Model):
     class Meta:
         verbose_name = _("Subject")
         verbose_name_plural = _("Subjects")
+        ordering = ["name"]
 
 
 class TibScholEntityMixin(models.Model):

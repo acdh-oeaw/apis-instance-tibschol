@@ -240,6 +240,10 @@ class TibScholRelationMixinTable(GenericTable):
     class Meta(GenericTable.Meta):
         fields = ["subj", "obj"]
         exclude = ["desc"]
+        sequence = ("subj", "obj", "...")
+
+    subj = tables.Column(verbose_name="Subject", orderable=False)
+    obj = tables.Column(verbose_name="Object", orderable=False)
 
     def render_subj(self, value):
         url = value.get_absolute_url()

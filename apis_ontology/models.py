@@ -114,6 +114,7 @@ class Person(
     class Meta:
         verbose_name = _("person")
         verbose_name_plural = _("Persons")
+        ordering = ["name", "pk"]
 
     def __str__(self):
         return f"{self.name} ({self.pk})"

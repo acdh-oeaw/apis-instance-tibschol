@@ -213,6 +213,7 @@ class Work(
     class Meta:
         verbose_name = _("work")
         verbose_name_plural = _("Works")
+        ordering = ["name", "pk"]
 
     def __str__(self):
         return f"{self.name} ({self.pk})"

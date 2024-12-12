@@ -28,6 +28,7 @@ class Subject(GenericModel, models.Model):
     class Meta:
         verbose_name = _("Subject")
         verbose_name_plural = _("Subjects")
+        ordering = ["name"]
 
 
 class TibScholEntityMixin(models.Model):
@@ -113,6 +114,7 @@ class Person(
     class Meta:
         verbose_name = _("person")
         verbose_name_plural = _("Persons")
+        ordering = ["name", "pk"]
 
     def __str__(self):
         return f"{self.name} ({self.pk})"
@@ -211,6 +213,7 @@ class Work(
     class Meta:
         verbose_name = _("work")
         verbose_name_plural = _("Works")
+        ordering = ["name", "pk"]
 
     def __str__(self):
         return f"{self.name} ({self.pk})"
@@ -328,6 +331,7 @@ class Instance(
     class Meta:
         verbose_name = _("instance")
         verbose_name_plural = _("Instances")
+        ordering = ["name", "pk"]
 
     def __str__(self):
         return f"{self.name} ({self.pk})"
@@ -390,14 +394,15 @@ class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericMode
         abstract = True
 
 
-def enforce_plural_name(sender, **kwargs):
+def enforce_meta_attributes(sender, **kwargs):
     if issubclass(sender, TibScholRelationMixin):
         meta = sender._meta
         # set verbose_name_plural to verbose_name
         meta.verbose_name_plural = meta.verbose_name or sender.__name__.lower()
+        meta.ordering = ["subj_object_id", "obj_object_id"]
 
 
-class_prepared.connect(enforce_plural_name)
+class_prepared.connect(enforce_meta_attributes)
 
 
 class PersonActiveAtPlace(TibScholRelationMixin):

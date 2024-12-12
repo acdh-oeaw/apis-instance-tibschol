@@ -5,6 +5,8 @@ from apis_core.apis_entities.tables import AbstractEntityTable
 from apis_core.generic.tables import CustomTemplateColumn, GenericTable, MoreLessColumn
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
+from django.utils.html import format_html
+
 import re
 
 from .models import Instance, Person, Place, Work
@@ -232,126 +234,77 @@ class TibScholEntityMixinRelationsTable(GenericTable):
         per_page = 1000
 
 
-class RelationsTable(TibScholEntityMixinRelationsTable):
-    reverse = False
+class TibScholRelationMixinTable(GenericTable):
+    paginate_by = 100
 
-    name = tables.Column(verbose_name="Relationship", orderable=False)
-    obj = tables.Column(verbose_name="Object", orderable=False)
-    support_notes = tables.Column(orderable=False)
-    zotero_refs = tables.Column(verbose_name="Zotero", orderable=False)
-    tei_refs = tables.Column(verbose_name="Excerpts", orderable=False)
+    class Meta(GenericTable.Meta):
+        fields = ["subj", "obj"]
+        exclude = ["desc"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Define the obj attribute based on the value of self.reverse
+    def render_subj(self, value):
+        url = value.get_absolute_url()
+        return format_html('<a href="{}" target="_blank">{}</a>', url, value)
 
-
-# class RelationsTableEdit(RelationsTable):
-#     class Meta(GenericTable.Meta):
-#         model = TibScholRelationMixin
-#         fields = [
-#             "name",
-#             "obj",
-#             "support_notes",
-#             "zotero_refs",
-#             "tei_refs",
-#             "edit",
-#             "delete",
-#         ]
-#         exclude = ["view", "desc", "subj"]
-
-#     edit = tables.TemplateColumn(
-#         "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>",
-#         orderable=False,
-#         verbose_name="",
-#         attrs={"td": {"style": "max-width: 2em"}},
-#     )
-
-#     delete = tables.TemplateColumn(
-#         "<a href='{% url 'apis:relationdelete' record.id %}?next={{ request.GET.next }}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">delete</span></a>",
-#         orderable=False,
-#         verbose_name="",
-#         attrs={"td": {"style": "max-width: 2em"}},
-#     )
+    def render_obj(self, value):
+        url = value.get_absolute_url()
+        return format_html('<a href="{}" target="_blank">{}</a>', url, value)
 
 
-# class RelationsTableView(RelationsTable):
-#     class Meta(GenericTable.Meta):
-#         model = TibScholRelationMixin
-#         fields = [
-#             "name",
-#             "obj",
-#             "support_notes",
-#             "zotero_refs",
-#             "tei_refs",
-#         ]
-#         exclude = ["view", "edit", "desc", "delete", "subj"]
+class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = [
+            "subj",
+            "obj",
+            "commentary_author",
+        ]
+        sequence = ("subj", "obj", "commentary_author", "...")
+
+    commentary_author = tables.Column(
+        verbose_name="Author (obj)", orderable=False, accessor="obj"
+    )
+
+    def render_commentary_author(self, value):
+        obj_work = Work.objects.get(pk=value.pk)
+        if obj_work.author_id:
+            author = Person.objects.get(pk=obj_work.author_id)
+            return format_html(
+                '<a href="{}" target="_blank">{}</a>', author.get_absolute_url(), author
+            )
+        return ""
 
 
-# class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
-#     class Meta(TibScholRelationMixinTable.Meta):
-#         fields = [
-#             "subj",
-#             "obj",
-#             "commentary_author",
-#             "edit",
-#             "delete",
-#         ]
+class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = [
+            "subj",
+            "work_author",
+            "obj",
+        ]
+        sequence = ("subj", "obj", "work_author", "...")
 
-#     subj = tables.Column()
-#     obj = tables.Column()
-#     commentary_author = tables.Column(
-#         verbose_name="Author (obj)", orderable=False, accessor="obj"
-#     )
+    work_author = tables.Column(verbose_name="Author", orderable=False, accessor="subj")
 
-#     def render_commentary_author(self, value):
-#         obj_work = Work.objects.get(pk=value.pk)
-#         if obj_work.author_id:
-#             return f"{obj_work.author_name} ({obj_work.author_id})"
-#         return ""
+    def render_work_author(self, value):
+        obj_work = Work.objects.get(pk=value.pk)
+        if obj_work.author_id:
+            author = Person.objects.get(pk=obj_work.author_id)
+            return format_html(
+                '<a href="{}" target="_blank">{}</a>', author.get_absolute_url(), author
+            )
+        return ""
 
 
-# class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
-#     class Meta(TibScholRelationMixinTable.Meta):
-#         fields = [
-#             "subj",
-#             "obj",
-#             "work_author",
-#             "edit",
-#             "delete",
-#         ]
+class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "lifespan"]
+        sequence = ("subj", "obj", "lifespan", "...")
 
-#     subj = tables.Column(verbose_name="Work")
-#     work_author = tables.Column(verbose_name="Author", orderable=False, accessor="subj")
-#     obj = tables.Column(verbose_name="Place")
+    lifespan = tables.Column(verbose_name="Lifespan", orderable=False, accessor="subj")
 
-#     def render_work_author(self, value):
-#         work = Work.objects.get(pk=value.pk)
-#         if work.author_id:
-#             return f"{work.author_name} ({work.author_id})"
-#         return ""
-
-
-# class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
-#     class Meta(TibScholRelationMixinTable.Meta):
-#         fields = [
-#             "subj",
-#             "obj",
-#             "author_dates",
-#             "edit",
-#             "delete",
-#         ]
-
-#     subj = tables.Column(verbose_name="Person")
-#     author_dates = tables.Column(
-#         verbose_name="Lifespan", orderable=False, accessor="subj"
-#     )
-#     obj = tables.Column(verbose_name="Place")
-
-#     def render_author_dates(self, value):
-#         author = Person.objects.get(pk=value.pk)
-#         return (
-#             (author.start_date_written if author.start_date_written else "")
-#             + " - "
-#             + (author.end_date_written if author.end_date_written else "")
-#         )
+    def render_lifespan(self, value):
+        author = Person.objects.get(pk=value.pk)
+        return (
+            (author.start_date_written if author.start_date_written else "")
+            + " - "
+            + (author.end_date_written if author.end_date_written else "")
+        )

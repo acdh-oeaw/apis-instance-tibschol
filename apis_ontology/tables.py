@@ -5,6 +5,8 @@ from apis_core.apis_entities.tables import AbstractEntityTable
 from apis_core.generic.tables import CustomTemplateColumn, GenericTable, MoreLessColumn
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
+from django.utils.html import format_html
+
 import re
 
 from .models import Instance, Person, Place, Work
@@ -232,8 +234,24 @@ class TibScholEntityMixinRelationsTable(GenericTable):
         per_page = 1000
 
 
-# class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
-#     class Meta(TibScholRelationMixinTable.Meta):
+class TibScholRelationMixinTable(GenericTable):
+    paginate_by = 100
+
+    class Meta(GenericTable.Meta):
+        fields = ["subj", "obj"]
+        exclude = ["desc"]
+
+    def render_subj(self, value):
+        url = value.get_absolute_url()
+        return format_html('<a href="{}" target="_blank">{}</a>', url, value)
+
+    def render_obj(self, value):
+        url = value.get_absolute_url()
+        return format_html('<a href="{}" target="_blank">{}</a>', url, value)
+
+
+# class WorkCommentaryOnWorkTable(TibScholEntityMixinRelationsTable):
+#     class Meta(TibScholEntityMixinRelationsTable.Meta):
 #         fields = [
 #             "subj",
 #             "obj",

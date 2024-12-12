@@ -294,46 +294,17 @@ class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
         return ""
 
 
-#     class Meta(TibScholRelationMixinTable.Meta):
-#         fields = [
-#             "subj",
-#             "obj",
-#             "work_author",
-#             "edit",
-#             "delete",
-#         ]
+class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "lifespan"]
+        sequence = ("subj", "obj", "lifespan", "...")
 
-#     subj = tables.Column(verbose_name="Work")
-#     work_author = tables.Column(verbose_name="Author", orderable=False, accessor="subj")
-#     obj = tables.Column(verbose_name="Place")
+    lifespan = tables.Column(verbose_name="Lifespan", orderable=False, accessor="subj")
 
-#     def render_work_author(self, value):
-#         work = Work.objects.get(pk=value.pk)
-#         if work.author_id:
-#             return f"{work.author_name} ({work.author_id})"
-#         return ""
-
-
-# class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
-#     class Meta(TibScholRelationMixinTable.Meta):
-#         fields = [
-#             "subj",
-#             "obj",
-#             "author_dates",
-#             "edit",
-#             "delete",
-#         ]
-
-#     subj = tables.Column(verbose_name="Person")
-#     author_dates = tables.Column(
-#         verbose_name="Lifespan", orderable=False, accessor="subj"
-#     )
-#     obj = tables.Column(verbose_name="Place")
-
-#     def render_author_dates(self, value):
-#         author = Person.objects.get(pk=value.pk)
-#         return (
-#             (author.start_date_written if author.start_date_written else "")
-#             + " - "
-#             + (author.end_date_written if author.end_date_written else "")
-#         )
+    def render_lifespan(self, value):
+        author = Person.objects.get(pk=value.pk)
+        return (
+            (author.start_date_written if author.start_date_written else "")
+            + " - "
+            + (author.end_date_written if author.end_date_written else "")
+        )

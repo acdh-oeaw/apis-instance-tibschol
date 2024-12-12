@@ -232,62 +232,6 @@ class TibScholEntityMixinRelationsTable(GenericTable):
         per_page = 1000
 
 
-class RelationsTable(TibScholEntityMixinRelationsTable):
-    reverse = False
-
-    name = tables.Column(verbose_name="Relationship", orderable=False)
-    obj = tables.Column(verbose_name="Object", orderable=False)
-    support_notes = tables.Column(orderable=False)
-    zotero_refs = tables.Column(verbose_name="Zotero", orderable=False)
-    tei_refs = tables.Column(verbose_name="Excerpts", orderable=False)
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Define the obj attribute based on the value of self.reverse
-
-
-# class RelationsTableEdit(RelationsTable):
-#     class Meta(GenericTable.Meta):
-#         model = TibScholRelationMixin
-#         fields = [
-#             "name",
-#             "obj",
-#             "support_notes",
-#             "zotero_refs",
-#             "tei_refs",
-#             "edit",
-#             "delete",
-#         ]
-#         exclude = ["view", "desc", "subj"]
-
-#     edit = tables.TemplateColumn(
-#         "<a href='{% url 'apis:relationupdate' record.id %}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">edit</span></a>",
-#         orderable=False,
-#         verbose_name="",
-#         attrs={"td": {"style": "max-width: 2em"}},
-#     )
-
-#     delete = tables.TemplateColumn(
-#         "<a href='{% url 'apis:relationdelete' record.id %}?next={{ request.GET.next }}' target=\"_BLANK\"><span class=\"material-symbols-outlined\">delete</span></a>",
-#         orderable=False,
-#         verbose_name="",
-#         attrs={"td": {"style": "max-width: 2em"}},
-#     )
-
-
-# class RelationsTableView(RelationsTable):
-#     class Meta(GenericTable.Meta):
-#         model = TibScholRelationMixin
-#         fields = [
-#             "name",
-#             "obj",
-#             "support_notes",
-#             "zotero_refs",
-#             "tei_refs",
-#         ]
-#         exclude = ["view", "edit", "desc", "delete", "subj"]
-
-
 # class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
 #     class Meta(TibScholRelationMixinTable.Meta):
 #         fields = [

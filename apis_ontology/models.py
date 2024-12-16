@@ -26,8 +26,8 @@ class Subject(GenericModel, models.Model):
         return self.name
 
     class Meta:
-        verbose_name = _("Subject")
-        verbose_name_plural = _("Subjects")
+        verbose_name = _("Topic")
+        verbose_name_plural = _("Topics")
         ordering = ["name"]
 
 
@@ -198,7 +198,7 @@ class Work(
         ("Other", "Other"),
     ]
 
-    subject_vocab = models.ManyToManyField(Subject, verbose_name="Subject", blank=True)
+    subject_vocab = models.ManyToManyField(Subject, verbose_name="Topic", blank=True)
     name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
     sde_dge_ref = models.CharField(
         max_length=25, blank=True, null=True, verbose_name="Derge reference"

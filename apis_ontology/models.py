@@ -409,7 +409,7 @@ class PersonActiveAtPlace(TibScholRelationMixin):
     subj_model = Person
     obj_model = Place
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Subject of teaching", blank=True
+        Subject, verbose_name="Topic of teaching", blank=True
     )
 
     @classmethod
@@ -538,7 +538,7 @@ class PersonLineagePredecessorOfPerson(TibScholRelationMixin):
         return "lineage successor of"
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Subject of teaching", blank=True
+        Subject, verbose_name="Topic of teaching", blank=True
     )
 
 
@@ -675,7 +675,7 @@ class PersonQuotesWithNamePerson(TibScholRelationMixin):
         return "is quoted with name by"
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Subject of teaching", blank=True
+        Subject, verbose_name="Topic of teaching", blank=True
     )
 
 
@@ -692,7 +692,7 @@ class PersonQuotesWithoutNamePerson(TibScholRelationMixin):
         return "is quoted without name by"
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Subject of teaching", blank=True
+        Subject, verbose_name="Topic of teaching", blank=True
     )
 
 
@@ -709,7 +709,7 @@ class PersonRequestsPerson(TibScholRelationMixin):
         return "requested by"
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Subject of teaching", blank=True
+        Subject, verbose_name="Topic of teaching", blank=True
     )
 
 
@@ -765,7 +765,7 @@ class PersonStudentOfPerson(TibScholRelationMixin):
         return "teacher of"
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Subject of teaching", blank=True
+        Subject, verbose_name="Topic of teaching", blank=True
     )
 
 

@@ -83,6 +83,7 @@ class Person(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Person"
+    _default_search_fields = ["id", "name", "alternative_names"]
 
     start_date_written = models.CharField(
         max_length=255,
@@ -129,6 +130,8 @@ class Place(
     AbstractEntity,
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Place"
+    _default_search_fields = ["id", "label", "alternative_names"]
+
     label = models.CharField(blank=True, default="", verbose_name="Name")
     end_date = None
     end_start_date = None
@@ -180,6 +183,8 @@ class Work(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Work"
+    _default_search_fields = ["id", "name", "alternative_names"]
+
     end_date = None
     end_start_date = None
     end_end_date = None
@@ -255,6 +260,8 @@ class Instance(
     VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Instance"
+    _default_search_fields = ["id", "name", "alternative_names"]
+
     end_date = None
     end_start_date = None
     end_end_date = None

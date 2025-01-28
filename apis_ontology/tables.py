@@ -196,7 +196,11 @@ class TEIRefColumn(TibScholRelationColumn):
             words = l.split()
             linked_words = []
             for w in words:
-                if w.startswith("xml:id=") or bool(re.search(r"\bex\d\w*", w)):
+                if (
+                    w.startswith("xml:id=")
+                    or bool(re.search(r"\bex(?:\d\w*)\b", w))
+                    or bool(re.search(r"\bexX(?:\w*)\b", w))
+                ):
                     linked_words.append(linkify_excerpt_id(w))
                 else:
                     linked_words.append(w)

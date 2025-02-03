@@ -260,7 +260,7 @@ class TibScholRelationMixinTable(GenericTable):
 
     class Meta(GenericTable.Meta):
         fields = ["subj", "obj"]
-        exclude = ["desc"]
+        exclude = ["desc", "view", "edit", "delete"]
         sequence = ("subj", "obj", "...")
 
     subj = tables.Column(verbose_name="Subject")

@@ -52,6 +52,30 @@ class TibscholEntityMixinTable(AbstractEntityTable):
         return str(record)
 
 
+class AuthorColumn(tables.Column):
+    def render(self, value, *args, **kwargs):
+        subj_work = Work.objects.get(pk=value)
+        if subj_work.author_id:
+            author = Person.objects.get(pk=subj_work.author_id)
+            return format_html(
+                '<a href="{}" target="_blank">{}</a>', author.get_absolute_url(), author
+            )
+        return ""
+
+    def order(self, queryset, is_descending):
+        queryset = queryset.annotate(
+            author_str=Coalesce(
+                Subquery(
+                    Work.objects.filter(pk=OuterRef(self.accessor)).values(
+                        "author_name"
+                    )[:1]
+                ),
+                Value(""),
+            )
+        ).order_by(("-" if is_descending else "") + "author_str")
+        return queryset, True
+
+
 class PlaceTable(TibscholEntityMixinTable):
     class Meta:
         model = Place
@@ -300,38 +324,15 @@ class TibScholRelationMixinTable(GenericTable):
 
 class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
-        fields = [
-            "subj",
-            "obj",
-            "commentary_author",
-        ]
-        sequence = ("subj", "obj", "commentary_author", "...")
+        fields = ["subj", "commentary_author", "obj", "work_author"]
+        sequence = ("subj", "commentary_author", "obj", "work_author", "...")
 
-    commentary_author = tables.Column(
-        verbose_name="Author (obj)", orderable=True, accessor="obj"
+    work_author = AuthorColumn(
+        verbose_name="Author (obj)", orderable=True, accessor="obj_object_id"
     )
-
-    def render_commentary_author(self, value):
-        obj_work = Work.objects.get(pk=value.pk)
-        if obj_work.author_id:
-            author = Person.objects.get(pk=obj_work.author_id)
-            return format_html(
-                '<a href="{}" target="_blank">{}</a>', author.get_absolute_url(), author
-            )
-        return ""
-
-    def order_commentary_author(self, queryset, is_descending):
-        queryset = queryset.annotate(
-            commentary_author_str=Coalesce(
-                Subquery(
-                    Work.objects.filter(pk=OuterRef("obj_object_id")).values(
-                        "author_name"
-                    )[:1]
-                ),
-                Value(""),
-            )
-        ).order_by(("-" if is_descending else "") + "commentary_author_str")
-        return queryset, True
+    commentary_author = AuthorColumn(
+        verbose_name="Author (subj)", orderable=True, accessor="subj_object_id"
+    )
 
 
 class WorkComposedAtPlaceTable(TibScholRelationMixinTable):

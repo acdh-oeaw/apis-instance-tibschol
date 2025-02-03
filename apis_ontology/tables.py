@@ -6,8 +6,10 @@ from apis_core.generic.tables import CustomTemplateColumn, GenericTable, MoreLes
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
-
 import re
+from django.db.models import OuterRef, Subquery
+from django.db.models import Value
+from django.db.models.functions import Coalesce
 
 from .models import Instance, Person, Place, Work
 from .templatetags.filter_utils import (
@@ -246,8 +248,8 @@ class TibScholRelationMixinTable(GenericTable):
         exclude = ["desc"]
         sequence = ("subj", "obj", "...")
 
-    subj = tables.Column(verbose_name="Subject", orderable=False)
-    obj = tables.Column(verbose_name="Object", orderable=False)
+    subj = tables.Column(verbose_name="Subject")
+    obj = tables.Column(verbose_name="Object")
 
     def render_subj(self, value):
         url = value.get_absolute_url()
@@ -256,6 +258,53 @@ class TibScholRelationMixinTable(GenericTable):
     def render_obj(self, value):
         url = value.get_absolute_url()
         return format_html('<a href="{}" target="_blank">{}</a>', url, value)
+
+    def order_subj(self, queryset, is_descending):
+        queryset = queryset.annotate(
+            subj_str=Subquery(
+                Person.objects.filter(pk=OuterRef("subj_object_id"))
+                .values("name")[:1]
+                .union(
+                    Place.objects.filter(pk=OuterRef("subj_object_id")).values("label")[
+                        :1
+                    ]
+                )
+                .union(
+                    Work.objects.filter(pk=OuterRef("subj_object_id")).values("name")[
+                        :1
+                    ]
+                )
+                .union(
+                    Instance.objects.filter(pk=OuterRef("subj_object_id")).values(
+                        "name"
+                    )[:1]
+                ),
+            ),
+        ).order_by(("-" if is_descending else "") + "subj_str")
+        return queryset, True
+
+    def order_obj(self, queryset, is_descending):
+        queryset = queryset.annotate(
+            obj_str=Subquery(
+                Person.objects.filter(pk=OuterRef("obj_object_id"))
+                .values("name")[:1]
+                .union(
+                    Place.objects.filter(pk=OuterRef("obj_object_id")).values("label")[
+                        :1
+                    ]
+                )
+                .union(
+                    Work.objects.filter(pk=OuterRef("obj_object_id")).values("name")[:1]
+                )
+                .union(
+                    Instance.objects.filter(pk=OuterRef("obj_object_id")).values(
+                        "name"
+                    )[:1]
+                ),
+            ),
+        ).order_by(("-" if is_descending else "") + "obj_str")
+
+        return queryset, True
 
 
 class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
@@ -268,7 +317,7 @@ class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
         sequence = ("subj", "obj", "commentary_author", "...")
 
     commentary_author = tables.Column(
-        verbose_name="Author (obj)", orderable=False, accessor="obj"
+        verbose_name="Author (obj)", orderable=True, accessor="obj"
     )
 
     def render_commentary_author(self, value):
@@ -280,6 +329,19 @@ class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
             )
         return ""
 
+    def order_commentary_author(self, queryset, is_descending):
+        queryset = queryset.annotate(
+            commentary_author_str=Coalesce(
+                Subquery(
+                    Work.objects.filter(pk=OuterRef("obj_object_id")).values(
+                        "author_name"
+                    )[:1]
+                ),
+                Value(""),
+            )
+        ).order_by(("-" if is_descending else "") + "commentary_author_str")
+        return queryset, True
+
 
 class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
@@ -290,7 +352,7 @@ class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
         ]
         sequence = ("subj", "obj", "work_author", "...")
 
-    work_author = tables.Column(verbose_name="Author", orderable=False, accessor="subj")
+    work_author = tables.Column(verbose_name="Author", orderable=True, accessor="subj")
 
     def render_work_author(self, value):
         obj_work = Work.objects.get(pk=value.pk)
@@ -301,13 +363,47 @@ class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
             )
         return ""
 
+    def order_work_author(self, queryset, is_descending):
+        queryset = queryset.annotate(
+            author_str=Coalesce(
+                Subquery(
+                    Work.objects.filter(pk=OuterRef("subj_object_id")).values(
+                        "author_name"
+                    )[:1]
+                ),
+                Value(""),
+            )
+        ).order_by(("-" if is_descending else "") + "author_str")
+        return queryset, True
+
 
 class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "lifespan"]
         sequence = ("subj", "obj", "lifespan", "...")
 
-    lifespan = tables.Column(verbose_name="Lifespan", orderable=False, accessor="subj")
+    lifespan = tables.Column(verbose_name="Lifespan", orderable=True, accessor="subj")
+
+    def order_lifespan(self, queryset, is_descending):
+        queryset = queryset.annotate(
+            person_start=Subquery(
+                Person.objects.filter(pk=OuterRef("subj_object_id")).values(
+                    "start_date"
+                )[:1]
+            ),
+            person_end=Subquery(
+                Person.objects.filter(pk=OuterRef("subj_object_id")).values("end_date")[
+                    :1
+                ]
+            ),
+        )
+        order = (
+            ("-" if is_descending else "") + "person_start",
+            ("-" if is_descending else "") + "person_end",
+        )
+
+        queryset = queryset.order_by(*order)
+        return queryset, True
 
     def render_lifespan(self, value):
         author = Person.objects.get(pk=value.pk)

@@ -141,16 +141,8 @@ class InstanceTable(TibscholEntityMixinTable):
 
 
 class TibScholRelationColumn(tables.Column):
-    template_name = None
-    orderable = False
-    exclude_from_export = False
-    verbose_name = None
-
     def __init__(self, *args, **kwargs):
         super().__init__(
-            orderable=self.orderable,
-            exclude_from_export=self.exclude_from_export,
-            verbose_name=self.verbose_name,
             *args,
             **kwargs,
         )
@@ -182,7 +174,6 @@ class RelationPredicateColumn(CustomTemplateColumn):
 
 
 class TEIRefColumn(TibScholRelationColumn):
-    verbose_name = "TEI REfs"
 
     def render(self, record, *args, **kwargs):
         def linkify_excerpt_id(xml_id):
@@ -228,7 +219,7 @@ class TibScholEntityMixinRelationsTable(GenericTable):
         ),
         fulltext=lambda x: mark_safe(parse_comment(render_list_field(x.zotero_refs))),
     )
-    tei_refs = TEIRefColumn()
+    tei_refs = TEIRefColumn(verbose_name="TEI Refs", orderable=False)
 
     class Meta(GenericTable.Meta):
         fields = [

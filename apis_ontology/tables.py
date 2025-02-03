@@ -57,9 +57,15 @@ class AuthorColumn(tables.Column):
         subj_work = Work.objects.get(pk=value)
         if subj_work.author_id:
             author = Person.objects.get(pk=subj_work.author_id)
-            return format_html(
-                '<a href="{}" target="_blank">{}</a>', author.get_absolute_url(), author
+            context = {
+                "entity_id": author.id,
+                "entity_name": author.name,
+                "entity_uri": author.get_absolute_url(),
+            }
+            return mark_safe(
+                render_to_string("apis_ontology/linked_entity_column.html", context)
             )
+
         return ""
 
     def order(self, queryset, is_descending):
@@ -118,19 +124,7 @@ class WorkTable(TibscholEntityMixinTable):
             )
         }
 
-    author = tables.Column(
-        verbose_name="Author", accessor="author_name", orderable=True
-    )
-
-    def render_author(self, record):
-        context = {
-            "entity_id": record.author_id,
-            "entity_name": record.author_name,
-            "entity_uri": Person.objects.get(pk=record.author_id).uri,
-        }
-        return mark_safe(
-            render_to_string("apis_ontology/linked_entity_column.html", context)
-        )
+    author = AuthorColumn(verbose_name="Author", accessor="id", orderable=True)
 
 
 class InstanceTable(TibscholEntityMixinTable):

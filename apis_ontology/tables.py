@@ -326,31 +326,11 @@ class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
             "work_author",
             "obj",
         ]
-        sequence = ("subj", "obj", "work_author", "...")
+        sequence = ("subj", "work_author", "obj", "...")
 
-    work_author = tables.Column(verbose_name="Author", orderable=True, accessor="subj")
-
-    def render_work_author(self, value):
-        obj_work = Work.objects.get(pk=value.pk)
-        if obj_work.author_id:
-            author = Person.objects.get(pk=obj_work.author_id)
-            return format_html(
-                '<a href="{}" target="_blank">{}</a>', author.get_absolute_url(), author
-            )
-        return ""
-
-    def order_work_author(self, queryset, is_descending):
-        queryset = queryset.annotate(
-            author_str=Coalesce(
-                Subquery(
-                    Work.objects.filter(pk=OuterRef("subj_object_id")).values(
-                        "author_name"
-                    )[:1]
-                ),
-                Value(""),
-            )
-        ).order_by(("-" if is_descending else "") + "author_str")
-        return queryset, True
+    work_author = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
 
 
 class PersonActiveAtPlaceTable(TibScholRelationMixinTable):

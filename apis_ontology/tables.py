@@ -54,8 +54,10 @@ class TibscholEntityMixinTable(AbstractEntityTable):
 
 class PersonDateColumn(tables.Column):
     def render(self, value, *args, **kwargs):
-        person = Person.objects.get(pk=value)
-
+        try:
+            person = Person.objects.get(pk=value)
+        except Person.DoesNotExist:
+            return ""
         return (
             (person.start_date_written if person.start_date_written else "")
             + " - "

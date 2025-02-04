@@ -430,3 +430,13 @@ class WorkHasAsAnInstanceInstanceTable(TibScholRelationMixinTable):
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="subj_object_id"
     )
+
+
+class InstanceIsCopiedFromInstanceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "author_work", "obj", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )

@@ -54,7 +54,11 @@ class TibscholEntityMixinTable(AbstractEntityTable):
 
 class AuthorColumn(tables.Column):
     def render(self, value, *args, **kwargs):
-        subj_work = Work.objects.get(pk=value)
+        try:
+            subj_work = Work.objects.get(pk=value)
+        except Work.DoesNotExist:
+            subj_work = Instance.objects.get(pk=value)
+
         if subj_work.author_id:
             author = Person.objects.get(pk=subj_work.author_id)
             context = {
@@ -73,6 +77,11 @@ class AuthorColumn(tables.Column):
             author_str=Coalesce(
                 Subquery(
                     Work.objects.filter(pk=OuterRef(self.accessor)).values(
+                        "author_name"
+                    )[:1]
+                ),
+                Subquery(
+                    Instance.objects.filter(pk=OuterRef(self.accessor)).values(
                         "author_name"
                     )[:1]
                 ),
@@ -400,4 +409,14 @@ class WorkContainsCitationsOfWorkTable(TibScholRelationMixinTable):
     )
     author_obj = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class InstanceWrittenAtPlaceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "author_work", "obj", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
     )

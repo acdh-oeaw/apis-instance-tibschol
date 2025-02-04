@@ -368,3 +368,13 @@ class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
             + " - "
             + (author.end_date_written if author.end_date_written else "")
         )
+
+
+class PersonAddresseeOfWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "work_author"]
+        sequence = ("subj", "obj", "work_author", "...")
+
+    work_author = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )

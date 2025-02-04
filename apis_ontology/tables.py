@@ -52,6 +52,33 @@ class TibscholEntityMixinTable(AbstractEntityTable):
         return str(record)
 
 
+class PersonDateColumn(tables.Column):
+    def render(self, value, *args, **kwargs):
+        person = Person.objects.get(pk=value)
+
+        return (
+            (person.start_date_written if person.start_date_written else "")
+            + " - "
+            + (person.end_date_written if person.end_date_written else "")
+        )
+
+    def order(self, queryset, is_descending):
+        queryset = queryset.annotate(
+            person_start=Subquery(
+                Person.objects.filter(pk=OuterRef(self.accessor)).values("start_date")[
+                    :1
+                ]
+            ),
+            person_end=Subquery(
+                Person.objects.filter(pk=OuterRef(self.accessor)).values("end_date")[:1]
+            ),
+        ).order_by(
+            ("-" if is_descending else "") + "person_start",
+            ("-" if is_descending else "") + "person_end",
+        )
+        return queryset, True
+
+
 class AuthorColumn(tables.Column):
     def render(self, value, *args, **kwargs):
         try:
@@ -345,57 +372,49 @@ class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
 class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "lifespan"]
-        sequence = ("subj", "obj", "lifespan", "...")
+        sequence = ("subj", "lifespan", "obj", "...")
 
-    lifespan = tables.Column(verbose_name="Lifespan", orderable=True, accessor="subj")
-
-    def order_lifespan(self, queryset, is_descending):
-        queryset = queryset.annotate(
-            person_start=Subquery(
-                Person.objects.filter(pk=OuterRef("subj_object_id")).values(
-                    "start_date"
-                )[:1]
-            ),
-            person_end=Subquery(
-                Person.objects.filter(pk=OuterRef("subj_object_id")).values("end_date")[
-                    :1
-                ]
-            ),
-        )
-        order = (
-            ("-" if is_descending else "") + "person_start",
-            ("-" if is_descending else "") + "person_end",
-        )
-
-        queryset = queryset.order_by(*order)
-        return queryset, True
-
-    def render_lifespan(self, value):
-        author = Person.objects.get(pk=value.pk)
-        return (
-            (author.start_date_written if author.start_date_written else "")
-            + " - "
-            + (author.end_date_written if author.end_date_written else "")
-        )
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
 
 
 class PersonAddresseeOfWorkTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "work_author"]
-        sequence = ("subj", "obj", "work_author", "...")
+        sequence = ("subj", "lifespan", "obj", "work_author", "...")
 
     work_author = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
     )
 
 
 class PersonBiographedInWorkTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "work_author"]
-        sequence = ("subj", "obj", "work_author", "...")
+        sequence = ("subj", "lifespan", "obj", "work_author", "...")
 
     work_author = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
+
+
+class PersonBiographerOfPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
     )
 
 
@@ -422,6 +441,19 @@ class InstanceWrittenAtPlaceTable(TibScholRelationMixinTable):
     )
 
 
+class PersonLineagePredecessorOfPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
+    )
+
+
 class WorkHasAsAnInstanceInstanceTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "author_work"]
@@ -429,6 +461,19 @@ class WorkHasAsAnInstanceInstanceTable(TibScholRelationMixinTable):
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+
+
+class PersonOtherRelationToPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
     )
 
 
@@ -442,20 +487,54 @@ class InstanceIsCopiedFromInstanceTable(TibScholRelationMixinTable):
     )
 
 
+class PersonOrdinatorOfPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
+    )
+
+
 class PersonOwnerOfInstanceTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
-        fields = ["subj", "obj", "author_work"]
-        sequence = ("subj", "obj", "author_work", "...")
+        fields = ["subj", "lifespan", "obj", "author_work"]
+        sequence = ("subj", "lifespan", "obj", "author_work", "...")
+
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
     )
 
 
+class PersonParentOfPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
+    )
+
+
 class PersonPrompterOfWorkTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "author_work"]
-        sequence = ("subj", "obj", "author_work", "...")
+        sequence = ("subj", "lifespan", "obj", "author_work", "...")
+
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
@@ -465,37 +544,117 @@ class PersonPrompterOfWorkTable(TibScholRelationMixinTable):
 class WorkRecordsTheTeachingOfPersonTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "author_work"]
-        sequence = ("subj", "author_work", "obj", "...")
+        sequence = ("subj", "author_work", "obj", "lifespan", "...")
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonQuotesWithNamePersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonQuotesWithoutNamePersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonRequestsPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
     )
 
 
 class PersonScribeOfInstanceTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "author_work"]
-        sequence = ("subj", "obj", "author_work", "...")
+        sequence = ("subj", "lifespan", "obj", "author_work", "...")
+
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonSiblingOfPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
     )
 
 
 class PersonSponsorOfInstanceTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "author_work"]
-        sequence = ("subj", "obj", "author_work", "...")
+        sequence = ("subj", "lifespan", "obj", "author_work", "...")
+
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
     )
 
 
+class PersonStudentOfPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
+    )
+
+
 class PersonStudiesWorkTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "author_work"]
-        sequence = ("subj", "obj", "author_work", "...")
+        sequence = ("subj", "lifespan", "obj", "author_work", "...")
+
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
@@ -505,10 +664,27 @@ class PersonStudiesWorkTable(TibScholRelationMixinTable):
 class PersonTeachesWorkTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "author_work"]
-        sequence = ("subj", "obj", "author_work", "...")
+        sequence = ("subj", "lifespan", "obj", "author_work", "...")
+
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonUncleMaternalPaternalOfPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj"]
+        sequence = ("subj", "lifespan_subj", "obj", "lifespan_obj", "...")
+
+    lifespan_subj = PersonDateColumn(
+        verbose_name="Lifespan (subj)", orderable=True, accessor="subj_object_id"
+    )
+    lifespan_obj = PersonDateColumn(
+        verbose_name="Lifespan (obj)", orderable=True, accessor="obj_object_id"
     )
 
 
@@ -525,7 +701,11 @@ class WorkTaughtAtPlaceTable(TibScholRelationMixinTable):
 class PersonTranslatorOfWorkTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "author_work"]
-        sequence = ("subj", "obj", "author_work", "...")
+        sequence = ("subj", "lifespan", "obj", "author_work", "...")
+
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
@@ -535,8 +715,22 @@ class PersonTranslatorOfWorkTable(TibScholRelationMixinTable):
 class PersonHasOtherRelationWithInstanceTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
         fields = ["subj", "obj", "author_work"]
-        sequence = ("subj", "obj", "author_work", "...")
+        sequence = ("subj", "lifespan", "obj", "author_work", "...")
+
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
+    )
 
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonAuthorOfWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "lifespan"]
+        sequence = ("subj", "lifespan", "obj", "...")
+
+    lifespan = PersonDateColumn(
+        verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
     )

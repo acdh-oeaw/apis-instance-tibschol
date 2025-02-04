@@ -388,3 +388,16 @@ class PersonBiographedInWorkTable(TibScholRelationMixinTable):
     work_author = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
     )
+
+
+class WorkContainsCitationsOfWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_subj", "author_obj"]
+        sequence = ("subj", "author_subj", "obj", "author_obj", "...")
+
+    author_subj = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+    author_obj = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )

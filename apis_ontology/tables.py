@@ -424,10 +424,10 @@ class WorkContainsCitationsOfWorkTable(TibScholRelationMixinTable):
         sequence = ("subj", "author_subj", "obj", "author_obj", "...")
 
     author_subj = AuthorColumn(
-        verbose_name="Author", orderable=True, accessor="subj_object_id"
+        verbose_name="Author (subj)", orderable=True, accessor="subj_object_id"
     )
     author_obj = AuthorColumn(
-        verbose_name="Author", orderable=True, accessor="obj_object_id"
+        verbose_name="Author (obj)", orderable=True, accessor="obj_object_id"
     )
 
 

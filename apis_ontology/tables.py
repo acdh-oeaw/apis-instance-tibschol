@@ -194,6 +194,10 @@ class InstanceTable(TibscholEntityMixinTable):
             symbol = "check"
         return mark_safe(f'<span class="material-symbols-outlined">{symbol}</span>')
 
+    def order_start_date_written(self, queryset, is_descending):
+        queryset = queryset.order_by(("-" if is_descending else "") + "start_date")
+        return queryset, True
+
     author = AuthorColumn(verbose_name="Author", accessor="work_id", orderable=True)
 
 

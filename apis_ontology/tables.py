@@ -52,6 +52,45 @@ class TibscholEntityMixinTable(AbstractEntityTable):
         return str(record)
 
 
+class AuthorColumn(tables.Column):
+    def render(self, value, *args, **kwargs):
+        try:
+            subj_work = Work.objects.get(pk=value)
+        except Work.DoesNotExist:
+            subj_work = Instance.objects.get(pk=value)
+
+        if subj_work.author_id:
+            author = Person.objects.get(pk=subj_work.author_id)
+            context = {
+                "entity_id": author.id,
+                "entity_name": author.name,
+                "entity_uri": author.get_absolute_url(),
+            }
+            return mark_safe(
+                render_to_string("apis_ontology/linked_entity_column.html", context)
+            )
+
+        return ""
+
+    def order(self, queryset, is_descending):
+        queryset = queryset.annotate(
+            author_str=Coalesce(
+                Subquery(
+                    Work.objects.filter(pk=OuterRef(self.accessor)).values(
+                        "author_name"
+                    )[:1]
+                ),
+                Subquery(
+                    Instance.objects.filter(pk=OuterRef(self.accessor)).values(
+                        "author_name"
+                    )[:1]
+                ),
+                Value(""),
+            )
+        ).order_by(("-" if is_descending else "") + "author_str")
+        return queryset, True
+
+
 class PlaceTable(TibscholEntityMixinTable):
     class Meta:
         model = Place
@@ -94,19 +133,7 @@ class WorkTable(TibscholEntityMixinTable):
             )
         }
 
-    author = tables.Column(
-        verbose_name="Author", accessor="author_name", orderable=True
-    )
-
-    def render_author(self, record):
-        context = {
-            "entity_id": record.author_id,
-            "entity_name": record.author_name,
-            "entity_uri": Person.objects.get(pk=record.author_id).uri,
-        }
-        return mark_safe(
-            render_to_string("apis_ontology/linked_entity_column.html", context)
-        )
+    author = AuthorColumn(verbose_name="Author", accessor="id", orderable=True)
 
 
 class InstanceTable(TibscholEntityMixinTable):
@@ -115,9 +142,7 @@ class InstanceTable(TibscholEntityMixinTable):
         fields = ["name", "start_date_written", "author"]
         exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
 
-    author = tables.Column(
-        verbose_name="Author", accessor="author_name", orderable=True
-    )
+    author = AuthorColumn(verbose_name="Author", accessor="id", orderable=True)
 
     def render_availability(self, value):
         symbol = "indeterminate_question_box"
@@ -129,28 +154,12 @@ class InstanceTable(TibscholEntityMixinTable):
             symbol = "check"
         return mark_safe(f'<span class="material-symbols-outlined">{symbol}</span>')
 
-    def render_author(self, record):
-        context = {
-            "entity_id": record.author_id,
-            "entity_name": record.author_name,
-            "entity_uri": Person.objects.get(pk=record.author_id).uri,
-        }
-        return mark_safe(
-            render_to_string("apis_ontology/linked_entity_column.html", context)
-        )
+    author = AuthorColumn(verbose_name="Author", accessor="work_id", orderable=True)
 
 
 class TibScholRelationColumn(tables.Column):
-    template_name = None
-    orderable = False
-    exclude_from_export = False
-    verbose_name = None
-
     def __init__(self, *args, **kwargs):
         super().__init__(
-            orderable=self.orderable,
-            exclude_from_export=self.exclude_from_export,
-            verbose_name=self.verbose_name,
             *args,
             **kwargs,
         )
@@ -182,7 +191,6 @@ class RelationPredicateColumn(CustomTemplateColumn):
 
 
 class TEIRefColumn(TibScholRelationColumn):
-    verbose_name = "TEI REfs"
 
     def render(self, record, *args, **kwargs):
         def linkify_excerpt_id(xml_id):
@@ -228,7 +236,7 @@ class TibScholEntityMixinRelationsTable(GenericTable):
         ),
         fulltext=lambda x: mark_safe(parse_comment(render_list_field(x.zotero_refs))),
     )
-    tei_refs = TEIRefColumn()
+    tei_refs = TEIRefColumn(verbose_name="TEI Refs", orderable=False)
 
     class Meta(GenericTable.Meta):
         fields = [
@@ -245,7 +253,7 @@ class TibScholRelationMixinTable(GenericTable):
 
     class Meta(GenericTable.Meta):
         fields = ["subj", "obj"]
-        exclude = ["desc"]
+        exclude = ["desc", "view", "edit", "delete"]
         sequence = ("subj", "obj", "...")
 
     subj = tables.Column(verbose_name="Subject")
@@ -309,38 +317,15 @@ class TibScholRelationMixinTable(GenericTable):
 
 class WorkCommentaryOnWorkTable(TibScholRelationMixinTable):
     class Meta(TibScholRelationMixinTable.Meta):
-        fields = [
-            "subj",
-            "obj",
-            "commentary_author",
-        ]
-        sequence = ("subj", "obj", "commentary_author", "...")
+        fields = ["subj", "commentary_author", "obj", "work_author"]
+        sequence = ("subj", "commentary_author", "obj", "work_author", "...")
 
-    commentary_author = tables.Column(
-        verbose_name="Author (obj)", orderable=True, accessor="obj"
+    work_author = AuthorColumn(
+        verbose_name="Author (obj)", orderable=True, accessor="obj_object_id"
     )
-
-    def render_commentary_author(self, value):
-        obj_work = Work.objects.get(pk=value.pk)
-        if obj_work.author_id:
-            author = Person.objects.get(pk=obj_work.author_id)
-            return format_html(
-                '<a href="{}" target="_blank">{}</a>', author.get_absolute_url(), author
-            )
-        return ""
-
-    def order_commentary_author(self, queryset, is_descending):
-        queryset = queryset.annotate(
-            commentary_author_str=Coalesce(
-                Subquery(
-                    Work.objects.filter(pk=OuterRef("obj_object_id")).values(
-                        "author_name"
-                    )[:1]
-                ),
-                Value(""),
-            )
-        ).order_by(("-" if is_descending else "") + "commentary_author_str")
-        return queryset, True
+    commentary_author = AuthorColumn(
+        verbose_name="Author (subj)", orderable=True, accessor="subj_object_id"
+    )
 
 
 class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
@@ -350,31 +335,11 @@ class WorkComposedAtPlaceTable(TibScholRelationMixinTable):
             "work_author",
             "obj",
         ]
-        sequence = ("subj", "obj", "work_author", "...")
+        sequence = ("subj", "work_author", "obj", "...")
 
-    work_author = tables.Column(verbose_name="Author", orderable=True, accessor="subj")
-
-    def render_work_author(self, value):
-        obj_work = Work.objects.get(pk=value.pk)
-        if obj_work.author_id:
-            author = Person.objects.get(pk=obj_work.author_id)
-            return format_html(
-                '<a href="{}" target="_blank">{}</a>', author.get_absolute_url(), author
-            )
-        return ""
-
-    def order_work_author(self, queryset, is_descending):
-        queryset = queryset.annotate(
-            author_str=Coalesce(
-                Subquery(
-                    Work.objects.filter(pk=OuterRef("subj_object_id")).values(
-                        "author_name"
-                    )[:1]
-                ),
-                Value(""),
-            )
-        ).order_by(("-" if is_descending else "") + "author_str")
-        return queryset, True
+    work_author = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
 
 
 class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
@@ -412,3 +377,166 @@ class PersonActiveAtPlaceTable(TibScholRelationMixinTable):
             + " - "
             + (author.end_date_written if author.end_date_written else "")
         )
+
+
+class PersonAddresseeOfWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "work_author"]
+        sequence = ("subj", "obj", "work_author", "...")
+
+    work_author = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonBiographedInWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "work_author"]
+        sequence = ("subj", "obj", "work_author", "...")
+
+    work_author = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class WorkContainsCitationsOfWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_subj", "author_obj"]
+        sequence = ("subj", "author_subj", "obj", "author_obj", "...")
+
+    author_subj = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+    author_obj = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class InstanceWrittenAtPlaceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "author_work", "obj", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+
+
+class WorkHasAsAnInstanceInstanceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "author_work", "obj", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+
+
+class InstanceIsCopiedFromInstanceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "author_work", "obj", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+
+
+class PersonOwnerOfInstanceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonPrompterOfWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class WorkRecordsTheTeachingOfPersonTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "author_work", "obj", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+
+
+class PersonScribeOfInstanceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonSponsorOfInstanceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonStudiesWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonTeachesWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class WorkTaughtAtPlaceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "author_work", "obj", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+
+
+class PersonTranslatorOfWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonHasOtherRelationWithInstanceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )

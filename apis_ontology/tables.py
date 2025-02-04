@@ -480,3 +480,13 @@ class PersonScribeOfInstanceTable(TibScholRelationMixinTable):
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
     )
+
+
+class PersonSponsorOfInstanceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )

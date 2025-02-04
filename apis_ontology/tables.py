@@ -81,21 +81,32 @@ class PersonDateColumn(tables.Column):
 
 class AuthorColumn(tables.Column):
     def render(self, value, *args, **kwargs):
+        subj_work = None
         try:
             subj_work = Work.objects.get(pk=value)
         except Work.DoesNotExist:
-            subj_work = Instance.objects.get(pk=value)
-
+            # if the _object_id is not a work, look for an instance
+            try:
+                subj_work = Instance.objects.get(pk=value)
+            except Instance.DoesNotExist:
+                logger.warn(
+                    "Unable to find work or instance for %s: %s", self.accessor, value
+                )
+                return ""
         if subj_work.author_id:
-            author = Person.objects.get(pk=subj_work.author_id)
-            context = {
-                "entity_id": author.id,
-                "entity_name": author.name,
-                "entity_uri": author.get_absolute_url(),
-            }
-            return mark_safe(
-                render_to_string("apis_ontology/linked_entity_column.html", context)
-            )
+            try:
+                author = Person.objects.get(pk=subj_work.author_id)
+                context = {
+                    "entity_id": author.id,
+                    "entity_name": author.name,
+                    "entity_uri": author.get_absolute_url(),
+                }
+                return mark_safe(
+                    render_to_string("apis_ontology/linked_entity_column.html", context)
+                )
+            except Person.DoesNotExist:
+                # Author is deleted or not accessible to the user
+                logger.warning("Unable to find author for %s ", subj_work)
 
         return ""
 

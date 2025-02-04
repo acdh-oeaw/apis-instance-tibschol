@@ -490,3 +490,53 @@ class PersonSponsorOfInstanceTable(TibScholRelationMixinTable):
     author_work = AuthorColumn(
         verbose_name="Author", orderable=True, accessor="obj_object_id"
     )
+
+
+class PersonStudiesWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonTeachesWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class WorkTaughtAtPlaceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "author_work", "obj", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="subj_object_id"
+    )
+
+
+class PersonTranslatorOfWorkTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )
+
+
+class PersonHasOtherRelationWithInstanceTable(TibScholRelationMixinTable):
+    class Meta(TibScholRelationMixinTable.Meta):
+        fields = ["subj", "obj", "author_work"]
+        sequence = ("subj", "obj", "author_work", "...")
+
+    author_work = AuthorColumn(
+        verbose_name="Author", orderable=True, accessor="obj_object_id"
+    )

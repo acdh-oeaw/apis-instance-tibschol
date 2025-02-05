@@ -2,19 +2,19 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-  <div class="container">
+<div class="container">
     <div class="mt-4  alert alert-info" role="alert"">
         This database is being prepared by the
-        <a href="https://www.oeaw.ac.at/projects/tibschol/home" class="alert-link">TibSchol</a> project. If you have authorised access, please
-        login with your credentials. It will be open to the public in the near future.
+        <a href=" https://www.oeaw.ac.at/projects/tibschol/home" class="alert-link">TibSchol</a> project. It will be
+        open to the public in the near future. If you have authorised access, please login with your credentials.
     </div>
     <div class="mt-4">
-    <form method="post" action="{% url 'apis_core:login' %}">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" value="login">
-        <input type="hidden" name="next" value="{{ next }}">
-    </form>
+        <form method="post" action="{% url 'apis_core:login' %}">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="login">
+            <input type="hidden" name="next" value="{{ next }}">
+        </form>
     </div>
-    </div>
-    {% endblock content %}
+</div>
+{% endblock content %}

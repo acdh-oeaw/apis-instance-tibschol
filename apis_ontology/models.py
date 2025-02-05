@@ -71,12 +71,7 @@ class LegacyStuffMixin(models.Model):
 
 
 class TibScholEntityManager(models.Manager):
-    def get_queryset(self):
-        user = get_current_user()
-        if user and user.is_authenticated:
-            return super().get_queryset()
-
-        return super().get_queryset().filter(review=True)
+    pass
 
 
 class Person(

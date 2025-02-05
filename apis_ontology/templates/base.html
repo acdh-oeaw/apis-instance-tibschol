@@ -22,14 +22,6 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
 {% endfor %}
 {% endblock entities-menu-items %}
 
-{% block relations-menu-items %}
-{% if user.is_authenticated %}
-{{ block.super }}
-{% else %}
-    <div id="relationsList"></div>
-{% endif %}
-{% endblock relations-menu-items %}
-
 {% block main-menu %}
 <li class="nav-item dropdown">
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"

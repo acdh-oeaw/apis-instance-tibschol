@@ -3,6 +3,14 @@ body {
       text-rendering: geometricPrecision;
 }
 
+a:not([class]) {
+    text-decoration: none;
+}
+
+a:not([class]):hover {
+    text-decoration: underline;
+}
+
 .linkish {
     color: #007BFF;
     cursor: pointer;

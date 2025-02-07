@@ -18,6 +18,7 @@ from .templatetags.filter_utils import (
     render_list_field,
 )
 from .templatetags.parse_comment import parse_comment
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,22 @@ def preview_text(text, n=50):
 
 
 class TibscholEntityMixinTable(AbstractEntityTable):
+    export_filename = f"tibschol_export_{datetime.now().strftime('%Y%m%d_%H%M')}"
+
+    export_alternative_names = tables.Column(
+        visible=False, verbose_name="Alternative names", accessor="alternative_names"
+    )
+    export_external_links = tables.Column(
+        visible=False, verbose_name="External links", accessor="external_links"
+    )
+    export_comments = tables.Column(
+        visible=False, verbose_name="Comments", accessor="comments"
+    )
+    export_review = tables.Column(
+        visible=False, verbose_name="Review", accessor="review"
+    )
+    export_notes = tables.Column(visible=False, verbose_name="Notes", accessor="notes")
+
     paginate_by = 100
 
     def render_alternative_names(self, value):
@@ -82,19 +99,24 @@ class PersonDateColumn(tables.Column):
 
 
 class AuthorColumn(tables.Column):
-    def render(self, value, *args, **kwargs):
-        subj_work = None
+    def get_work_from_id(self, work_instance_id):
         try:
-            subj_work = Work.objects.get(pk=value)
+            return Work.objects.get(pk=work_instance_id)
         except Work.DoesNotExist:
             # if the _object_id is not a work, look for an instance
             try:
-                subj_work = Instance.objects.get(pk=value)
+                return Instance.objects.get(pk=work_instance_id)
             except Instance.DoesNotExist:
                 logger.warn(
-                    "Unable to find work or instance for %s: %s", self.accessor, value
+                    "Unable to find work or instance for %s: %s",
+                    self.accessor,
+                    work_instance_id,
                 )
-                return ""
+
+    def render(self, value, *args, **kwargs):
+        subj_work = self.get_work_from_id(value)
+        if not subj_work:
+            return ""
         if subj_work.author_id:
             try:
                 author = Person.objects.get(pk=subj_work.author_id)
@@ -111,6 +133,13 @@ class AuthorColumn(tables.Column):
                 logger.warning("Unable to find author for %s ", subj_work)
 
         return ""
+
+    def value(self, value, *args, **kwargs):
+        work = self.get_work_from_id(value)
+        if not work:
+            return ""
+        if work.author_id:
+            return Person.objects.get(id=work.author_id)
 
     def order(self, queryset, is_descending):
         queryset = queryset.annotate(
@@ -142,6 +171,10 @@ class PlaceTable(TibscholEntityMixinTable):
         empty_values=[],
     )
 
+    export_date = tables.Column(
+        verbose_name="Date", accessor="start_date_written", visible=False
+    )
+
     def render_label(self, record):
         return str(record)
 
@@ -161,6 +194,19 @@ class PersonTable(TibscholEntityMixinTable):
     def render_name(self, record):
         return str(record)
 
+    export_lifedate_start = tables.Column(
+        accessor="start_date_written", verbose_name="Life date start", visible=False
+    )
+    export_lifedate_end = tables.Column(
+        accessor="end_date_written", verbose_name="Life date end", visible=False
+    )
+    export_gender = tables.Column(
+        accessor="gender", verbose_name="Gender", visible=False
+    )
+    export_nationality = tables.Column(
+        accessor="nationality", verbose_name="Nationality", visible=False
+    )
+
 
 class WorkTable(TibscholEntityMixinTable):
     class Meta:
@@ -174,6 +220,15 @@ class WorkTable(TibscholEntityMixinTable):
         }
 
     author = AuthorColumn(verbose_name="Author", accessor="id", orderable=True)
+    export_date_of_composition = tables.Column(
+        accessor="start_date_written", verbose_name="Date of composition", visible=False
+    )
+    export_topic = tables.Column(
+        accessor="subject_vocab", verbose_name="Topic", visible=False
+    )
+
+    def value_export_topic(self, record):
+        return "\n".join(str(sub) for sub in record.subject_vocab.all())
 
 
 class InstanceTable(TibscholEntityMixinTable):
@@ -294,6 +349,9 @@ class TibScholEntityMixinRelationsTable(GenericTable):
 
 class TibScholRelationMixinTable(GenericTable):
     paginate_by = 100
+    export_filename = (
+        f"tibschol_relation_export_{datetime.now().strftime('%Y%m%d_%H%M')}"
+    )
 
     class Meta(GenericTable.Meta):
         fields = ["subj", "obj"]
@@ -307,9 +365,27 @@ class TibScholRelationMixinTable(GenericTable):
         url = value.get_absolute_url()
         return format_html('<a href="{}" target="_blank">{}</a>', url, value)
 
+    def value_subj(self, value):
+        return value
+
     def render_obj(self, value):
         url = value.get_absolute_url()
         return format_html('<a href="{}" target="_blank">{}</a>', url, value)
+
+    def value_obj(self, value):
+        return value
+
+    def render_zotero_refs(self, value):
+        return mark_safe(parse_comment(render_list_field(value)))
+
+    def value_zotero_refs(self, value):
+        return value
+
+    def render_support_notes(self, value):
+        return mark_safe(parse_comment(render_list_field(value)))
+
+    def value_support_notes(self, value):
+        return value
 
     def order_subj(self, queryset, is_descending):
         queryset = queryset.annotate(

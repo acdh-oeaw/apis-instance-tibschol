@@ -32,10 +32,13 @@ def preview_text(text, n=50):
     return truncated_text + "…"
 
 
-class TibscholEntityMixinTable(GenericTable):
-    class Meta(GenericTable.Meta):
-        exclude = ["id", "desc"]
-        sequence = ("name", "...", "view", "edit", "delete")
+class TibscholEntityMixinTable(AbstractEntityTable):
+    class Meta(AbstractEntityTable.Meta):
+        exclude = ["id", "desc", "view", "edit", "delete", "noduplicate"]
+        sequence = (
+            "name",
+            "...",
+        )
 
     export_filename = f"tibschol_export_{datetime.now().strftime('%Y%m%d_%H%M')}"
 
@@ -168,8 +171,13 @@ class PlaceTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
         model = Place
         fields = ["label", "longitude", "latitude"]
-        exclude = ("name",)
-        sequence = ("label", "longitude", "latitude", "...", "view", "edit", "delete")
+        exclude = ["name"]
+        sequence = (
+            "label",
+            "longitude",
+            "latitude",
+            "...",
+        )
 
     label = tables.Column(
         linkify=lambda record: record.get_absolute_url(),
@@ -217,7 +225,6 @@ class WorkTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
         model = Work
         fields = ["name", "author"]
-        exclude = ["id", "desc"]
         row_attrs = {
             "style": lambda record: (
                 "background-color: lightgray;" if not record.isExtant else None

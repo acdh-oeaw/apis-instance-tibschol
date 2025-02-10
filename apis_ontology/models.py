@@ -49,7 +49,7 @@ class LegacyStuffMixin(models.Model):
         abstract = True
 
     review = models.BooleanField(
-        default=False,
+        default=False,  # type: ignore
         help_text="Should be set to True, if the "
         "data record holds up quality "
         "standards.",

@@ -18,6 +18,8 @@ from .templatetags.filter_utils import (
     render_list_field,
 )
 from .templatetags.parse_comment import parse_comment
+from .templatetags.render_tei_refs import render_tei_refs
+
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -300,60 +302,33 @@ class RelationPredicateColumn(CustomTemplateColumn):
         return super().render(record, **kwargs)
 
 
-class TEIRefColumn(TibScholRelationColumn):
-
-    def render(self, record, *args, **kwargs):
-        def linkify_excerpt_id(xml_id):
-            true_id = xml_id.replace('"', "").replace("xml:id=", "").strip().rstrip(".")
-            return f"""<a href="#" onclick="showPopup('{true_id}'); return false;">
-            {true_id}
-            </a>"""
-
-        value = record.tei_refs
-        lines = value.split("\n")
-        linked_lines = []
-        for line in lines:
-            words = line.split()
-            linked_words = []
-            for w in words:
-                if (
-                    w.startswith("xml:id=")
-                    or bool(re.search(r"\bex(?:\d\w*)\b", w))
-                    or bool(re.search(r"\bexX(?:\w*)\b", w))
-                ):
-                    linked_words.append(linkify_excerpt_id(w))
-                else:
-                    linked_words.append(w)
-            linked_lines.append(" ".join(linked_words))
-
-        return mark_safe("<br />".join(linked_lines))
-
-
 class TibScholEntityMixinRelationsTable(GenericTable):
     relation = RelationNameColumn()
     predicate = RelationPredicateColumn()
-    support_notes = MoreLessColumn(
+    references = MoreLessColumn(
         orderable=False,
         preview=lambda x: mark_safe(
-            parse_comment(render_list_field(preview_text(x.support_notes, 50)))
+            render_tei_refs(getattr(x, "tei_refs", "") or "")
+            + parse_comment(
+                render_list_field(
+                    preview_text(
+                        f"{getattr(x,'support_notes', '') or ''}\n{getattr(x, 'zotero_refs','') or ''}",
+                        100,
+                    )
+                )
+            )
         ),
-        fulltext=lambda x: mark_safe(parse_comment(render_list_field(x.support_notes))),
-    )
-    zotero_refs = MoreLessColumn(
-        orderable=False,
-        preview=lambda x: mark_safe(
-            parse_comment(render_list_field(preview_text(x.zotero_refs, 50)))
+        fulltext=lambda x: mark_safe(
+            render_tei_refs(getattr(x, "tei_refs", "") or "")
+            + parse_comment(
+                render_list_field(
+                    f"{getattr(x,'support_notes', '') or ''}\n{getattr(x, 'zotero_refs','')  or ''}",
+                )
+            )
         ),
-        fulltext=lambda x: mark_safe(parse_comment(render_list_field(x.zotero_refs))),
     )
-    tei_refs = TEIRefColumn(verbose_name="TEI Refs", orderable=False)
 
     class Meta(GenericTable.Meta):
-        fields = [
-            "support_notes",
-            "zotero_refs",
-            "tei_refs",
-        ]
         exclude = ["desc"]
         per_page = 1000
 

@@ -301,8 +301,8 @@ class TEIRefColumn(TibScholRelationColumn):
         value = record.tei_refs
         lines = value.split("\n")
         linked_lines = []
-        for l in lines:
-            words = l.split()
+        for line in lines:
+            words = line.split()
             linked_words = []
             for w in words:
                 if (

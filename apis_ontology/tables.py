@@ -32,7 +32,11 @@ def preview_text(text, n=50):
     return truncated_text + "…"
 
 
-class TibscholEntityMixinTable(AbstractEntityTable):
+class TibscholEntityMixinTable(GenericTable):
+    class Meta(GenericTable.Meta):
+        exclude = ["id", "desc"]
+        sequence = ("name", "...", "view", "edit", "delete")
+
     export_filename = f"tibschol_export_{datetime.now().strftime('%Y%m%d_%H%M')}"
 
     export_alternative_names = tables.Column(
@@ -164,7 +168,8 @@ class PlaceTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
         model = Place
         fields = ["label", "longitude", "latitude"]
-        exclude = ["name", "desc", "view", "edit", "noduplicate", "delete"]
+        exclude = ("name",)
+        sequence = ("label", "longitude", "latitude", "...", "view", "edit", "delete")
 
     label = tables.Column(
         linkify=lambda record: record.get_absolute_url(),
@@ -189,7 +194,7 @@ class PersonTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
         model = Person
         fields = ["name"]
-        exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
+        # exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
 
     def render_name(self, record):
         return str(record)
@@ -212,7 +217,7 @@ class WorkTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
         model = Work
         fields = ["name", "author"]
-        exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
+        exclude = ["id", "desc"]
         row_attrs = {
             "style": lambda record: (
                 "background-color: lightgray;" if not record.isExtant else None
@@ -235,7 +240,6 @@ class InstanceTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
         model = Instance
         fields = ["name", "start_date_written", "author"]
-        exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
 
     author = AuthorColumn(verbose_name="Author", accessor="id", orderable=True)
 

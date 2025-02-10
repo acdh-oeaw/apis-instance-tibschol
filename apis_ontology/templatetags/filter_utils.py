@@ -79,6 +79,6 @@ def render_zotero_links(value):
 @register.filter
 def preview_text(text, n=50):
     if len(text) <= n:
-        return text
-    truncated_text = text[:n].rsplit(" ", 1)[0]
+        return text.strip()
+    truncated_text = text[:n].rsplit(" ", 1)[0].strip()
     return truncated_text + "…"

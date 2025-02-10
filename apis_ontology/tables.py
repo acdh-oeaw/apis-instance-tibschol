@@ -161,7 +161,7 @@ class AuthorColumn(tables.Column):
 
 
 class PlaceTable(TibscholEntityMixinTable):
-    class Meta:
+    class Meta(TibscholEntityMixinTable.Meta):
         model = Place
         fields = ["label", "longitude", "latitude"]
         exclude = ["name", "desc", "view", "edit", "noduplicate", "delete"]
@@ -186,7 +186,7 @@ class PlaceTable(TibscholEntityMixinTable):
 
 
 class PersonTable(TibscholEntityMixinTable):
-    class Meta:
+    class Meta(TibscholEntityMixinTable.Meta):
         model = Person
         fields = ["name"]
         exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
@@ -209,7 +209,7 @@ class PersonTable(TibscholEntityMixinTable):
 
 
 class WorkTable(TibscholEntityMixinTable):
-    class Meta:
+    class Meta(TibscholEntityMixinTable.Meta):
         model = Work
         fields = ["name", "author"]
         exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
@@ -232,7 +232,7 @@ class WorkTable(TibscholEntityMixinTable):
 
 
 class InstanceTable(TibscholEntityMixinTable):
-    class Meta:
+    class Meta(TibscholEntityMixinTable.Meta):
         model = Instance
         fields = ["name", "start_date_written", "author"]
         exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]

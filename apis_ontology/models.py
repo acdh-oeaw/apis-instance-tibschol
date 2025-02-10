@@ -6,7 +6,6 @@ from apis_core.core.models import LegacyDateMixin
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
 from apis_core.relations.models import Relation
-from apis_core.apis_metainfo.models import RootObject
 from apis_core.utils.helpers import create_object_from_uri
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -14,7 +13,6 @@ from django.db.models import OuterRef, QuerySet, Subquery
 from django.db.models.signals import class_prepared
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from crum import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -421,7 +419,7 @@ class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericMode
         abstract = True
 
 
-def enforce_meta_attributes(sender, **kwargs):
+def enforce_meta_attributes(sender, **kwargs):  # type: ignore
     if issubclass(sender, TibScholRelationMixin):
         meta = sender._meta
         # set verbose_name_plural to verbose_name

@@ -107,7 +107,13 @@ class Person(
 
     objects = TibScholEntityManager()
 
-    class Meta:
+    class Meta(
+        VersionMixin.Meta,
+        LegacyStuffMixin.Meta,
+        LegacyDateMixin.Meta,
+        AbstractEntity.Meta,
+        TibScholEntityMixin.Meta,
+    ):
         verbose_name = _("person")
         verbose_name_plural = _("Persons")
         ordering = ["name", "pk"]
@@ -139,7 +145,14 @@ class Place(
         verbose_name="Date",
     )
 
-    class Meta:
+    class Meta(
+        E53_Place.Meta,
+        VersionMixin.Meta,
+        LegacyStuffMixin.Meta,
+        LegacyDateMixin.Meta,
+        TibScholEntityMixin.Meta,
+        AbstractEntity.Meta,
+    ):
         verbose_name = _("place")
         verbose_name_plural = _("Places")
 
@@ -210,7 +223,13 @@ class Work(
         default=True, verbose_name="Is extant", null=True, blank=True
     )
 
-    class Meta:
+    class Meta(
+        VersionMixin.Meta,
+        LegacyStuffMixin.Meta,
+        LegacyDateMixin.Meta,
+        TibScholEntityMixin.Meta,
+        AbstractEntity.Meta,
+    ):
         verbose_name = _("work")
         verbose_name_plural = _("Works")
         ordering = ["name", "pk"]
@@ -330,7 +349,13 @@ class Instance(
         blank=True, null=True, verbose_name="Item description"
     )
 
-    class Meta:
+    class Meta(
+        VersionMixin.Meta,
+        LegacyStuffMixin.Meta,
+        LegacyDateMixin.Meta,
+        TibScholEntityMixin.Meta,
+        AbstractEntity.Meta,
+    ):
         verbose_name = _("instance")
         verbose_name_plural = _("Instances")
         ordering = ["name", "pk"]
@@ -392,7 +417,7 @@ class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericMode
     def object_type(self):
         return str(self.obj_model.__name__).lower()
 
-    class Meta:
+    class Meta(VersionMixin.Meta, LegacyDateMixin.Meta):
         abstract = True
 
 
@@ -582,7 +607,7 @@ class InstanceIsCopiedFromInstance(TibScholRelationMixin):
     def reverse_name(cls) -> str:
         return "is source for"
 
-    class Meta:
+    class Meta(TibScholRelationMixin.Meta):
         verbose_name = "instance has source"
 
 

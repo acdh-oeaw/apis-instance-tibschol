@@ -117,11 +117,11 @@ class AuthorColumn(tables.Column):
         subj_work = self.get_work_from_id(value)
         if not subj_work:
             return ""
-        if subj_work.author_id:
+        if getattr(subj_work, "author_id"):
             try:
-                author = Person.objects.get(pk=subj_work.author_id)
+                author = Person.objects.get(pk=getattr(subj_work, "author_id"))
                 context = {
-                    "entity_id": author.id,
+                    "entity_id": author.pk,
                     "entity_name": author.name,
                     "entity_uri": author.get_absolute_url(),
                 }
@@ -138,8 +138,8 @@ class AuthorColumn(tables.Column):
         work = self.get_work_from_id(value)
         if not work:
             return ""
-        if work.author_id:
-            return Person.objects.get(id=work.author_id)
+        if getattr(work, "author_id"):
+            return Person.objects.get(id=getattr(work, "author_id"))
 
     def order(self, queryset, is_descending):
         queryset = queryset.annotate(

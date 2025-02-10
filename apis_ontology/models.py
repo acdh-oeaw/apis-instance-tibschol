@@ -60,7 +60,7 @@ class LegacyStuffMixin(models.Model):
 
     @classmethod
     def get_or_create_uri(cls, uri):
-        logger.info(f"using custom get_or_create_uri with %s", uri)
+        logger.info("using custom get_or_create_uri with %s", uri)
         return create_object_from_uri(uri, cls) or cls.objects.get(pk=uri)
 
     @property

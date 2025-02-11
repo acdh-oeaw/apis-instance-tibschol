@@ -57,10 +57,6 @@ CACHES = {
 }
 
 SELECT2_CACHE_BACKEND = "select2"
-REST_FRAMEWORK = {
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 20,
-}
 
 MIDDLEWARE += [
     "simple_history.middleware.HistoryRequestMiddleware",

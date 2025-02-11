@@ -64,7 +64,7 @@ MIDDLEWARE += [
 
 
 APIS_ANON_VIEWS_ALLOWED = False
-EXPORT_FORMATS = ("csv",)
+EXPORT_FORMATS = ("csv", "xlsx")
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5-responsive.html"
 DJANGO_TABLES2_TABLE_ATTRS = {
     "class": "table table-striped table-hover",

@@ -77,6 +77,9 @@ class TibscholEntityMixinTable(AbstractEntityTable):
     def render_name(self, record):
         return str(record)
 
+    def value_name(self, record):
+        return getattr(record, "label", getattr(record, "name", ""))
+
 
 class PersonDateColumn(tables.Column):
     def render(self, value, *args, **kwargs):
@@ -147,8 +150,7 @@ class AuthorColumn(tables.Column):
         work = self.get_work_from_id(value)
         if not work:
             return ""
-        if getattr(work, "author_id"):
-            return Person.objects.get(id=getattr(work, "author_id"))
+        return getattr(work, "author_name", "")
 
     def order(self, queryset, is_descending):
         queryset = queryset.annotate(
@@ -172,26 +174,17 @@ class AuthorColumn(tables.Column):
 class PlaceTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
         model = Place
-        fields = ["label", "longitude", "latitude"]
-        exclude = ["name"]
+        fields = ["name", "longitude", "latitude"]
         sequence = (
-            "label",
+            "name",
             "longitude",
             "latitude",
             "...",
         )
 
-    label = tables.Column(
-        linkify=lambda record: record.get_absolute_url(),
-        empty_values=[],
-    )
-
     export_date = tables.Column(
         verbose_name="Date", accessor="start_date_written", visible=False
     )
-
-    def render_label(self, record):
-        return str(record)
 
     def render_latitude(self, value):
         return render_coordinate(value)
@@ -222,6 +215,14 @@ class PersonTable(TibscholEntityMixinTable):
         accessor="nationality", verbose_name="Nationality", visible=False
     )
 
+    def order_start_date_written(self, queryset, is_descending):
+        queryset = queryset.order_by(("-" if is_descending else "") + "start_date")
+        return queryset, True
+
+    def order_end_date_written(self, queryset, is_descending):
+        queryset = queryset.order_by(("-" if is_descending else "") + "end_date")
+        return queryset, True
+
 
 class WorkTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
@@ -243,6 +244,10 @@ class WorkTable(TibscholEntityMixinTable):
 
     def value_export_topic(self, record):
         return "\n".join(str(sub) for sub in record.subject_vocab.all())
+
+    def order_start_date_written(self, queryset, is_descending):
+        queryset = queryset.order_by(("-" if is_descending else "") + "start_date")
+        return queryset, True
 
 
 class InstanceTable(TibscholEntityMixinTable):
@@ -352,14 +357,14 @@ class TibScholRelationMixinTable(GenericTable):
         return format_html('<a href="{}" target="_blank">{}</a>', url, value)
 
     def value_subj(self, value):
-        return value
+        return getattr(value, "name", "") or getattr(value, "label", "") or ""
 
     def render_obj(self, value):
         url = value.get_absolute_url()
         return format_html('<a href="{}" target="_blank">{}</a>', url, value)
 
     def value_obj(self, value):
-        return value
+        return getattr(value, "name", "") or getattr(value, "label", "") or ""
 
     def render_zotero_refs(self, value):
         return mark_safe(parse_comment(render_list_field(value)))

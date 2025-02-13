@@ -52,8 +52,6 @@ class LegacyStuffMixin(models.Model):
         "data record holds up quality "
         "standards.",
     )
-    notes = models.TextField(blank=True, null=True, verbose_name="Notes")
-    # published = models.BooleanField(default=False)
     published = None
 
     @classmethod

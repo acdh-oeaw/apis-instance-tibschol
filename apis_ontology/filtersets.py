@@ -18,10 +18,6 @@ from apis_ontology.forms import (
 from apis_ontology.models import Instance, Person, Place, Work
 from apis_ontology.utils import get_relevant_relations
 
-ABSTRACT_ENTITY_FILTERS_EXCLUDE = [
-    f for f in ABSTRACT_ENTITY_FILTERS_EXCLUDE if f != "notes"
-]
-
 
 def filter_related_property(queryset, name, value):
     rel_class = apps.get_model("apis_ontology", value)
@@ -145,7 +141,6 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
             *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
             "latitude",
             "longitude",
-            "notes",
             "name",
         ]
         form = PlaceSearchForm
@@ -185,7 +180,6 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
     class Meta:
         exclude = [
             *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
-            "notes",
             "alternative_names",
         ]
         form = PersonSearchForm
@@ -225,7 +219,6 @@ class WorkFilterSet(TibScholEntityMixinFilterSet):
     class Meta:
         exclude = [
             *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
-            "notes",
             "alternative_names",
         ]
 
@@ -266,7 +259,6 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
     class Meta:
         exclude = [
             *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
-            "notes",
             "alternative_names",
         ]
 

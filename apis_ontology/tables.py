@@ -312,17 +312,7 @@ class TibScholEntityMixinRelationsTable(GenericTable):
     predicate = RelationPredicateColumn()
     references = MoreLessColumn(
         orderable=False,
-        preview=lambda x: mark_safe(
-            render_tei_refs(getattr(x, "tei_refs", "") or "")
-            + parse_comment(
-                render_list_field(
-                    preview_text(
-                        f"{getattr(x,'support_notes', '') or ''}\n{getattr(x, 'zotero_refs','') or ''}",
-                        100,
-                    )
-                )
-            )
-        ),
+        preview=lambda x: "",
         fulltext=lambda x: mark_safe(
             render_tei_refs(getattr(x, "tei_refs", "") or "")
             + parse_comment(

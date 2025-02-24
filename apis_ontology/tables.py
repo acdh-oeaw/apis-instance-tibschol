@@ -824,3 +824,19 @@ class ExcerptsTable(GenericTable):
 
     def render_xml_id(self, value):
         return value
+
+
+class ZoteroEntryTable(GenericTable):
+    class Meta(GenericTable.Meta):
+        exclude = ["desc", "view", "edit", "delete"]
+        fields = ["zoteroId", "shortTitle", "fullCitation", "year"]
+        sequence = fields + ["..."]
+        per_page = 100
+
+    zoteroId = tables.Column(
+        linkify=lambda record: record.get_absolute_url(),
+        empty_values=[],
+    )
+
+    def render_zoteroId(self, value):
+        return value

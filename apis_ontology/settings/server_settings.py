@@ -17,7 +17,6 @@ INSTALLED_APPS += [
     "django_acdhch_functions",
     "django_select2",
 ]
-INSTALLED_APPS = ["apis_core.relations"] + INSTALLED_APPS
 INSTALLED_APPS.append("apis_core.documentation")
 INSTALLED_APPS.remove("apis_ontology")
 INSTALLED_APPS.insert(0, "apis_ontology")

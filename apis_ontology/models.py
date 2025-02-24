@@ -370,11 +370,19 @@ class ZoteroEntry(GenericModel, models.Model):
         max_length=255, blank=True, null=True, verbose_name="Year of publication"
     )
 
+    class Meta:
+        verbose_name = _("zotero entry")
+        verbose_name_plural = _("zotero entries")
+
 
 class Excerpts(GenericModel, models.Model):
     xml_id = models.CharField(max_length=255, unique=True)
     xml_content = models.TextField()
     source = models.CharField(max_length=255)  # the TEI file source
+
+    class Meta:
+        verbose_name = _("excerpt")
+        verbose_name_plural = _("excerpts")
 
 
 #######################################################################################

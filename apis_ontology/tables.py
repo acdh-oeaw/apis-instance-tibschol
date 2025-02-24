@@ -808,3 +808,19 @@ class PersonAuthorOfWorkTable(TibScholRelationMixinTable):
     lifespan = PersonDateColumn(
         verbose_name="Lifespan", orderable=True, accessor="subj_object_id"
     )
+
+
+class ExcerptsTable(GenericTable):
+    class Meta(GenericTable.Meta):
+        exclude = ["desc", "view", "edit", "delete"]
+        fields = ["xml_id", "xml_content"]
+        sequence = ["xml_id", "xml_content", "..."]
+        per_page = 100
+
+    xml_id = tables.Column(
+        linkify=lambda record: record.get_absolute_url(),
+        empty_values=[],
+    )
+
+    def render_xml_id(self, value):
+        return value

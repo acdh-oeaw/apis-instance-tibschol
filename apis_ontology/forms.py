@@ -1,9 +1,7 @@
-from apis_core.relations.models import Relation
+from apis_core.apis_entities.filtersets import AbstractEntityFilterSetForm
+from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
 from apis_core.relations.forms import RelationForm
 from django import forms
-from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
-from django.forms.models import ModelChoiceField
-from django.apps import apps
 
 
 class TibscholEntityForm(GenericModelForm):
@@ -92,7 +90,20 @@ class InstanceForm(TibscholEntityForm):
     ]
 
 
-class PlaceSearchForm(GenericFilterSetForm):
+class TibScholEntityMixinSearchForm(AbstractEntityFilterSetForm):
+    columns_exclude = [
+        "start_start_date",
+        "end_start_date",
+        "start_date",
+        "start_end_date",
+        "end_end_date",
+        "end_date",
+        "rootobject_ptr",
+        "self_contenttype",
+    ]
+
+
+class PlaceSearchForm(TibScholEntityMixinSearchForm):
     field_order = [
         "columns",
         "label",
@@ -103,7 +114,7 @@ class PlaceSearchForm(GenericFilterSetForm):
     ]
 
 
-class PersonSearchForm(GenericFilterSetForm):
+class PersonSearchForm(TibScholEntityMixinSearchForm):
     field_order = [
         "columns",
         "name",
@@ -117,7 +128,7 @@ class PersonSearchForm(GenericFilterSetForm):
     ]
 
 
-class WorkSearchForm(GenericFilterSetForm):
+class WorkSearchForm(TibScholEntityMixinSearchForm):
     field_order = [
         "columns",
         "name",
@@ -131,7 +142,7 @@ class WorkSearchForm(GenericFilterSetForm):
     ]
 
 
-class InstanceSearchForm(GenericFilterSetForm):
+class InstanceSearchForm(TibScholEntityMixinSearchForm):
     field_order = [
         "columns",
         "name",
@@ -151,4 +162,20 @@ class InstanceSearchForm(GenericFilterSetForm):
         "item_description",
         "comments",
         "external_links",
+    ]
+
+
+class RelationSearchForm(GenericFilterSetForm):
+    columns_exclude = [
+        "subj_object_id",
+        "obj_object_id",
+        "subj_content_type",
+        "obj_content_type",
+        "start_date",
+        "end_date",
+        "start_start_date",
+        "start_end_date",
+        "end_start_date",
+        "end_end_date",
+        "relation_ptr",
     ]

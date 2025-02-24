@@ -131,9 +131,9 @@ class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
     external_links = django_filters.CharFilter(
         label="External links contain", lookup_expr="icontains"
     )
-    related_entity = django_filters.CharFilter(
-        label="Related entity", method=filter_related_entity
-    )
+    # related_entity = django_filters.CharFilter(
+    #     label="Related entity", method=filter_related_entity
+    # )
 
 
 class PlaceFilterSet(TibScholEntityMixinFilterSet):
@@ -161,11 +161,11 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
         }
 
     label = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
-    related_property = django_filters.ChoiceFilter(
-        choices=get_relevant_relations(Place),
-        label="Related Property",
-        method=filter_related_property,
-    )
+    # related_property = django_filters.ChoiceFilter(
+    #     choices=get_relevant_relations(Place),
+    #     label="Related Property",
+    #     method=filter_related_property,
+    # )
 
     def custom_name_search(self, queryset, name, value):
         name_query = models.Q(label__icontains=value) | models.Q(
@@ -200,11 +200,11 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
         }
 
     name = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
-    related_property = django_filters.ChoiceFilter(
-        choices=get_relevant_relations(Person),
-        label="Related Property",
-        method=filter_related_property,
-    )
+    # related_property = django_filters.ChoiceFilter(
+    #     choices=get_relevant_relations(Person),
+    #     label="Related Property",
+    #     method=filter_related_property,
+    # )
 
     def custom_name_search(self, queryset, name, value):
         name_query = models.Q(name__icontains=value) | models.Q(
@@ -240,11 +240,11 @@ class WorkFilterSet(TibScholEntityMixinFilterSet):
         }
 
     name = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
-    related_property = django_filters.ChoiceFilter(
-        choices=get_relevant_relations(Work),
-        label="Related Property",
-        method=filter_related_property,
-    )
+    # related_property = django_filters.ChoiceFilter(
+    #     choices=get_relevant_relations(Work),
+    #     label="Related Property",
+    #     method=filter_related_property,
+    # )
 
     def custom_name_search(self, queryset, name, value):
         name_query = models.Q(name__icontains=value) | models.Q(
@@ -282,11 +282,11 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
     name = django_filters.CharFilter(
         method="custom_name_search", label="Name or Tibschol reference or ID"
     )
-    related_property = django_filters.ChoiceFilter(
-        choices=get_relevant_relations(Instance),
-        label="Related Property",
-        method=filter_related_property,
-    )
+    # related_property = django_filters.ChoiceFilter(
+    #     choices=get_relevant_relations(Instance),
+    #     label="Related Property",
+    #     method=filter_related_property,
+    # )
 
     def custom_name_search(self, queryset, name, value):
         name_query = (

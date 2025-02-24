@@ -37,18 +37,18 @@ trio = ["trio (>=0.26.1)"]
 
 [[package]]
 name = "apis-acdhch-default-settings"
-version = "2.1.0"
+version = "2.2.2"
 description = "Default settings for APIS instances at the ACDH-CH"
 optional = false
 python-versions = "<4.0,>=3.11"
 files = [
-    {file = "apis_acdhch_default_settings-2.1.0-py3-none-any.whl", hash = "sha256:31e4fa81c6cfaa15de8f18665c03cd996170fb44b25ac8f61a7c8ce10f1e79b7"},
-    {file = "apis_acdhch_default_settings-2.1.0.tar.gz", hash = "sha256:8026c3cc82d6a8623ebfc9c75ebf2860c1ecaa845bc0887a32d668aeac1c1fbb"},
+    {file = "apis_acdhch_default_settings-2.2.2-py3-none-any.whl", hash = "sha256:5ce2bebd30193c4b7c88c2a00e140c961d12b32075947b46156a0ece98d4db49"},
+    {file = "apis_acdhch_default_settings-2.2.2.tar.gz", hash = "sha256:4c2e2dee7ee8de26e47f3bc67f75589bee7ca5f20aaade443c660cc00d988d1e"},
 ]
 
 [package.dependencies]
 dj-database-url = ">=2.0.0,<3.0.0"
-django-allow-cidr = ">=0.6.0,<0.7.0"
+django-allow-cidr = ">=0.6,<0.8"
 django-auth-ldap = ">=4.6.0,<5.0.0"
 django-csp = ">=3.7,<4.0"
 django-removals = ">=1.0.5,<2.0.0"
@@ -60,29 +60,28 @@ opentelemetry-instrumentation-logging = "*"
 opentelemetry-instrumentation-psycopg2 = "*"
 opentelemetry-instrumentation-wsgi = "*"
 sentry-sdk = ">=1.26.0,<2.0.0"
-whitenoise = ">=5.2.0,<6.0.0"
+whitenoise = ">=5.2,<7.0"
 
 [[package]]
 name = "apis-core-rdf"
-version = "0.37.2"
+version = "0.38.0"
 description = "Base package for the APIS framework"
 optional = false
 python-versions = "<4.0,>=3.11"
 files = [
-    {file = "apis_core_rdf-0.37.2-py3-none-any.whl", hash = "sha256:145309cadd8812ed324862ff589c9ee6b6483bf3eb0e7ca623f1023fd6a9ef0a"},
-    {file = "apis_core_rdf-0.37.2.tar.gz", hash = "sha256:09a98b9bbb8df90d0ee53b7f441f2750ddd4db801fa0512ceeb17e623977a75a"},
+    {file = "apis_core_rdf-0.38.0-py3-none-any.whl", hash = "sha256:59cae19469237bd5346ffd96bde19e1ff4043114e8595ec671e4486ff1fa030e"},
+    {file = "apis_core_rdf-0.38.0.tar.gz", hash = "sha256:28cbc815e676b2da0fbde9dac4be5bd9137aef79894087a8e0a81c1b3487b454"},
 ]
 
 [package.dependencies]
 acdh-arche-assets = ">=3.21.1,<4.0.0"
-apis-override-select2js = ">=0.1,<0.3"
 crispy-bootstrap4 = ">=2023.1,<2025.0"
 crispy-bootstrap5 = ">=2024.10"
 Django = ">5"
 django-autocomplete-light = ">=3.9.4,<3.12.0"
 django-crispy-forms = ">=2,<3"
 django-crum = ">=0.7.9,<0.8.0"
-django-filter = ">=24.1"
+django-filter = ">=24.3"
 django-model-utils = ">=4.1.1,<6.0.0"
 django-simple-history = ">=3.6"
 django-tables2 = ">=2.3.3,<3.0.0"
@@ -92,20 +91,6 @@ pydot = ">=3.0.2,<4.0.0"
 rdflib = ">=6.0.2,<8.0.0"
 requests = ">=2.25.0,<3.0.0"
 tablib = ">=3.8.0,<4.0.0"
-
-[[package]]
-name = "apis-override-select2js"
-version = "0.2.1"
-description = "Override select2js files in APIS Django projects"
-optional = false
-python-versions = "*"
-files = [
-    {file = "apis_override_select2js-0.2.1-py2.py3-none-any.whl", hash = "sha256:d42e92194ac4dbfc0225b42f4c18ae0c0bb6a6b295f3f7051ae35c62bb3b68e8"},
-    {file = "apis_override_select2js-0.2.1.tar.gz", hash = "sha256:9afed572e9ceec28e74cdf03da27e6288b284d3431da664ef0996bcf50f3e55f"},
-]
-
-[package.dependencies]
-django = "*"
 
 [[package]]
 name = "appnope"
@@ -684,13 +669,13 @@ django = ">=4.1"
 
 [[package]]
 name = "django-allow-cidr"
-version = "0.6.0"
+version = "0.7.1"
 description = "A Django Middleware to enable use of CIDR IP ranges in ALLOWED_HOSTS."
 optional = false
 python-versions = "*"
 files = [
-    {file = "django-allow-cidr-0.6.0.tar.gz", hash = "sha256:24b71f70257e97bab9fdb5ad8342c96eeea1d45bc06a36332978574252219401"},
-    {file = "django_allow_cidr-0.6.0-py2.py3-none-any.whl", hash = "sha256:6709f4581dfd2a00476a134741a738a7f67714ec4f8596c55b22cf3b2ac5a12e"},
+    {file = "django-allow-cidr-0.7.1.tar.gz", hash = "sha256:382c5d7a9807279e3e96e4f4892b59163a2b30128c596902bf5f80e133e1ccbb"},
+    {file = "django_allow_cidr-0.7.1-py2.py3-none-any.whl", hash = "sha256:11126c5bb9df3a61ff9d97304856ba7e5b26d46c6d456709a6d9e28483bff47f"},
 ]
 
 [package.dependencies]
@@ -3531,17 +3516,17 @@ test = ["websockets"]
 
 [[package]]
 name = "whitenoise"
-version = "5.3.0"
+version = "6.9.0"
 description = "Radically simplified static file serving for WSGI applications"
 optional = false
-python-versions = ">=3.5, <4"
+python-versions = ">=3.9"
 files = [
-    {file = "whitenoise-5.3.0-py2.py3-none-any.whl", hash = "sha256:d963ef25639d1417e8a247be36e6aedd8c7c6f0a08adcb5a89146980a96b577c"},
-    {file = "whitenoise-5.3.0.tar.gz", hash = "sha256:d234b871b52271ae7ed6d9da47ffe857c76568f11dd30e28e18c5869dbd11e12"},
+    {file = "whitenoise-6.9.0-py3-none-any.whl", hash = "sha256:c8a489049b7ee9889617bb4c274a153f3d979e8f51d2efd0f5b403caf41c57df"},
+    {file = "whitenoise-6.9.0.tar.gz", hash = "sha256:8c4a7c9d384694990c26f3047e118c691557481d624f069b7f7752a2f735d609"},
 ]
 
 [package.extras]
-brotli = ["Brotli"]
+brotli = ["brotli"]
 
 [[package]]
 name = "widgetsnbextension"
@@ -3664,4 +3649,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "5b9afe8f0be07ec32f2c7ccafc8cff7b52c517a10b6ed1b6783db748828ade92"
+content-hash = "867bad1d8ac18044460b51de29161a887bf12171e020c506ff6843f8871c0067"

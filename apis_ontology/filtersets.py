@@ -1,3 +1,4 @@
+from apis_core.generic.filtersets import GenericFilterSet
 import django_filters
 from apis_core.apis_entities.filtersets import (
     ABSTRACT_ENTITY_FILTERS_EXCLUDE,
@@ -298,3 +299,33 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
             name_query = name_query | models.Q(pk=int(value))
 
         return queryset.filter(name_query)
+
+
+class OtherModelsFilterSet(GenericFilterSet):
+    class Meta(GenericFilterSet.Meta):
+        filter_overrides = {
+            models.CharField: {
+                "filter_class": django_filters.CharFilter,
+                "extra": lambda f: {
+                    "lookup_expr": "icontains",
+                },
+            },
+            models.TextField: {
+                "filter_class": django_filters.CharFilter,
+                "extra": lambda f: {
+                    "lookup_expr": "icontains",
+                },
+            },
+        }
+
+
+class ExcerptsFilterSet(OtherModelsFilterSet):
+    pass
+
+
+class ZoteroEntryFilterSet(OtherModelsFilterSet):
+    pass
+
+
+class TopicFilterSet(OtherModelsFilterSet):
+    pass

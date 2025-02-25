@@ -18,6 +18,7 @@ tqdm = "^4.67.1"
 pandas = "^2.2.2"
 django-select2 = "^8.2.3"
 tablib = {extras = ["xlsx"], version = "^3.8.0"}
+lxml = "^5.3.1"
 
 
 [tool.poetry.group.dev.dependencies]

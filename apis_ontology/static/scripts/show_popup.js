@@ -104,7 +104,15 @@ let behaviors = {
     "milestone": function(e) {
       return null;
     },
-
+    // Note editorial
+    // hide text and show note in a tooltip
+    "note": function(e) {
+      let result = document.createElement("span");
+      result.classList.add("note");
+      result.innerHTML ="<span class='material-symbols-outlined'>description</span>";
+      result.title = e.textContent;
+      return result;
+    },
   }
 };
 
@@ -114,23 +122,28 @@ function showPopup(recordId, renderStyle) {
   document.getElementById("popupContent").innerHTML = "";
   renderStyle = "tei";
   fetch(`/apis/excerpts/${recordId}/${renderStyle}`)
-    .then(response => response.text())
+    .then(response => response.json())
     .then(teidata => {
-      // show 404 error if the respose is 404
-      if (teidata.includes("Page not found")) {
-        document.getElementById("popupContent").innerHTML = "Excerpt Not Found";
-        document.getElementById("rawTEI").innerText = "";
-        document.getElementById('popupModal').style.display = 'block';
-        return;
-      }
+      console.log("TEI DATA",teidata);
       // show raw teidata in the element #rawTEI as text
-      document.getElementById("rawTEI").innerText = teidata;
-      console.log(teidata);
-      c.makeHTML5(teidata, function(data) {
+      document.getElementById("rawTEI").innerText = teidata.xml_content;
+      document.getElementById("excerpt-id").innerText = teidata.xml_id;
+      document.getElementById("excerpt-status").innerText = teidata.status;
+      document.getElementById("instances").innerHTML = teidata.instances;
+
+      c.makeHTML5(teidata.xml_content, function(data) {
         document.getElementById("popupContent").appendChild(data);
         document.getElementById('popupModal').style.display = 'block';
       });
 
+    })  .catch(error => {
+      console.error('Error fetching data:', error);
+      document.getElementById("popupContent").innerHTML = "Not Found";
+      document.getElementById("excerpt-id").innerText = "";
+      document.getElementById("excerpt-status").innerText = "";
+      document.getElementById("rawTEI").innerText = "";
+      document.getElementById('popupModal').style.display = 'block';
+      return;
     });
 }
 

@@ -18,6 +18,9 @@ class Command(BaseCommand):
             record, _ = Excerpts.objects.get_or_create(xml_id=row.xml_id)
             record.xml_content = row.xml_content
             record.source = row.source
+            record.tibschol_refs = row.tibschol_refs
+            record.status = row.status
+
             record.save()
 
         print(len(Excerpts.objects.all()))

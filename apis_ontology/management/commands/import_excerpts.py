@@ -16,16 +16,12 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         def create_record(row):
             record, _ = Excerpts.objects.get_or_create(xml_id=row.xml_id)
-            record.xml_content = row.xml_content
-            record.source = row.source
-            record.tibschol_refs = row.tibschol_refs
-            record.status = row.status
-
+            record.__dict__.update(row.to_dict())
             record.save()
 
         print(len(Excerpts.objects.all()))
         import_file = "data/excerpts.csv"
-        df = pd.read_csv(import_file)
+        df = pd.read_csv(import_file).fillna("")
         for _, row in tqdm(df.iterrows(), total=df.shape[0]):
             create_record(row)
 

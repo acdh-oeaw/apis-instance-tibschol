@@ -382,7 +382,11 @@ class Excerpts(GenericModel, models.Model):
     tibschol_refs = models.TextField(
         blank=True, null=True, verbose_name="Tibschol reference"
     )  # populated from //tei:idno[@type="TibSchol"]/text()
+    zotero_refs = models.TextField(
+        blank=True, null=True, verbose_name="Zotero references"
+    )  # populated from //tei:idno[@type="Zotero"]/text()
     status = models.CharField(max_length=255, blank=True)
+    location = models.CharField(max_length=255, blank=True)
 
     class Meta:
         verbose_name = _("excerpt")

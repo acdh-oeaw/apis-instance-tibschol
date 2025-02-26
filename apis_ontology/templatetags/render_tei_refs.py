@@ -19,7 +19,7 @@ def render_tei_refs(value):
 
     def linkify_excerpt_id(xml_id):
         true_id = xml_id.replace('"', "").replace("xml:id=", "").strip().rstrip(".")
-        return f"""<a href="#" onclick="showPopup('{true_id}'); return false;">
+        return f"""<a href="#" onclick="showExcerpt('{true_id}'); return false;">
         {true_id}
         </a> """
 

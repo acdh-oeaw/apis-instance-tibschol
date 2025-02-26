@@ -118,7 +118,7 @@ let behaviors = {
 
 c.addBehaviors(behaviors);
 
-function showPopup(recordId, renderStyle) {
+function showExcerpt(recordId, renderStyle) {
   document.getElementById("popupContent").innerHTML = "";
   renderStyle = "tei";
   fetch(`/apis/excerpts/${recordId}/${renderStyle}`)

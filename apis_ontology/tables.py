@@ -368,6 +368,12 @@ class TibScholRelationMixinTable(GenericTable):
     def value_support_notes(self, value):
         return value
 
+    def render_tei_refs(self, value):
+        return mark_safe(render_tei_refs(value))
+
+    def value_tei_refs(self, value):
+        return value
+
     def order_subj(self, queryset, is_descending):
         queryset = queryset.annotate(
             subj_str=Subquery(

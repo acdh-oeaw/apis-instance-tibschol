@@ -40,3 +40,7 @@ pre#rawTEI{
      max-height: 90vh;
     overflow-y: auto;
 }
+
+.modal-header{
+  align-items: normal !important;
+}

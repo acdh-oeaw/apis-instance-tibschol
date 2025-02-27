@@ -130,6 +130,7 @@ function showExcerpt(recordId, renderStyle) {
       document.getElementById("excerpt-id").innerText = teidata.xml_id;
       document.getElementById("excerpt-status").innerText = teidata.status;
       document.getElementById("instances").innerHTML = teidata.instances;
+      document.getElementById("location").innerHTML = teidata.location;
 
       c.makeHTML5(teidata.xml_content, function(data) {
         document.getElementById("popupContent").appendChild(data);
@@ -143,6 +144,7 @@ function showExcerpt(recordId, renderStyle) {
       document.getElementById("excerpt-status").innerText = "";
       document.getElementById("rawTEI").innerText = "";
       document.getElementById('popupModal').style.display = 'block';
+      document.getElementById("location").innerHTML = "";
       return;
     });
 }

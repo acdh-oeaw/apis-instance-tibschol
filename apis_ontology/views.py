@@ -28,6 +28,7 @@ class ExcerptsView(View):
             "xml_content": record.xml_content,
             "xml_id": record.xml_id,
             "status": f"[{record.status}]" if record.status else "[unknown]",
+            "location": record.location,
             "tibschol_refs": record.tibschol_refs,
             "instances": ", ".join(instances),
         }

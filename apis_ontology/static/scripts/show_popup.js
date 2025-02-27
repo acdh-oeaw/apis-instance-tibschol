@@ -145,6 +145,7 @@ function showExcerpt(recordId, renderStyle) {
       document.getElementById("rawTEI").innerText = "";
       document.getElementById('popupModal').style.display = 'block';
       document.getElementById("location").innerHTML = "";
+      document.getElementById("instances").innerHTML = "";
       return;
     });
 }

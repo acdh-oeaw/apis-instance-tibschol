@@ -812,17 +812,15 @@ class PersonAuthorOfWorkTable(TibScholRelationMixinTable):
 
 class ExcerptsTable(GenericTable):
     class Meta(GenericTable.Meta):
-        exclude = ["desc", "view", "edit", "delete"]
+        exclude = ["desc", "edit", "delete"]
         fields = ["xml_id", "xml_content"]
-        sequence = ["xml_id", "xml_content", "..."]
+        sequence = ["xml_id", "xml_content", "...", "view"]
         per_page = 100
 
-    xml_id = tables.Column(
-        linkify=lambda record: record.get_absolute_url(),
-        empty_values=[],
-    )
-
     def render_xml_id(self, value):
+        return mark_safe(render_tei_refs(value))
+
+    def value_xml_id(self, value):
         return value
 
 

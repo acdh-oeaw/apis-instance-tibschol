@@ -1,4 +1,5 @@
 import logging
+from django.core.exceptions import FieldError
 
 import django_tables2 as tables
 from apis_core.apis_entities.tables import AbstractEntityTable
@@ -79,6 +80,22 @@ class TibscholEntityMixinTable(AbstractEntityTable):
 
     def value_name(self, record):
         return getattr(record, "label", getattr(record, "name", ""))
+
+    def order_name(self, queryset, is_descending):
+        try:
+            return (
+                queryset.order_by(
+                    ("-" if is_descending else "") + "name",
+                ),
+                True,
+            )
+        except FieldError:
+            return (
+                queryset.order_by(
+                    ("-" if is_descending else "") + "label",
+                ),
+                True,
+            )
 
 
 class PersonDateColumn(tables.Column):

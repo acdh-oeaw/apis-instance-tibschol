@@ -16,6 +16,7 @@ INSTALLED_APPS += [
     "apis_core.history",
     "django_acdhch_functions",
     "django_select2",
+    "django_interval",
 ]
 INSTALLED_APPS.append("apis_core.documentation")
 INSTALLED_APPS.remove("apis_ontology")

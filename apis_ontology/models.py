@@ -2,7 +2,6 @@ import logging
 
 from apis_core.apis_entities.abc import E53_Place
 from apis_core.apis_entities.models import AbstractEntity
-from apis_core.core.models import LegacyDateMixin
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
 from apis_core.relations.models import Relation
@@ -72,9 +71,7 @@ class TibScholEntityManager(models.Manager):
     pass
 
 
-class Person(
-    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
-):
+class Person(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Person"
     _default_search_fields = ["id", "name", "alternative_names"]
     start_date_written = models.CharField(
@@ -119,7 +116,6 @@ class Person(
     class Meta(
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
-        LegacyDateMixin.Meta,
         AbstractEntity.Meta,
         TibScholEntityMixin.Meta,
     ):
@@ -135,7 +131,6 @@ class Place(
     E53_Place,
     VersionMixin,
     LegacyStuffMixin,
-    LegacyDateMixin,
     TibScholEntityMixin,
     AbstractEntity,
 ):
@@ -164,7 +159,6 @@ class Place(
         E53_Place.Meta,
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
-        LegacyDateMixin.Meta,
         TibScholEntityMixin.Meta,
         AbstractEntity.Meta,
     ):
@@ -202,9 +196,7 @@ class WorkManager(TibScholEntityManager):
         )
 
 
-class Work(
-    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
-):
+class Work(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Work"
     _default_search_fields = ["id", "name", "alternative_names"]
 
@@ -247,7 +239,6 @@ class Work(
     class Meta(
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
-        LegacyDateMixin.Meta,
         TibScholEntityMixin.Meta,
         AbstractEntity.Meta,
     ):
@@ -291,9 +282,7 @@ class InstanceManager(TibScholEntityManager):
         )
 
 
-class Instance(
-    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
-):
+class Instance(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Instance"
     _default_search_fields = ["id", "name", "alternative_names"]
 
@@ -379,7 +368,6 @@ class Instance(
     class Meta(
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
-        LegacyDateMixin.Meta,
         TibScholEntityMixin.Meta,
         AbstractEntity.Meta,
     ):
@@ -429,7 +417,7 @@ class Excerpts(GenericModel, models.Model):
 #######################################################################################
 
 
-class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericModel):
+class TibScholRelationMixin(VersionMixin, Relation, GenericModel):
     CONFIDENCE = [
         ("Positive", "Positive"),
         ("Uncertain", "Uncertain"),
@@ -462,7 +450,7 @@ class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericMode
     def object_type(self):
         return str(self.obj_model.__name__).lower()
 
-    class Meta(VersionMixin.Meta, LegacyDateMixin.Meta):
+    class Meta(VersionMixin.Meta):
         abstract = True
 
 

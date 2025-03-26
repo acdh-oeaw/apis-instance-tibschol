@@ -105,20 +105,22 @@ class PersonDateColumn(tables.Column):
         except Person.DoesNotExist:
             return ""
         return (
-            (person.start_date_written if person.start_date_written else "")
+            (person.start if person.start else "")
             + " - "
-            + (person.end_date_written if person.end_date_written else "")
+            + (person.end if person.end else "")
         )
 
     def order(self, queryset, is_descending):
         queryset = queryset.annotate(
             person_start=Subquery(
-                Person.objects.filter(pk=OuterRef(self.accessor)).values("start_date")[
-                    :1
-                ]
+                Person.objects.filter(pk=OuterRef(self.accessor)).values(
+                    "start_date_sort"
+                )[:1]
             ),
             person_end=Subquery(
-                Person.objects.filter(pk=OuterRef(self.accessor)).values("end_date")[:1]
+                Person.objects.filter(pk=OuterRef(self.accessor)).values(
+                    "end_date_sort"
+                )[:1]
             ),
         ).order_by(
             ("-" if is_descending else "") + "person_start",
@@ -199,9 +201,7 @@ class PlaceTable(TibscholEntityMixinTable):
             "...",
         )
 
-    export_date = tables.Column(
-        verbose_name="Date", accessor="start_date_written", visible=False
-    )
+    export_date = tables.Column(verbose_name="Date", accessor="start", visible=False)
 
     def render_latitude(self, value):
         return render_coordinate(value)
@@ -220,10 +220,10 @@ class PersonTable(TibscholEntityMixinTable):
         return str(record)
 
     export_lifedate_start = tables.Column(
-        accessor="start_date_written", verbose_name="Life date start", visible=False
+        accessor="start", verbose_name="Life date start", visible=False
     )
     export_lifedate_end = tables.Column(
-        accessor="end_date_written", verbose_name="Life date end", visible=False
+        accessor="end", verbose_name="Life date end", visible=False
     )
     export_gender = tables.Column(
         accessor="gender", verbose_name="Gender", visible=False
@@ -232,12 +232,12 @@ class PersonTable(TibscholEntityMixinTable):
         accessor="nationality", verbose_name="Nationality", visible=False
     )
 
-    def order_start_date_written(self, queryset, is_descending):
-        queryset = queryset.order_by(("-" if is_descending else "") + "start_date")
+    def order_start(self, queryset, is_descending):
+        queryset = queryset.order_by(("-" if is_descending else "") + "start_date_sort")
         return queryset, True
 
-    def order_end_date_written(self, queryset, is_descending):
-        queryset = queryset.order_by(("-" if is_descending else "") + "end_date")
+    def order_end(self, queryset, is_descending):
+        queryset = queryset.order_by(("-" if is_descending else "") + "end_date_sort")
         return queryset, True
 
 
@@ -253,7 +253,7 @@ class WorkTable(TibscholEntityMixinTable):
 
     author = AuthorColumn(verbose_name="Author", accessor="id", orderable=True)
     export_date_of_composition = tables.Column(
-        accessor="start_date_written", verbose_name="Date of composition", visible=False
+        accessor="start", verbose_name="Date of composition", visible=False
     )
     export_topic = tables.Column(
         accessor="subject_vocab", verbose_name="Topic", visible=False
@@ -262,15 +262,15 @@ class WorkTable(TibscholEntityMixinTable):
     def value_export_topic(self, record):
         return "\n".join(str(sub) for sub in record.subject_vocab.all())
 
-    def order_start_date_written(self, queryset, is_descending):
-        queryset = queryset.order_by(("-" if is_descending else "") + "start_date")
+    def order_start(self, queryset, is_descending):
+        queryset = queryset.order_by(("-" if is_descending else "") + "start_date_sort")
         return queryset, True
 
 
 class InstanceTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
         model = Instance
-        fields = ["name", "start_date_written", "author"]
+        fields = ["name", "start", "author"]
 
     author = AuthorColumn(verbose_name="Author", accessor="id", orderable=True)
 
@@ -284,8 +284,8 @@ class InstanceTable(TibscholEntityMixinTable):
             symbol = "check"
         return mark_safe(f'<span class="material-symbols-outlined">{symbol}</span>')
 
-    def order_start_date_written(self, queryset, is_descending):
-        queryset = queryset.order_by(("-" if is_descending else "") + "start_date")
+    def order_start(self, queryset, is_descending):
+        queryset = queryset.order_by(("-" if is_descending else "") + "start_date_sort")
         return queryset, True
 
     author = AuthorColumn(verbose_name="Author", accessor="work_id", orderable=True)

@@ -13,6 +13,8 @@ from django.db.models import OuterRef, QuerySet, Subquery
 from django.db.models.signals import class_prepared
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django_interval.fields import FuzzyDateParserField
+from .date_utils import tibschol_dateparser
 
 logger = logging.getLogger(__name__)
 
@@ -75,7 +77,6 @@ class Person(
 ):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Person"
     _default_search_fields = ["id", "name", "alternative_names"]
-
     start_date_written = models.CharField(
         max_length=255,
         blank=True,
@@ -86,6 +87,18 @@ class Person(
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Life date end",
+    )
+    start = FuzzyDateParserField(
+        parser=tibschol_dateparser,
+        null=True,
+        blank=True,
+        verbose_name="Life date start",
+    )
+    end = FuzzyDateParserField(
+        parser=tibschol_dateparser,
+        null=True,
+        blank=True,
         verbose_name="Life date end",
     )
 
@@ -138,6 +151,12 @@ class Place(
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Date",
+    )
+    start = FuzzyDateParserField(
+        parser=tibschol_dateparser,
+        null=True,
+        blank=True,
         verbose_name="Date",
     )
 
@@ -197,6 +216,12 @@ class Work(
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Date of composition",
+    )
+    start = FuzzyDateParserField(
+        parser=tibschol_dateparser,
+        null=True,
+        blank=True,
         verbose_name="Date of composition",
     )
 
@@ -280,6 +305,12 @@ class Instance(
         max_length=255,
         blank=True,
         null=True,
+        verbose_name="Date",
+    )
+    start = FuzzyDateParserField(
+        parser=tibschol_dateparser,
+        null=True,
+        blank=True,
         verbose_name="Date",
     )
 
@@ -420,6 +451,8 @@ class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericMode
     )
     subj_model = None
     obj_model = None
+    start = FuzzyDateParserField(parser=tibschol_dateparser, null=True, blank=True)
+    end = FuzzyDateParserField(parser=tibschol_dateparser, null=True, blank=True)
 
     @property
     def subject_type(self):

@@ -22,28 +22,28 @@
         </tr>
     {% endif %}
 
-    {% if object.start_date_written %}
+    {% if object.start %}
         <tr>
             <th>
                 Life date start
             </th>
             <td>
-                {% if object.start_date_written %}
-                    {{ object.start_date_written }}
+                {% if object.start %}
+                    {{ object.start }}
                 {% else %}
                     Unknown
                 {% endif %}
             </td>
         </tr>
     {% endif %}
-    {% if object.end_date_written %}
+    {% if object.end %}
         <tr>
             <th>
                 Life date end
             </th>
             <td>
-                {% if object.end_date_written %}
-                    {{ object.end_date_written }}
+                {% if object.end %}
+                    {{ object.end }}
                 {% else %}
                     Unknown
                 {% endif %}

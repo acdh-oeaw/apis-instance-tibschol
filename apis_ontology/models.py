@@ -74,18 +74,6 @@ class TibScholEntityManager(models.Manager):
 class Person(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Person"
     _default_search_fields = ["id", "name", "alternative_names"]
-    start_date_written = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Life date start",
-    )
-    end_date_written = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Life date end",
-    )
     start = FuzzyDateParserField(
         parser=tibschol_dateparser,
         null=True,
@@ -138,16 +126,6 @@ class Place(
     _default_search_fields = ["id", "label", "alternative_names"]
 
     label = models.CharField(blank=True, default="", verbose_name="Name")
-    end_date = None
-    end_start_date = None
-    end_end_date = None
-    end_date_written = None
-    start_date_written = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Date",
-    )
     start = FuzzyDateParserField(
         parser=tibschol_dateparser,
         null=True,
@@ -200,16 +178,6 @@ class Work(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Work"
     _default_search_fields = ["id", "name", "alternative_names"]
 
-    end_date = None
-    end_start_date = None
-    end_end_date = None
-    end_date_written = None
-    start_date_written = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Date of composition",
-    )
     start = FuzzyDateParserField(
         parser=tibschol_dateparser,
         null=True,
@@ -286,16 +254,6 @@ class Instance(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEnti
     class_uri = "http://id.loc.gov/ontologies/bibframe/Instance"
     _default_search_fields = ["id", "name", "alternative_names"]
 
-    end_date = None
-    end_start_date = None
-    end_end_date = None
-    end_date_written = None
-    start_date_written = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Date",
-    )
     start = FuzzyDateParserField(
         parser=tibschol_dateparser,
         null=True,

@@ -78,6 +78,7 @@ def tibschol_dateparser(
                 incomplete_date_to_interval(date_string)
             )
     except Exception as e:
-        pass
+        if date_string.strip() != "" and len(date_string) > 3:
+            raise ValueError(f"Could not parse date: {date_string}")
 
     return dates.tuple()

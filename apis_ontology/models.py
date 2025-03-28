@@ -2,7 +2,6 @@ import logging
 
 from apis_core.apis_entities.abc import E53_Place
 from apis_core.apis_entities.models import AbstractEntity
-from apis_core.core.models import LegacyDateMixin
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
 from apis_core.relations.models import Relation
@@ -13,6 +12,8 @@ from django.db.models import OuterRef, QuerySet, Subquery
 from django.db.models.signals import class_prepared
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django_interval.fields import FuzzyDateParserField
+from .date_utils import tibschol_dateparser
 
 logger = logging.getLogger(__name__)
 
@@ -70,22 +71,19 @@ class TibScholEntityManager(models.Manager):
     pass
 
 
-class Person(
-    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
-):
+class Person(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Person"
     _default_search_fields = ["id", "name", "alternative_names"]
-
-    start_date_written = models.CharField(
-        max_length=255,
-        blank=True,
+    start = FuzzyDateParserField(
+        parser=tibschol_dateparser,
         null=True,
+        blank=True,
         verbose_name="Life date start",
     )
-    end_date_written = models.CharField(
-        max_length=255,
-        blank=True,
+    end = FuzzyDateParserField(
+        parser=tibschol_dateparser,
         null=True,
+        blank=True,
         verbose_name="Life date end",
     )
 
@@ -106,7 +104,6 @@ class Person(
     class Meta(
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
-        LegacyDateMixin.Meta,
         AbstractEntity.Meta,
         TibScholEntityMixin.Meta,
     ):
@@ -122,7 +119,6 @@ class Place(
     E53_Place,
     VersionMixin,
     LegacyStuffMixin,
-    LegacyDateMixin,
     TibScholEntityMixin,
     AbstractEntity,
 ):
@@ -130,14 +126,10 @@ class Place(
     _default_search_fields = ["id", "label", "alternative_names"]
 
     label = models.CharField(blank=True, default="", verbose_name="Name")
-    end_date = None
-    end_start_date = None
-    end_end_date = None
-    end_date_written = None
-    start_date_written = models.CharField(
-        max_length=255,
-        blank=True,
+    start = FuzzyDateParserField(
+        parser=tibschol_dateparser,
         null=True,
+        blank=True,
         verbose_name="Date",
     )
 
@@ -145,7 +137,6 @@ class Place(
         E53_Place.Meta,
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
-        LegacyDateMixin.Meta,
         TibScholEntityMixin.Meta,
         AbstractEntity.Meta,
     ):
@@ -183,20 +174,14 @@ class WorkManager(TibScholEntityManager):
         )
 
 
-class Work(
-    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
-):
+class Work(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Work"
     _default_search_fields = ["id", "name", "alternative_names"]
 
-    end_date = None
-    end_start_date = None
-    end_end_date = None
-    end_date_written = None
-    start_date_written = models.CharField(
-        max_length=255,
-        blank=True,
+    start = FuzzyDateParserField(
+        parser=tibschol_dateparser,
         null=True,
+        blank=True,
         verbose_name="Date of composition",
     )
 
@@ -222,7 +207,6 @@ class Work(
     class Meta(
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
-        LegacyDateMixin.Meta,
         TibScholEntityMixin.Meta,
         AbstractEntity.Meta,
     ):
@@ -266,20 +250,14 @@ class InstanceManager(TibScholEntityManager):
         )
 
 
-class Instance(
-    VersionMixin, LegacyStuffMixin, LegacyDateMixin, TibScholEntityMixin, AbstractEntity
-):
+class Instance(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
     class_uri = "http://id.loc.gov/ontologies/bibframe/Instance"
     _default_search_fields = ["id", "name", "alternative_names"]
 
-    end_date = None
-    end_start_date = None
-    end_end_date = None
-    end_date_written = None
-    start_date_written = models.CharField(
-        max_length=255,
-        blank=True,
+    start = FuzzyDateParserField(
+        parser=tibschol_dateparser,
         null=True,
+        blank=True,
         verbose_name="Date",
     )
 
@@ -348,7 +326,6 @@ class Instance(
     class Meta(
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
-        LegacyDateMixin.Meta,
         TibScholEntityMixin.Meta,
         AbstractEntity.Meta,
     ):
@@ -398,7 +375,7 @@ class Excerpts(GenericModel, models.Model):
 #######################################################################################
 
 
-class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericModel):
+class TibScholRelationMixin(VersionMixin, Relation, GenericModel):
     CONFIDENCE = [
         ("Positive", "Positive"),
         ("Uncertain", "Uncertain"),
@@ -420,6 +397,8 @@ class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericMode
     )
     subj_model = None
     obj_model = None
+    start = FuzzyDateParserField(parser=tibschol_dateparser, null=True, blank=True)
+    end = FuzzyDateParserField(parser=tibschol_dateparser, null=True, blank=True)
 
     @property
     def subject_type(self):
@@ -429,7 +408,7 @@ class TibScholRelationMixin(VersionMixin, Relation, LegacyDateMixin, GenericMode
     def object_type(self):
         return str(self.obj_model.__name__).lower()
 
-    class Meta(VersionMixin.Meta, LegacyDateMixin.Meta):
+    class Meta(VersionMixin.Meta):
         abstract = True
 
 

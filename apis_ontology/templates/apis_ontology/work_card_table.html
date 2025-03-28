@@ -30,12 +30,12 @@
         </tr>
     {% endif %}
 
-    {% if object.start_date_written %}
+    {% if object.start %}
         <tr>
             <th>Date of composition</th>
             <td>
-                {% if object.start_date_written %}
-                    {{ object.start_date_written }}
+                {% if object.start %}
+                    {{ object.start }}
                 {% else %}
                     Unknown
                 {% endif %}

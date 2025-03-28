@@ -19,6 +19,7 @@ pandas = "^2.2.2"
 django-select2 = "^8.2.3"
 tablib = {extras = ["xlsx"], version = "^3.8.0"}
 lxml = "^5.3.1"
+django-interval = "^0.5.0"
 
 
 [tool.poetry.group.dev.dependencies]

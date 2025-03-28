@@ -9,6 +9,8 @@ from apis_core.relations.filtersets import RelationFilterSet
 from apis_core.relations.models import Relation
 from django.apps import apps
 from django.db import models
+from django_interval.fields import FuzzyDateParserField
+from django_interval.filters import YearIntervalRangeFilter
 
 from apis_ontology.forms import (
     PersonSearchForm,
@@ -18,6 +20,17 @@ from apis_ontology.forms import (
 )
 from apis_ontology.models import Instance, Person, Place, Work
 from apis_ontology.utils import get_relevant_relations
+
+
+ABSTRACT_ENTITY_FILTERS_EXCLUDE = [
+    *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
+    "start_date_sort",
+    "start_date_from",
+    "start_date_to",
+    "end_date_sort",
+    "end_date_from",
+    "end_date_to",
+]
 
 
 def filter_related_property(queryset, name, value):
@@ -77,13 +90,13 @@ class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
             models.CharField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
+                    "lookup_expr": "icontains",
                 },
             },
             models.TextField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
+                    "lookup_expr": "icontains",
                 },
             },
         }
@@ -97,15 +110,16 @@ class TibScholRelationMixinFilterSet(RelationFilterSet):
             models.CharField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
+                    "lookup_expr": "icontains",
                 },
             },
             models.TextField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
+                    "lookup_expr": "icontains",
                 },
             },
+            FuzzyDateParserField: {"filter_class": YearIntervalRangeFilter},
         }
 
 
@@ -115,22 +129,23 @@ class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
             models.CharField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
+                    "lookup_expr": "icontains",
                 },
             },
             models.TextField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
+                    "lookup_expr": "icontains",
                 },
             },
+            FuzzyDateParserField: {"filter_class": YearIntervalRangeFilter},
         }
 
     comments = django_filters.CharFilter(
-        label="Comments contain", lookup_expr="unaccent__icontains"
+        label="Comments contain", lookup_expr="icontains"
     )
     external_links = django_filters.CharFilter(
-        label="External links contain", lookup_expr="unaccent__icontains"
+        label="External links contain", lookup_expr="icontains"
     )
     # related_entity = django_filters.CharFilter(
     #     label="Related entity", method=filter_related_entity
@@ -146,20 +161,6 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
             "name",
         ]
         form = PlaceSearchForm
-        filter_overrides = {
-            models.CharField: {
-                "filter_class": django_filters.CharFilter,
-                "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
-                },
-            },
-            models.TextField: {
-                "filter_class": django_filters.CharFilter,
-                "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
-                },
-            },
-        }
 
     label = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
     # related_property = django_filters.ChoiceFilter(
@@ -185,20 +186,6 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
             "alternative_names",
         ]
         form = PersonSearchForm
-        filter_overrides = {
-            models.CharField: {
-                "filter_class": django_filters.CharFilter,
-                "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
-                },
-            },
-            models.TextField: {
-                "filter_class": django_filters.CharFilter,
-                "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
-                },
-            },
-        }
 
     name = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
     # related_property = django_filters.ChoiceFilter(
@@ -225,20 +212,6 @@ class WorkFilterSet(TibScholEntityMixinFilterSet):
         ]
 
         form = WorkSearchForm
-        filter_overrides = {
-            models.CharField: {
-                "filter_class": django_filters.CharFilter,
-                "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
-                },
-            },
-            models.TextField: {
-                "filter_class": django_filters.CharFilter,
-                "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
-                },
-            },
-        }
 
     name = django_filters.CharFilter(method="custom_name_search", label="Name or ID")
     # related_property = django_filters.ChoiceFilter(
@@ -265,20 +238,6 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
         ]
 
         form = WorkSearchForm
-        filter_overrides = {
-            models.CharField: {
-                "filter_class": django_filters.CharFilter,
-                "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
-                },
-            },
-            models.TextField: {
-                "filter_class": django_filters.CharFilter,
-                "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
-                },
-            },
-        }
 
     name = django_filters.CharFilter(
         method="custom_name_search", label="Name or Tibschol reference or ID"
@@ -293,7 +252,7 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
         name_query = (
             models.Q(name__unaccent__icontains=value)
             | models.Q(alternative_names__unaccent__icontains=value)
-            | models.Q(tibschol_ref__unaccent__icontains=value)
+            | models.Q(tibschol_ref__icontains=value)
         )
         if value.isdigit():
             name_query = name_query | models.Q(pk=int(value))
@@ -307,15 +266,16 @@ class OtherModelsFilterSet(GenericFilterSet):
             models.CharField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
+                    "lookup_expr": "icontains",
                 },
             },
             models.TextField: {
                 "filter_class": django_filters.CharFilter,
                 "extra": lambda f: {
-                    "lookup_expr": "unaccent__icontains",
+                    "lookup_expr": "icontains",
                 },
             },
+            FuzzyDateParserField: {"filter_class": YearIntervalRangeFilter},
         }
 
 

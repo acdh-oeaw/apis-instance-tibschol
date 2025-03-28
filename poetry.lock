@@ -805,6 +805,20 @@ files = [
 Django = ">=4.2"
 
 [[package]]
+name = "django-interval"
+version = "0.5.0"
+description = "A Django field for storing fuzzy date information"
+optional = false
+python-versions = ">=3.11"
+files = [
+    {file = "django_interval-0.5.0-py3-none-any.whl", hash = "sha256:c1d8e3f1a2cbdeeb41c2af3d016f95b0e91b9e3ddd0abda153594b6cb5ccaeae"},
+    {file = "django_interval-0.5.0.tar.gz", hash = "sha256:acb2bcac9c7cc4d89b295566b9cd08109f45d41861747c550328ee692c5f602f"},
+]
+
+[package.dependencies]
+django = ">=4"
+
+[[package]]
 name = "django-model-utils"
 version = "5.0.0"
 description = "Django model mixins and utilities"
@@ -3803,4 +3817,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "62ceb8b3a3b1be88faa291d013f0261072696c4e8c479aacf14a91c9126da45d"
+content-hash = "1e6f1f0686f848bfb8663545046ba8bca1fdba6bcb5a01c9563e8be2683d3fa2"

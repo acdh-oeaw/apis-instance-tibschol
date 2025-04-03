@@ -3,6 +3,13 @@ from apis_acdhch_default_settings.settings import *
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+if DEBUG:
+    INSTALLED_APPS += ["debug_toolbar"]
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
+
 
 ROOT_URLCONF = "apis_ontology.urls"
 CSRF_TRUSTED_ORIGINS = [

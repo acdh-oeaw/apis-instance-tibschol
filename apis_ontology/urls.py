@@ -5,6 +5,7 @@ from django.views.generic import TemplateView
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from apis_core.apis_entities.api_views import GetEntityGeneric
+from django.conf import settings
 
 
 urlpatterns = [
@@ -31,3 +32,9 @@ urlpatterns += [
 ]
 
 urlpatterns += [path("", include("django_interval.urls"))]
+
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]

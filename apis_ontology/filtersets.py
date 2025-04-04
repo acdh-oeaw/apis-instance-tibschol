@@ -1,9 +1,5 @@
 from apis_core.generic.filtersets import GenericFilterSet
 import django_filters
-from apis_core.apis_entities.filtersets import (
-    ABSTRACT_ENTITY_FILTERS_EXCLUDE,
-    AbstractEntityFilterSet,
-)
 from apis_core.apis_entities.models import RootObject
 from apis_core.relations.filtersets import RelationFilterSet
 from apis_core.relations.models import Relation
@@ -18,12 +14,9 @@ from apis_ontology.forms import (
     RelationSearchForm,
     WorkSearchForm,
 )
-from apis_ontology.models import Instance, Person, Place, Work
-from apis_ontology.utils import get_relevant_relations
 
 
 ABSTRACT_ENTITY_FILTERS_EXCLUDE = [
-    *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
     "start_date_sort",
     "start_date_from",
     "start_date_to",
@@ -83,8 +76,8 @@ def filter_related_entity(queryset, name, value):
     return queryset
 
 
-class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
-    class Meta(AbstractEntityFilterSet.Meta):
+class LegacyStuffMixinFilterSet(GenericFilterSet):
+    class Meta(GenericFilterSet.Meta):
         exclude = ABSTRACT_ENTITY_FILTERS_EXCLUDE
         filter_overrides = {
             models.CharField: {
@@ -123,8 +116,8 @@ class TibScholRelationMixinFilterSet(RelationFilterSet):
         }
 
 
-class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
-    class Meta(AbstractEntityFilterSet.Meta):
+class TibScholEntityMixinFilterSet(GenericFilterSet):
+    class Meta(GenericFilterSet.Meta):
         filter_overrides = {
             models.CharField: {
                 "filter_class": django_filters.CharFilter,
@@ -159,6 +152,7 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
             "latitude",
             "longitude",
             "name",
+            "feature_code",
         ]
         form = PlaceSearchForm
 

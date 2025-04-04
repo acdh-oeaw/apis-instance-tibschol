@@ -1,4 +1,3 @@
-from apis_core.apis_entities.filtersets import AbstractEntityFilterSetForm
 from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
 from apis_core.relations.forms import RelationForm
 from django import forms
@@ -31,6 +30,9 @@ class PlaceForm(TibscholEntityForm):
         "external_links",
         "review",
     ]
+
+    class Meta(TibscholEntityForm.Meta):
+        exclude = ["published", "feature_code"]
 
 
 class PersonForm(TibscholEntityForm):
@@ -90,7 +92,7 @@ class InstanceForm(TibscholEntityForm):
     ]
 
 
-class TibScholEntityMixinSearchForm(AbstractEntityFilterSetForm):
+class TibScholEntityMixinSearchForm(GenericFilterSetForm):
     columns_exclude = [
         "start_date_from",
         "end_date_from",

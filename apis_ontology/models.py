@@ -340,7 +340,7 @@ class Instance(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEnti
 
 
 class ZoteroEntry(GenericModel, models.Model):
-    zoteroId = models.CharField(max_length=255, verbose_name="Zotero ID")
+    zoteroId = models.CharField(max_length=255, db_index=True, verbose_name="Zotero ID")
     shortTitle = models.TextField(blank=True, null=True, verbose_name="Short title")
     fullCitation = models.TextField(blank=True, null=True, verbose_name="Full Citation")
     year = models.CharField(
@@ -353,7 +353,7 @@ class ZoteroEntry(GenericModel, models.Model):
 
 
 class Excerpts(GenericModel, models.Model):
-    xml_id = models.CharField(max_length=255, unique=True)
+    xml_id = models.CharField(max_length=255, unique=True, db_index=True)
     xml_content = models.TextField()
     source = models.CharField(max_length=255)  # the TEI file source
     tibschol_refs = models.TextField(

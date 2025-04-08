@@ -11,6 +11,30 @@ let behaviors = {
       }
       return result;
     },
+    // handle quote element
+    "quote": function(e) {
+      // if it has a source attribute
+      resultElementType = "span"
+      if (e.getAttribute("source")) {
+        resultElementType = "blockquote";
+      }
+      let result = document.createElement(resultElementType);
+      // // Process child nodes and append them to a p element
+      for (let n of Array.from(e.childNodes)) {
+        // Call the appropriate behavior for each child node
+        let behavior = behaviors.tei[n.nodeName.toLowerCase()];
+        if (behavior) {
+          result.appendChild(behavior(n)); // Process child nodes based on their type
+        } else {
+          result.appendChild(n.cloneNode(true)); // Clone nodes that don't have specific behavior
+        }
+      }
+      if (!e.getAttribute("source")) {
+        result.classList.add("text-danger");
+      }
+      return result;
+    },
+
     // Handle the LG element
     "lg": function(e) {
       let result = document.createElement("quote"); // Use a <div> for segments
@@ -28,8 +52,7 @@ let behaviors = {
       }
       return result;
     },
-
-    // Handle the LG element
+    // Handle the l element
     "l": function(e) {
       let result = document.createElement("div"); // Use a <div> for segments
       result.classList.add("l");

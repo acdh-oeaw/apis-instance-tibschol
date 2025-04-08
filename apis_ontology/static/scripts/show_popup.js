@@ -109,9 +109,13 @@ let behaviors = {
     "note": function(e) {
       let result = document.createElement("span");
       result.classList.add("note");
-      result.innerHTML ="<span class='material-symbols-outlined'>description</span>";
-      result.title = e.textContent;
-      return result;
+      if (e.getAttribute("type") === "gloss") {
+        result.appendChild(document.createTextNode(" ‹"+e.textContent+"› "));
+      } else {
+        result.innerHTML ="<span class='material-symbols-outlined button'>description</span>";
+        result.title = e.textContent;
+      }
+    return result;
     },
   }
 };

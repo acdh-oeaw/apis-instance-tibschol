@@ -108,3 +108,6 @@ tei-text {
 tei-titlepage {
   display: block;
 }
+blockquote{
+  margin: 0.5rem 2rem !important;
+}

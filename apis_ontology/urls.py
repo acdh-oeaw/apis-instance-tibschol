@@ -1,4 +1,4 @@
-from apis_ontology.views import ExcerptsView
+from apis_ontology.views import DataModelView, ExcerptsView
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
@@ -19,6 +19,11 @@ urlpatterns = [
         "apis/excerpts/<str:xml_id>/<str:render_style>/",
         ExcerptsView.as_view(),
         name="excerpts_view",
+    ),
+    path(
+        "apis/datamodel/",
+        DataModelView.as_view(),
+        name="datamodel",
     ),
 ]
 

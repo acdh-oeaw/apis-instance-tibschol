@@ -1,7 +1,9 @@
 from django.http import JsonResponse
 from django.views import View
 from django.shortcuts import get_object_or_404
+from django.views.generic.base import TemplateView
 from .models import Excerpts, Instance
+from .data_model_utils import DataModel
 
 
 class ExcerptsView(View):
@@ -34,3 +36,12 @@ class ExcerptsView(View):
         }
 
         return JsonResponse(data)  # Return the data as JSON response
+
+
+class DataModelView(TemplateView):
+    template_name = "datamodel.html"
+
+    def get_context_data(self):
+        ctx = super().get_context_data()
+        ctx["datamodel"] = DataModel()
+        return ctx

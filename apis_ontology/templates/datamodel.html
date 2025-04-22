@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load core %}
+{% load generic %}
+{% load i18n %}
+{% load datamodel %}
+
+{% block content %}
+<div class="text-center align-middle">
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-light">
+        <tr>
+                <th></th>
+                {% for col in datamodel.entities %}
+                <th class="text-center align-middle">{{ col.name | title }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in datamodel.entities %}
+            <tr>
+                <th class="text-center align-middle">{{ row.name |title }}</th>
+                {% for col in datamodel.entities %}
+                <td class="align-middle">
+                    {% for rel in datamodel.matrix|get_item:row.name|get_item:col.name %}
+                        {{rel}}<br>
+                    {% endfor %}
+                </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock content %}

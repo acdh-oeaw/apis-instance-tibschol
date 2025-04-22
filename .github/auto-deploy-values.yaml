@@ -45,7 +45,7 @@ readinessProbe:
 
 cronjobs:
   import:
-    schedule: "0 12 * * *"
+    schedule:  "0 4 * * *"
     command: ["/bin/bash"]
     args: ["-c", "./manage.py fetch_zotero_entries"]
     image:

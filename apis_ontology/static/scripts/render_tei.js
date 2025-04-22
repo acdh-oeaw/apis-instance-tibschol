@@ -107,9 +107,9 @@ let behaviors = {
       let result = document.createElement("span");
       result.classList.add("note");
       if (e.getAttribute("type") === "gloss") {
-        // result.appendChild(document.createTextNode(" ‹"+e.textContent+"› "));
-        //       // Process child nodes and append
+        result.appendChild(document.createTextNode(" ‹"));
         result.appendChild(processChildNodes(e, behaviors));
+        result.appendChild(document.createTextNode("› "));
       } else {
         result.innerHTML ="<span class='material-symbols-outlined button'>description</span>";
         result.title = e.textContent;

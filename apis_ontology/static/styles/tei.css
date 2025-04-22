@@ -111,3 +111,7 @@ tei-titlepage {
 blockquote{
   margin: 0.5rem 2rem !important;
 }
+
+.choice{
+  color: green;
+}

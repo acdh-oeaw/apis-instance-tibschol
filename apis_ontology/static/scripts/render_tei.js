@@ -1,6 +1,20 @@
 let c = new CETEI({
   ignoreFragmentId: true
 });
+function processChildNodes(e, behaviors) {
+  const fragment = document.createDocumentFragment();
+  for (let n of Array.from(e.childNodes)) {
+    const nodeName = n.nodeName.toLowerCase();
+    const behavior = behaviors.tei[nodeName];
+    if (behavior) {
+      fragment.appendChild(behavior(n));
+    } else {
+      fragment.appendChild(n.cloneNode(true));
+    }
+  }
+  return fragment;
+}
+
 let behaviors = {
   "tei": {
     "head": function(e) {
@@ -19,16 +33,8 @@ let behaviors = {
         resultElementType = "blockquote";
       }
       let result = document.createElement(resultElementType);
-      // // Process child nodes and append them to a p element
-      for (let n of Array.from(e.childNodes)) {
-        // Call the appropriate behavior for each child node
-        let behavior = behaviors.tei[n.nodeName.toLowerCase()];
-        if (behavior) {
-          result.appendChild(behavior(n)); // Process child nodes based on their type
-        } else {
-          result.appendChild(n.cloneNode(true)); // Clone nodes that don't have specific behavior
-        }
-      }
+      result.appendChild(processChildNodes(e, behaviors));
+
       if (!e.getAttribute("source")) {
         result.classList.add("text-danger");
       }
@@ -39,34 +45,14 @@ let behaviors = {
     "lg": function(e) {
       let result = document.createElement("quote"); // Use a <div> for segments
       result.classList.add("lg");
-
-      // Process child nodes and append
-      for (let n of Array.from(e.childNodes)) {
-        // Call the appropriate behavior for each child node
-        let behavior = behaviors.tei[n.nodeName.toLowerCase()];
-        if (behavior) {
-          result.appendChild(behavior(n)); // Process child nodes based on their type
-        } else {
-          result.appendChild(n.cloneNode(true)); // Clone nodes that don't have specific behavior
-        }
-      }
+      result.appendChild(processChildNodes(e, behaviors));
       return result;
     },
     // Handle the l element
     "l": function(e) {
       let result = document.createElement("div"); // Use a <div> for segments
       result.classList.add("l");
-
-      // Process child nodes and append
-      for (let n of Array.from(e.childNodes)) {
-        // Call the appropriate behavior for each child node
-        let behavior = behaviors.tei[n.nodeName.toLowerCase()];
-        if (behavior) {
-          result.appendChild(behavior(n)); // Process child nodes based on their type
-        } else {
-          result.appendChild(n.cloneNode(true)); // Clone nodes that don't have specific behavior
-        }
-      }
+      result.appendChild(processChildNodes(e, behaviors));
       return result;
     },
 
@@ -79,9 +65,7 @@ let behaviors = {
       result.setAttribute("target", "_BLANK");
       result.setAttribute("href", "/apis/apis_ontology."+e.getAttribute("type")+"/"+e.getAttribute("ref").split(":")[1]);
       result.setAttribute("title", "type: " + e.getAttribute("type") + ", id: " + e.getAttribute("ref"));
-      for (let n of Array.from(e.childNodes)) {
-        result.appendChild(n.cloneNode());
-      }
+      result.appendChild(processChildNodes(e, behaviors));
       return result;
     },
 
@@ -89,17 +73,7 @@ let behaviors = {
     "seg": function(e) {
       let result = document.createElement("div"); // Use a <div> for segments
       result.classList.add("seg");
-
-      // Process child nodes and append
-      for (let n of Array.from(e.childNodes)) {
-        // Call the appropriate behavior for each child node
-        let behavior = behaviors.tei[n.nodeName.toLowerCase()];
-        if (behavior) {
-          result.appendChild(behavior(n)); // Process child nodes based on their type
-        } else {
-          result.appendChild(n.cloneNode(true)); // Clone nodes that don't have specific behavior
-        }
-      }
+      result.appendChild(processChildNodes(e, behaviors));
       return result;
     },
 
@@ -133,14 +107,42 @@ let behaviors = {
       let result = document.createElement("span");
       result.classList.add("note");
       if (e.getAttribute("type") === "gloss") {
-        result.appendChild(document.createTextNode(" ‹"+e.textContent+"› "));
+        // result.appendChild(document.createTextNode(" ‹"+e.textContent+"› "));
+        //       // Process child nodes and append
+        result.appendChild(processChildNodes(e, behaviors));
       } else {
         result.innerHTML ="<span class='material-symbols-outlined button'>description</span>";
         result.title = e.textContent;
       }
     return result;
     },
-  }
+    "choice": function(e) {
+      const result = document.createElement("span");
+      const reg = e.querySelector("tei-reg");
+      const orig = e.querySelector("tei-orig");
+      const corr = e.querySelector("tei-corr");
+      const sic = e.querySelector("tei-sic");
+      console.log("CHOICE", reg, orig, corr, sic);
+      let displayNode = null;
+      let titleText = "";
+      console.log(reg, orig, corr, sic);
+      if (reg && orig) {
+        displayNode = reg.cloneNode(true);
+
+        titleText = "original: " + orig.textContent;
+      } else if (corr && sic) {
+        displayNode = corr.cloneNode(true);
+        titleText = "sic: " + sic.textContent;
+      }
+
+      if (displayNode) {
+        result.appendChild(processChildNodes(displayNode, behaviors));
+        result.title = titleText;
+        result.classList.add("choice");
+      }
+
+      return result;
+    }  }
 };
 
 c.addBehaviors(behaviors);

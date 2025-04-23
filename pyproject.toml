@@ -26,7 +26,7 @@ django-debug-toolbar = "^5.1.0"
 [tool.poetry.group.dev.dependencies]
 ipython = "^9.1.0"
 jupyter = "^1.0.0"
-notebook = "^7.3.2"
+notebook = "^7.4.1"
 jupyterlab = "^4.3.5"
 django-stubs = "^5.1.3"
 

@@ -6,12 +6,19 @@
 
 {% block content %}
 <div class="text-center align-middle">
-    <table class="table table-bordered table-striped table-hover">
+    <table border="1" class="table table-bordered table-striped table-hover">
         <thead class="table-light">
-        <tr>
-                <th></th>
+            <tr>
+                <th>
+                    <div>
+                        Object <span class="material-symbols-outlined align-middle">east</span>
+                    </div>
+                    <div>
+                        Subject <span class="material-symbols-outlined align-middle">south</span>
+                    </div>
+                </th>
                 {% for col in datamodel.entities %}
-                <th class="text-center align-middle">{{ col.name | title }}</th>
+                    <th class="text-center align-middle">{{ col.name | title }}</th>
                 {% endfor %}
             </tr>
         </thead>
@@ -20,11 +27,11 @@
             <tr>
                 <th class="text-center align-middle">{{ row.name |title }}</th>
                 {% for col in datamodel.entities %}
-                <td class="align-middle">
-                    {% for rel in datamodel.matrix|get_item:row.name|get_item:col.name %}
-                        {{rel}}<br>
-                    {% endfor %}
-                </td>
+                    <td class="align-middle">
+                        {% for rel in datamodel.matrix|get_item:row.name|get_item:col.name %}
+                            {{rel}}<br>
+                        {% endfor %}
+                    </td>
                 {% endfor %}
             </tr>
             {% endfor %}

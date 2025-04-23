@@ -15,9 +15,6 @@ class DataModel:
 
         for rel in self.relations:
             rel_model = rel.model_class()
-            print(
-                rel_model, rel_model.subj_model.__name__, rel_model.obj_model.__name__
-            )
             if (
                 str(rel_model.subj_model.__name__)
                 in self.matrix[str(rel_model.obj_model.__name__)]
@@ -38,7 +35,6 @@ class DataModel:
                     str(rel_model.subj_model.__name__)
                 ] = [rel_model.reverse_name()]
 
-        print(self.matrix)
         # sort the relations
         for row in self.matrix:
             for col in self.matrix[row]:

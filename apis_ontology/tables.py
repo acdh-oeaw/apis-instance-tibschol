@@ -835,9 +835,9 @@ class PersonAuthorOfWorkTable(TibScholRelationMixinTable):
 
 class ExcerptsTable(GenericTable):
     class Meta(GenericTable.Meta):
-        exclude = ["desc", "edit", "delete"]
+        exclude = ["desc", "edit"]
         fields = ["xml_id", "xml_content"]
-        sequence = ["xml_id", "xml_content", "...", "view"]
+        sequence = ["xml_id", "xml_content", "...", "view", "delete"]
         per_page = 100
 
     def render_xml_id(self, value):

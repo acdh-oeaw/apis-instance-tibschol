@@ -65,6 +65,7 @@ let behaviors = {
       result.setAttribute("target", "_BLANK");
       result.setAttribute("href", "/apis/apis_ontology."+e.getAttribute("type")+"/"+e.getAttribute("ref").split(":")[1]);
       result.setAttribute("title", "type: " + e.getAttribute("type") + ", id: " + e.getAttribute("ref"));
+      result.classList.add("rs-"+e.getAttribute("type"));
       result.appendChild(processChildNodes(e, behaviors));
       return result;
     },

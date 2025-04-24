@@ -115,3 +115,15 @@ blockquote{
 .choice{
   color: green;
 }
+
+.rs-work{
+  color: blue;
+}
+
+.rs-person{
+  color: maroon;
+}
+
+.rs-place{
+  color: darkolivegreen;
+}

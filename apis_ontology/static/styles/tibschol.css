@@ -8,7 +8,7 @@ a:not([class]) {
 }
 
 a:not([class]):hover {
-    text-decoration: underline;
+    text-decoration: dotted underline;
 }
 
 .linkish {
@@ -19,7 +19,7 @@ a:not([class]):hover {
 
 .linkish:hover {
     color: #0056b3;
-    text-decoration: underline;
+    text-decoration: dotted underline;
 }
 
 

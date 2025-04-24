@@ -127,3 +127,11 @@ blockquote{
 .rs-place{
   color: darkolivegreen;
 }
+
+tei-seg a{
+  text-decoration: none;
+}
+
+tei-seg a:hover{
+  text-decoration: dotted underline;
+}

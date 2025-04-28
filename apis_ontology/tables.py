@@ -130,7 +130,8 @@ class PersonDateColumn(tables.Column):
 
 
 class AuthorColumn(tables.Column):
-    def get_work_from_id(self, work_instance_id):
+    @classmethod
+    def get_work_from_id(cls, work_instance_id):
         try:
             return Work.objects.get(pk=work_instance_id)
         except Work.DoesNotExist:
@@ -139,13 +140,12 @@ class AuthorColumn(tables.Column):
                 return Instance.objects.get(pk=work_instance_id)
             except Instance.DoesNotExist:
                 logger.warn(
-                    "Unable to find work or instance for %s: %s",
-                    self.accessor,
+                    "Unable to find work or instance for %s",
                     work_instance_id,
                 )
 
     def render(self, value, *args, **kwargs):
-        subj_work = self.get_work_from_id(value)
+        subj_work = self.__class__.get_work_from_id(value)
         if not subj_work:
             return ""
         if getattr(subj_work, "author_id"):
@@ -343,6 +343,81 @@ class TibScholEntityMixinRelationsTable(GenericTable):
     class Meta(GenericTable.Meta):
         exclude = ["desc"]
         per_page = 1000
+        sequence = (
+            "relation",
+            "predicate",
+            "...",
+            "references",
+            "view",
+            "edit",
+            "delete",
+        )
+
+
+class EntityRelationAuthorColumn(CustomTemplateColumn):
+    template_name = "apis_ontology/linked_entity_column.html"
+    verbose_name = "Author (object)"
+    orderable = False
+
+    def render(self, record, **kwargs):
+        work_or_instance_id = (
+            record.obj_object_id if record.forward else record.subj_object_id
+        )
+        subj_work = AuthorColumn.get_work_from_id(work_or_instance_id)
+        if not subj_work:
+            return ""
+        if getattr(subj_work, "author_id"):
+            try:
+                author = Person.objects.get(pk=getattr(subj_work, "author_id"))
+                self.extra_context = {
+                    "entity_id": author.pk,
+                    "entity_name": author.name,
+                    "entity_uri": author.get_absolute_url(),
+                }
+                return super().render(author, **kwargs)
+
+            except Person.DoesNotExist:
+                # Author is deleted or not accessible to the user
+                logger.warning("Unable to find author for %s ", subj_work)
+
+        return ""
+
+
+class TibScholEntityMixinWorkRelationsTable(TibScholEntityMixinRelationsTable):
+    work_author = EntityRelationAuthorColumn()
+
+    class Meta(TibScholEntityMixinRelationsTable.Meta):
+        pass
+
+
+class TibScholEntityMixinInstanceRelationsTable(TibScholEntityMixinWorkRelationsTable):
+    pass
+
+    class Meta(TibScholEntityMixinWorkRelationsTable.Meta):
+        pass
+
+
+class TibScholEntityMixinPersonRelationsTable(TibScholEntityMixinRelationsTable):
+    lifespan_obj = tables.Column(
+        orderable=False, verbose_name="Lifespan (obj)", accessor="subj_object_id"
+    )
+
+    def render_lifespan_obj(self, record):
+        person_id = record.obj_object_id if record.forward else record.subj_object_id
+        try:
+            person = Person.objects.get(pk=person_id)
+        except Person.DoesNotExist:
+            return ""
+        return (
+            (person.start if person.start else "")
+            + " - "
+            + (person.end if person.end else "")
+        )
+
+        return ""
+
+    class Meta(TibScholEntityMixinRelationsTable.Meta):
+        pass
 
 
 class TibScholRelationMixinTable(GenericTable):

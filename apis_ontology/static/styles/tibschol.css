@@ -44,3 +44,7 @@ pre#rawTEI{
 .modal-header{
   align-items: normal !important;
 }
+
+.relation-confidence{
+  vertical-align: middle;
+}

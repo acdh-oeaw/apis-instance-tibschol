@@ -3,3 +3,9 @@
 {% else %}
   {{ record.reverse_name }}
 {% endif %}
+
+{% if record.confidence == "Uncertain" %}
+  <span class="relation-confidence text-warning material-symbols-outlined">indeterminate_question_box</span>
+{% elif record.confidence == "Negative" %}
+  <span class="relation-confidence text-danger  material-symbols-outlined">report</span>
+{% endif %}

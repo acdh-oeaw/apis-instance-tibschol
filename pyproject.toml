@@ -1,36 +1,39 @@
-[tool.poetry]
+[project]
 name = "apis-instance-tibschol"
 version = "0.0.1"
 description = "An APIS instance for the research project TibSchol"
-authors = ["Saranya Balasubramanian <saranya.balasubramanian@oeaw.ac.at>"]
+authors = [{ name = "Saranya Balasubramanian", email = "saranya.balasubramanian@oeaw.ac.at" }]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "apis_ontology"}]
+requires-python = ">=3.11"
+dependencies = [
+    "psycopg2==2.9.*",
+    "apis-core-rdf==0.45.0",
+    "apis-acdhch-default-settings==2.6.0",
+    "django-acdhch-functions==0.1.3",
+    "django-extensions==4.1.*",
+    "tqdm==4.67.1",
+    "pandas==2.2.2",
+    "django-select2==8.2.3",
+    "tablib[xlsx]==3.8.0",
+    "lxml==5.3.1",
+    "django-interval==0.5.1",
+    "django-debug-toolbar==5.1.0",
+    "tabulate==0.9.0"
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-psycopg2 = "^2.9"
-apis-core-rdf = "0.45.0"
-apis-acdhch-default-settings = "2.6.0"
-django-acdhch-functions = "^0.1.3"
-django-extensions = "^4.1"
-tqdm = "^4.67.1"
-pandas = "^2.2.2"
-django-select2 = "^8.2.3"
-tablib = {extras = ["xlsx"], version = "^3.8.0"}
-lxml = "^5.3.1"
-django-interval = "^0.5.1"
-django-debug-toolbar = "^5.1.0"
-tabulate = "^0.9.0"
+[project.optional-dependencies]
+dev = [
+    "ipython==9.1.0",
+    "jupyter==1.0.0",
+    "notebook==7.4.1",
+    "jupyterlab==4.4.1",
+    "django-stubs==5.1.3"
+]
 
-
-[tool.poetry.group.dev.dependencies]
-ipython = "^9.1.0"
-jupyter = "^1.0.0"
-notebook = "^7.4.1"
-jupyterlab = "^4.4.1"
-django-stubs = "^5.1.3"
+[tool.hatch.build.targets.wheel]
+packages = ["apis_ontology"]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

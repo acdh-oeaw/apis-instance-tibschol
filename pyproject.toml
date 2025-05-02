@@ -24,7 +24,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-    "ipython==9.1.0",
+    "ipython==9.2.0",
     "jupyter==1.1.1",
     "notebook==7.4.1",
     "jupyterlab==4.4.1",

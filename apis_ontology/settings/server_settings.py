@@ -19,7 +19,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 INSTALLED_APPS += [
     "django.contrib.postgres",
-    "django_acdhch_functions",
     "django_select2",
     "django_interval",
 ]

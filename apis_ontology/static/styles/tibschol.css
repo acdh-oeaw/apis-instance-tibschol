@@ -17,6 +17,10 @@ a:not([class]):hover {
     text-decoration: none;
 }
 
+.pointer{
+    cursor: pointer;
+}
+
 .linkish:hover {
     color: #0056b3;
     text-decoration: dotted underline;

@@ -100,13 +100,19 @@ let behaviors = {
 
     // Discard milestone
     "milestone": function(e) {
-      return null;
+      let result = document.createElement("span");
+      result.classList.add("material-symbols-outlined");
+      result.classList.add("pointer");
+      result.textContent = "book";
+      result.title = "Milestone: "+e.getAttribute("unit") + " " + e.getAttribute("n");
+      return result;
     },
     // Note editorial
     // hide text and show note in a tooltip
     "note": function(e) {
       let result = document.createElement("span");
       result.classList.add("note");
+      result.classList.add("pointer");
       if (e.getAttribute("type") === "gloss") {
         result.appendChild(document.createTextNode(" ‹"));
         result.appendChild(processChildNodes(e, behaviors));

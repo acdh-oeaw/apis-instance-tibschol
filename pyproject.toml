@@ -26,7 +26,7 @@ dev = [
     "ipython==9.2.0",
     "jupyter==1.1.1",
     "notebook==7.4.1",
-    "jupyterlab==4.4.1",
+    "jupyterlab==4.4.2",
     "django-stubs==5.2.0"
 ]
 

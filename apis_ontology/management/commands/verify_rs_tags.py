@@ -60,7 +60,7 @@ class Command(BaseCommand):
                                 {
                                     **error_template,
                                     "model": model_name,
-                                    "error": "entity not found",
+                                    "error": f"db:{pk} not found",
                                 }
                             )
                     except Exception as e:

@@ -1,6 +1,7 @@
 {% load generic %}
 {% load filter_utils %}
 {% load parse_comment %}
+{% load render_tei_refs %}
 
 <table class="table table-hover">
     <tr>
@@ -59,7 +60,7 @@
                 Comments
             </th>
             <td>
-                {{ object.comments | parse_comment }}
+                {{ object.comments | parse_comment | render_tei_refs | safe}}
             </td>
         </tr>
     {% endif %}

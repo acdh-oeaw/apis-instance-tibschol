@@ -1,6 +1,7 @@
 {% load generic %}
 {% load filter_utils %}
 {% load parse_comment %}
+{% load render_tei_refs %}
 {% load citation %}
 
 <table class="table table-hover">
@@ -97,7 +98,7 @@
     {% if object.item_description %}
     <tr>
         <th>Item description</th>
-        <td>{{ object.item_description | parse_comment }}</td>
+        <td>{{ object.item_description | parse_comment | render_tei_refs | safe }}</td>
     </tr>
     {% endif %}
     {% if object.provenance %}

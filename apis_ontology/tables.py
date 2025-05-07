@@ -274,6 +274,9 @@ class InstanceTable(TibscholEntityMixinTable):
 
     author = AuthorColumn(verbose_name="Author", accessor="id", orderable=True)
 
+    def render_item_description(self, value):
+        return mark_safe(render_tei_refs(parse_comment(value)))
+
     def render_availability(self, value):
         symbol = "indeterminate_question_box"
         if value == "lost":

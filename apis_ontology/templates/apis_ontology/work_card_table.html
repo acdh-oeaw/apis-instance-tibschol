@@ -22,7 +22,7 @@
     {% endif %}
     {% if object.subject_vocab.exists %}
         <tr>
-            <th>Subject</th>
+            <th>Topic</th>
             <td>
                 {% for sub in object.subject_vocab.all %}
                     {{ sub.name }}<br/>

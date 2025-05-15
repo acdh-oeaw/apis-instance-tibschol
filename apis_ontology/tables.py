@@ -372,10 +372,15 @@ class EntityRelationAuthorColumn(CustomTemplateColumn):
         if getattr(subj_work, "author_id"):
             try:
                 author = Person.objects.get(pk=getattr(subj_work, "author_id"))
+                author_uri = None
+                if (record.forward and record.subj_object_id != author.pk) or (
+                    not record.forward and record.obj_object_id != author.pk
+                ):
+                    author_uri = author.get_absolute_url()
                 self.extra_context = {
                     "entity_id": author.pk,
                     "entity_name": author.name,
-                    "entity_uri": author.get_absolute_url(),
+                    "entity_uri": author_uri,
                 }
                 return super().render(author, **kwargs)
 

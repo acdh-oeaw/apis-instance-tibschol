@@ -1,3 +1,7 @@
 <div>
-    <a href="{{entity_uri}}" target="_BLANK">{{entity_name}} ({{ entity_id }})
+    {% if entity_uri %}
+    <a href="{{entity_uri}}" target="_BLANK">{{entity_name}} ({{ entity_id }}) </a>
+    {% else %}
+    {{entity_name}} ({{ entity_id }})
+    {% endif %}
 </div>

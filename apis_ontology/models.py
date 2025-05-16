@@ -426,6 +426,7 @@ class TibScholRelationMixin(VersionMixin, Relation, GenericModel):
 
     class Meta(VersionMixin.Meta):
         abstract = True
+        ordering = ["subj_content_type", "obj_content_type", "confidence"]
 
 
 def enforce_meta_attributes(sender, **kwargs):  # type: ignore
@@ -433,7 +434,6 @@ def enforce_meta_attributes(sender, **kwargs):  # type: ignore
         meta = sender._meta
         # set verbose_name_plural to verbose_name
         meta.verbose_name_plural = meta.verbose_name or sender.__name__.lower()
-        meta.ordering = ["subj_object_id", "obj_object_id"]
 
 
 class_prepared.connect(enforce_meta_attributes)

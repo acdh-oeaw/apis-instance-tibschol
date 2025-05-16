@@ -60,7 +60,7 @@
                 Comments
             </th>
             <td>
-                {{ object.comments | parse_comment | render_tei_refs | safe}}
+                {{ object.comments |render_tei_refs | parse_comment |safe}}
             </td>
         </tr>
     {% endif %}

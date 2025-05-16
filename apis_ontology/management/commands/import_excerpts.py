@@ -7,6 +7,8 @@ from tqdm.auto import tqdm
 
 logger = logging.getLogger(__name__)
 
+LATEST_EXCERPT_FILE = "https://raw.githubusercontent.com/ERC-TibSchol/excerpts-extractor/refs/heads/main/data/excerpts.csv"
+
 
 class Command(BaseCommand):
     """
@@ -14,7 +16,13 @@ class Command(BaseCommand):
     """
 
     def add_arguments(self, parser):
-        parser.add_argument("dump", type=str, help="dump file name")
+        parser.add_argument(
+            "dump",
+            type=str,
+            help="excerpts file name",
+            default=LATEST_EXCERPT_FILE,
+            nargs="?",
+        )
 
     def handle(self, *args, **kwargs):
         def create_record(row):

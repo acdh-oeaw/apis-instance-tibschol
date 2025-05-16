@@ -56,7 +56,7 @@ cronjobs:
   excerpts:
     schedule: '0 6,13,18,23 * * *'
     command: ["/bin/bash"]
-    args: ["-c", "python manage.py import_excerpts"]
+    args: ["-c", "python manage.py import_excerpts && python manage.py excerpts-in-use-collection"]
     image:
       repository: $repository
       tag: "$tag"

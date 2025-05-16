@@ -44,10 +44,19 @@ readinessProbe:
 
 
 cronjobs:
-  import:
+  zotero:
     schedule:  "0 4 * * *"
     command: ["/bin/bash"]
     args: ["-c", "python manage.py fetch_zotero_entries"]
+    image:
+      repository: $repository
+      tag: "$tag"
+      pullPolicy: IfNotPresent
+
+  excerpts:
+    schedule: '0 6,13,18,23 * * *'
+    command: ["/bin/bash"]
+    args: ["-c", "python manage.py import_excerpts"]
     image:
       repository: $repository
       tag: "$tag"

@@ -8,7 +8,15 @@ from apis_core.relations.models import Relation
 from apis_core.utils.helpers import create_object_from_uri
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models import OuterRef, QuerySet, Subquery
+from django.db.models import (
+    Case,
+    IntegerField,
+    OuterRef,
+    QuerySet,
+    Subquery,
+    Value,
+    When,
+)
 from django.db.models.signals import class_prepared
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -149,19 +157,34 @@ class Place(
     objects = TibScholEntityManager()
 
 
+def get_confidence_order():
+    return Case(
+        When(confidence="Positive", then=Value(0)),
+        When(confidence="Uncertain", then=Value(1)),
+        When(confidence="Negative", then=Value(2)),
+        default=Value(3),
+        output_field=IntegerField(),
+    )
+
+
+def get_author_id_subquery(work_ref):
+    return Subquery(
+        PersonAuthorOfWork.objects.filter(obj_object_id=work_ref)
+        .annotate(confidence_order=get_confidence_order())
+        .order_by("confidence_order")
+        .values("subj_object_id")[:1]
+    )
+
+
+def get_author_name_subquery(author_ref):
+    return Subquery(Person.objects.filter(id=author_ref).values("name")[:1])
+
+
 class WorkQuerySet(QuerySet):
     def with_author(self):
         return self.annotate(
-            # Subquery to get the Person ID related to the Work through PersonAuthorOfWork
-            author_id=Subquery(
-                PersonAuthorOfWork.objects.filter(obj_object_id=OuterRef("id")).values(
-                    "subj_object_id"
-                )[:1]
-            ),
-            # Subquery to get the Person's name based on the person_id from above
-            author_name=Subquery(
-                Person.objects.filter(id=OuterRef("author_id")).values("name")[:1]
-            ),
+            author_id=get_author_id_subquery(OuterRef("id")),
+            author_name=get_author_name_subquery(OuterRef("author_id")),
         )
 
 
@@ -229,15 +252,8 @@ class InstanceQuerySet(QuerySet):
                     obj_object_id=OuterRef("id")
                 ).values("subj_object_id")[:1]
             ),
-            author_id=Subquery(
-                PersonAuthorOfWork.objects.filter(
-                    obj_object_id=OuterRef("work_id")
-                ).values("subj_object_id")[:1]
-            ),
-            # Subquery to get the Person's name based on the person_id from above
-            author_name=Subquery(
-                Person.objects.filter(id=OuterRef("author_id")).values("name")[:1]
-            ),
+            author_id=get_author_id_subquery(OuterRef("work_id")),
+            author_name=get_author_name_subquery(OuterRef("author_id")),
         )
 
 

@@ -405,6 +405,11 @@ class TibScholEntityMixinInstanceRelationsTable(TibScholEntityMixinWorkRelations
         pass
 
 
+class InstanceInstanceRelationsTable(TibScholEntityMixinRelationsTable):
+    class Meta(TibScholEntityMixinRelationsTable.Meta):
+        pass
+
+
 class TibScholEntityMixinPersonRelationsTable(TibScholEntityMixinRelationsTable):
     lifespan_obj = tables.Column(
         orderable=False, verbose_name="Lifespan (obj)", accessor="subj_object_id"

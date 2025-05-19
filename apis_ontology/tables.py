@@ -405,8 +405,18 @@ class TibScholEntityMixinInstanceRelationsTable(TibScholEntityMixinWorkRelations
         pass
 
 
-class InstanceInstanceRelationsTable(TibScholEntityMixinRelationsTable):
+class InstanceTabRelationsTable(TibScholEntityMixinRelationsTable):
     class Meta(TibScholEntityMixinRelationsTable.Meta):
+        pass
+
+
+class InstanceInstanceRelationsTable(InstanceTabRelationsTable):
+    class Meta(InstanceTabRelationsTable.Meta):
+        pass
+
+
+class WorkInstanceRelationsTable(InstanceTabRelationsTable):
+    class Meta(InstanceTabRelationsTable.Meta):
         pass
 
 

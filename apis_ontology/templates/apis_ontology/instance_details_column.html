@@ -1,0 +1,19 @@
+<div>
+    <span class="material-symbols-outlined text-danger align-middle">
+        {% if lost %}
+            close
+        {% elif non_accessible %}
+            lock
+        {% endif %}
+    </span>
+    {% if instance.num_folios %}
+    Number of folios: {{instance.num_folios}}<br>
+    {% endif %}
+    {% if instance.item_description %}
+    {{instance.item_description}}<br>
+    {% endif %}
+    {% if instance.comments %}
+    {{instance.comments}}<br>
+    {% endif %}
+
+</div>

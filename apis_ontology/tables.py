@@ -391,6 +391,22 @@ class EntityRelationAuthorColumn(CustomTemplateColumn):
         return ""
 
 
+class RelationInstanceColumn(CustomTemplateColumn):
+    template_name = "apis_ontology/instance_details_column.html"
+    verbose_name = "Object details"
+    orderable = False
+
+    def render(self, record, **kwargs):
+        instance_id = record.obj_object_id if record.forward else record.subj_object_id
+        instance = Instance.objects.get(pk=instance_id)
+        self.extra_context = {
+            "instance": instance,
+            "lost": instance.availability == "lost",
+            "non_accessible": instance.availability == "non-accessible",
+        }
+        return super().render(instance, **kwargs)
+
+
 class TibScholEntityMixinWorkRelationsTable(TibScholEntityMixinRelationsTable):
     work_author = EntityRelationAuthorColumn()
 
@@ -406,6 +422,8 @@ class TibScholEntityMixinInstanceRelationsTable(TibScholEntityMixinWorkRelations
 
 
 class InstanceTabRelationsTable(TibScholEntityMixinRelationsTable):
+    instance = RelationInstanceColumn()
+
     class Meta(TibScholEntityMixinRelationsTable.Meta):
         pass
 

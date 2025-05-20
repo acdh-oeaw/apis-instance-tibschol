@@ -97,9 +97,6 @@ tei-p {
   margin-bottom: .5em;
   text-align: justify;
 }
-tei-tei {
-  font-family: Georgia, 'Times New Roman', Times, serif;
-}
 tei-text {
   display: block;
   width: 750px;
@@ -134,4 +131,11 @@ tei-seg a{
 
 tei-seg a:hover{
   text-decoration: dotted underline;
+}
+
+.milestone {
+  font-family: "Gill Sans", "Helvetica Neue", sans-serif;
+  font-weight: bold;
+  letter-spacing: 0.03em;
+  color: slategray;
 }

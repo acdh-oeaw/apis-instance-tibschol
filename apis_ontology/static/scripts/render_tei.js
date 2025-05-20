@@ -100,11 +100,12 @@ let behaviors = {
 
     // Discard milestone
     "milestone": function(e) {
-      let result = document.createElement("span");
-      result.classList.add("material-symbols-outlined");
+      let result = document.createElement("div");
+      result.classList.add("milestone");
       result.classList.add("pointer");
-      result.textContent = "book";
-      result.title = "Milestone: "+e.getAttribute("unit") + " " + e.getAttribute("n");
+      result.title = "Milestone";
+
+      result.textContent = e.getAttribute("n");
       return result;
     },
     // Note editorial

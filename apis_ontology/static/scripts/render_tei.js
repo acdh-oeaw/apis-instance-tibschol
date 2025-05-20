@@ -56,7 +56,15 @@ let behaviors = {
       return result;
     },
 
-    "lb": ["<span class=\"break\">$@n&nbsp;</span>"],
+    "lb": function(e) {
+      let result = document.createElement("span");
+      result.classList.add("break");
+      result.classList.add("pointer");
+      result.title = "line " + e.getAttribute("n");
+      result.textContent = e.getAttribute("n");
+
+      return result;
+    },
 
     // Hyperlink the rs tag and include type and ref in its title
     "rs": function(e) {

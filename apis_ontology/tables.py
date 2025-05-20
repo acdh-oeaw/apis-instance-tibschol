@@ -435,7 +435,7 @@ class InstanceInstanceRelationsTable(InstanceTabRelationsTable):
 
 class WorkInstanceRelationsTable(InstanceTabRelationsTable):
     class Meta(InstanceTabRelationsTable.Meta):
-        pass
+        exclude = InstanceTabRelationsTable.Meta.exclude + ["references"]
 
 
 class TibScholEntityMixinPersonRelationsTable(TibScholEntityMixinRelationsTable):

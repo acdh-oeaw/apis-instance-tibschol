@@ -1,4 +1,8 @@
+{% load filter_utils %}
+{% load parse_comment %}
+{% load render_tei_refs %}
 <div>
+    {% if not available %}
     <span class="material-symbols-outlined text-danger align-middle">
         {% if lost %}
             close
@@ -6,6 +10,7 @@
             lock
         {% endif %}
     </span>
+    {% endif %}
     {% if instance.num_folios %}
     Number of folios: {{instance.num_folios}}<br>
     {% endif %}
@@ -13,9 +18,9 @@
     <div>Provenance: {{instance.provenance | render_list_field}}</div>
     {% endif %}
     {% if instance.item_description %}
-    {{instance.item_description}}<br>
+    {{instance.item_description | parse_comment | render_tei_refs | safe}}<br>
     {% endif %}
     {% if instance.comments %}
-    {{instance.comments}}<br>
+    {{instance.comments | parse_comment}}<br>
     {% endif %}
 </div>

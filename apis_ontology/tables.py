@@ -403,6 +403,7 @@ class RelationInstanceColumn(CustomTemplateColumn):
             "instance": instance,
             "lost": instance.availability == "lost",
             "non_accessible": instance.availability == "non-accessible",
+            "available": instance.availability == "available",
         }
         return super().render(instance, **kwargs)
 

@@ -165,12 +165,12 @@ let behaviors = {
       const rdgs = e.querySelectorAll("tei-rdg");
       let titleText = "";
       if (lem.getAttribute("wit")) {
-        titleText = "wit: " + lem.getAttribute("wit").replace(" ",", ").replace("inst:","ID:").trim() + "\n";
+        titleText = "wit: " + lem.getAttribute("wit").replaceAll(" ",", ").replaceAll("inst:","ID:").trim() + "\n";
       }
       for (let rdg of rdgs) {
         let witness = ""
         if (rdg.getAttribute("wit")) {
-          witness= "(" + rdg.getAttribute("wit").replace("inst:","ID:").trim() + ") ";
+          witness= "(" + rdg.getAttribute("wit").replaceAll("inst:","ID:").trim() + ") ";
         }
         titleText = titleText + witness + rdg.textContent + "\n";
       }

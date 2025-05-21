@@ -158,7 +158,35 @@ let behaviors = {
       }
 
       return result;
-    }  }
+    },
+    "app": function(e) {
+      const result = document.createElement("span");
+      const lem = e.querySelector("tei-lem");
+      const rdgs = e.querySelectorAll("tei-rdg");
+      let titleText = "";
+      if (lem.getAttribute("wit")) {
+        titleText = "wit: " + lem.getAttribute("wit").replace(" ",", ").replace("inst:","ID:").trim() + "\n";
+      }
+      for (let rdg of rdgs) {
+        let witness = ""
+        if (rdg.getAttribute("wit")) {
+          witness= "(" + rdg.getAttribute("wit").replace("inst:","ID:").trim() + ") ";
+        }
+        titleText = titleText + witness + rdg.textContent + "\n";
+      }
+      let displayNode = null;
+      if (lem) {
+        displayNode = lem.cloneNode(true);
+      }
+      if (displayNode) {
+        result.appendChild(processChildNodes(displayNode, behaviors));
+        result.title = titleText;
+        result.classList.add("app");
+        result.classList.add("pointer");
+      }
+      return result;
+    }
+  }
 };
 
 c.addBehaviors(behaviors);

@@ -109,7 +109,7 @@ blockquote{
   margin: 0.5rem 2rem !important;
 }
 
-.choice{
+.choice, .app{
   color: green;
 }
 

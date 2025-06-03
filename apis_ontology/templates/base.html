@@ -23,6 +23,11 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
 {% endblock entities-menu-items %}
 
 {% block main-menu %}
+    <li class="nav-item">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <img src="{% static 'img/TibSchol_Logo3.svg' %}" alt="TibSchol Logo" height="30" >
+        </a>
+    </li>
     <li class="nav-item dropdown">
     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
         aria-expanded="false">
@@ -39,3 +44,91 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
 {{ block.super }}
 {% include "excerpts/excerpts.html" %}
 {% endblock modal %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="p-5 bg-light rounded-3 shadow">
+            <div class="container-fluid py-5">
+                <h1 class="display-4 fw-bold text-primary">TibSchol Database</h1>
+                <p class="lead">The Dawn of Tibetan Buddhist Scholasticism (11th–13th century)</p>
+            </div>
+            <div class="container-fluid">
+                <p>
+                    <strong>TibSchol</strong> explores the formative phase of the Tibetan Buddhist scholastic tradition
+                    in the 11th to 13th century—an exceptionally active period of Tibetan scholarly creativity.
+                </p>
+                <p>
+                    Who were the individuals involved in the early Tibetan scholastic tradition? What were the
+                    connections between them and with enclaves of learning? What works did they compose, teach, and
+                    study? What was the range of diffusion and the mode of circulation of these works?
+                </p>
+                <p>
+                    This prosopographical database contains the data collected by the <a target="_blank"
+                        href="https://www.oeaw.ac.at/projects/tibschol/home">TibSchol project</a> <a target="_blank"
+                        href="https://www.oeaw.ac.at/projects/tibschol/people">team</a> with the aim
+                    of answering such questions—and more—in order to contribute to a more comprehensive and dynamic
+                    picture of the Tibetan scholastic landscape, with a focus on the 11th to 13th centuries. More
+                    generally, it seeks to offer a better-grounded and more nuanced understanding of Tibetan
+                    intellectual history.
+                </p>
+                <p>
+                    The database includes information on persons, works, instances of works (particularly manuscript
+                    versions), and places, along with supporting primary and secondary sources that document the
+                    relationships between these entities. Beginning with instances of works from the recently published
+                    <em>bKa’ gdams gsung ’bum</em> series and their authors, the database has expanded to incorporate
+                    further corpora and sources, bringing lesser-known entities into focus.
+                </p>
+                <p>
+                    <strong>TibSchol</strong> aims to reconstruct both personal and intellectual networks. The latter
+                    are uncovered through intertextual references, documented in the database via textual excerpts from
+                    original sources.
+                </p>
+                <p>
+                    The database was developed with the technical expertise of the <a href="https://www.oeaw.ac.at/acdh/"
+                        target="_blank">ACDH-CH</a>, using
+                    the Austrian
+                    Prosopographical/Biographical Information System (<a
+                        href="https://www.oeaw.ac.at/acdh/research/dh-research-infrastructure/resources/software-services/apis"
+                        target="_blank">APIS</a>)
+                    platform to accommodate TibSchol’s <a href="https://erc-tibschol.github.io/datamodel/" target="_blank"> data
+                        model</a>. It
+                    is linked to the <a href="https://www.zotero.org/" target="_blank">Zotero</a> group library <a href="
+                                                                        https://www.zotero.org/groups/4394244/tibschol"
+                        target="_blank">“TibSchol”</a>,
+                    which
+                    provides metadata for cited sources and
+                    relation support, and to a TEI repository of textual <a href="https://github.com/ERC-TibSchol/excerpts-extractor/"
+                        target="_blank">excerpts</a>, both of which are also
+                        accessible independently.
+                </p>
+                <p>
+                    Integration with other databases in the field of Tibetan and Buddhist studies is facilitated through
+                    links to corresponding entities on the Buddhist Digital Archives (<a href="https://library.bdrc.io/"
+                        target="_blank">BUDA</a>) of the
+                    Buddhist Digital
+                    Resource Center (BDRC), and, for Indian canonical Buddhist works, to the Resources for Kanjur and
+                    Tanjur Studies (<a href="http://www.rkts.org/" target="_blank">rKTs</a>) database.
+                </p>
+                <p>
+                    The entire dataset is freely available under the
+                    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">
+                        Creative Commons Attribution 4.0 International (CC BY 4.0)
+                    </a> licence.
+                </p>
+                <p>
+                    For enquiries and comments, please write to:
+                    <a href="mailto:pascale.hugon@oeaw.ac.at">pascale.hugon@oeaw.ac.at</a>.
+                </p>
+                <hr class="my-4">
+                <p class="small text-muted">
+                    The project <strong>TibSchol</strong> has received funding from the European Research Council (ERC)
+                    under the
+                    European Union’s <a
+                        href="https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/funding-programmes-and-open-calls/horizon-2020_en">Horizon
+                    2020</a> research and innovation programme (grant agreement No 101001002). DOI:
+                    <a href="https://doi.org/10.3030/101001002" target="_blank">10.3030/101001002</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

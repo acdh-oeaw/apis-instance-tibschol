@@ -43,6 +43,8 @@ class TibscholEntityMixinTable(AbstractEntityTable):
             "...",
         )
 
+    export_pk = tables.Column(accessor="pk", verbose_name="pk", visible=False)
+
     export_filename = f"tibschol_export_{datetime.now().strftime('%Y%m%d_%H%M')}"
 
     export_alternative_names = tables.Column(
@@ -475,6 +477,13 @@ class TibScholRelationMixinTable(GenericTable):
 
     subj = tables.Column(verbose_name="Subject")
     obj = tables.Column(verbose_name="Object")
+
+    export_subj_pk = tables.Column(
+        accessor="subj_object_id", verbose_name="subj_pk", visible=False
+    )
+    export_obj_pk = tables.Column(
+        accessor="obj_object_id", verbose_name="obj_pk", visible=False
+    )
 
     def render_subj(self, value):
         url = value.get_absolute_url()

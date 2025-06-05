@@ -1,4 +1,4 @@
-from apis_ontology.views import DataModelView, ExcerptsView
+from apis_ontology.views import DataModelView, ExcerptsView, ExportRelationsJSONView
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
@@ -24,6 +24,11 @@ urlpatterns = [
         "apis/datamodel/",
         DataModelView.as_view(),
         name="datamodel",
+    ),
+    path(
+        "apis/export-relations-json/",
+        ExportRelationsJSONView.as_view(),
+        name="relations.json",
     ),
 ]
 

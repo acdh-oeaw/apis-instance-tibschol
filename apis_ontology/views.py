@@ -4,10 +4,10 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView
 from .models import Excerpts, Instance
 from .data_model_utils import DataModel
+from .export_utils import TibScholDataExport
 
 
 class ExcerptsView(View):
-
     def get(self, request, xml_id, render_style, *args, **kwargs):
         def get_instances_from_tibschol_refs(tibschol_refs):
             instances = []
@@ -45,3 +45,9 @@ class DataModelView(TemplateView):
         ctx = super().get_context_data()
         ctx["datamodel"] = DataModel()
         return ctx
+
+
+class ExportRelationsJSONView(View):
+    def get(self, request, *args, **kwargs):
+        data = TibScholDataExport.all_relations()
+        return JsonResponse(data, safe=False)

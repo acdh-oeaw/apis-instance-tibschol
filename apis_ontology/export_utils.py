@@ -23,10 +23,19 @@ class TibScholDataExport:
 
             return str(entity)
 
-        relation_data = []
-        qs = Relation.objects.select_subclasses().order_by("id")
+        def get_subject_vocab(rel):
+            subjects = None
+            if hasattr(rel, "subject_vocab"):
+                subjects = rel.subject_vocab.all()
+            elif hasattr(rel, "subject_of_teaching_vocab"):
+                subjects = rel.subject_of_teaching_vocab.all()
 
-        for rel in Relation.objects.select_subclasses():
+            return [sub.name for sub in subjects] if subjects else []
+
+        relation_data = []
+        qs = Relation.objects.select_subclasses()
+
+        for rel in qs:
             try:
                 relation_data.append(
                     {
@@ -39,9 +48,13 @@ class TibScholDataExport:
                         "forward": rel.name(),
                         "reverse": rel.reverse_name(),
                         "confidence": rel.confidence,
-                        "start": rel.start,
-                        "end": rel.end,
-                        "topic": rel.topic if hasattr(rel, "topic") else "",
+                        "start_date_from": rel.start_date_from,
+                        "start_date_to": rel.start_date_to,
+                        "start_date_sort": rel.start_date_sort,
+                        "end_date_to": rel.end_date_from,
+                        "end_date_from": rel.end_date_to,
+                        "end_date_sort": rel.end_date_sort,
+                        "topics": get_subject_vocab(rel),
                     }
                 )
             except Exception as e:

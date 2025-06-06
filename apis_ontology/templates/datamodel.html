@@ -29,7 +29,7 @@
                 {% for col in datamodel.entities %}
                     <td class="align-middle">
                         {% for rel in datamodel.matrix|get_item:row.name|get_item:col.name %}
-                            {{rel}}<br>
+                            {{rel | safe}}<br>
                         {% endfor %}
                     </td>
                 {% endfor %}

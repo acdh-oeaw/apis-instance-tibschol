@@ -3,6 +3,7 @@
 {% load generic %}
 {% load i18n %}
 {% load datamodel %}
+{% load parse_comment %}
 
 {% block content %}
 <div class="container text-center  mb-auto" id="top">
@@ -54,12 +55,23 @@
 </span>
     </div>
     <div class="mb-2">{{ item.Description }}</div>
-<div>
+    <div>
     </div>
 
     </div>
 
     {% endfor %}
+    {% for item in datamodel.glossary_terms %}
+    {% if item.description %}
+
+    <div id="{{item.model_class | lower}}"
+        class="text-start glossary-item border rounded p-2 mb-2 bg-light text-muted small">
+                <div  class="fw-semibold text-dark mb-1">{{ item.name |title }}
+                </div>
+                <div class="mb-2">{{ item.description | parse_comment }}</div>
+            </div>
+            {% endif %}
+        {% endfor %}
     </div>
 </div>
 {% endblock content %}

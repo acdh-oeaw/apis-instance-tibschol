@@ -5,8 +5,9 @@
 {% load datamodel %}
 
 {% block content %}
-<div class="text-center align-middle">
-    <table border="1" class="table table-bordered table-striped table-hover">
+<div class="container text-center  mb-auto" id="top">
+    <h2 class="">Data Model</h2>
+    <table border="1" class=" align-middle table table-bordered table-striped table-hover">
         <thead class="table-light">
             <tr>
                 <th>
@@ -18,25 +19,47 @@
                     </div>
                 </th>
                 {% for col in datamodel.entities %}
-                    <th class="text-center align-middle">{{ col.name | title }}</th>
+                    <th class="text-center align-middle"> <a href="#{{col.name |lower}}">{{ col.name | title }}</a></th>
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for row in datamodel.entities %}
             <tr>
-                <th class="text-center align-middle">{{ row.name |title }}</th>
+                <th class="text-center align-middle"><a href="#{{row.name |lower}}">{{ row.name |title }}</a></th>
                 {% for col in datamodel.entities %}
-                    <td class="align-middle">
-                        {% for rel in datamodel.matrix|get_item:row.name|get_item:col.name %}
-                            {{rel | safe}}<br>
-                        {% endfor %}
-                    </td>
+                <td class="align-middle">
+                    {% for rel in datamodel.matrix|get_item:row.name|get_item:col.name %}
+
+                        <a href="#{{rel.class |lower}}">{{rel.display | safe}}</a><br>
+
+                    {% endfor %}
+                </td>
                 {% endfor %}
-            </tr>
-            {% endfor %}
+                </tr>
+                {% endfor %}
         </tbody>
     </table>
-</div>
+    <div class="mb-auto">
+        {% for item in datamodel.glossary %}
+            <div id="{{item.model_class | lower}}" class="text-start glossary-item border rounded p-2 mb-2 bg-light text-muted small">
+                <div class="fw-semibold text-dark mb-1">{{ item.name }}
+                    {% if item.name_reverse %}
+                        <span class='material-symbols-outlined align-middle text-secondary'>arrows_outward</span>
+                        {{ item.name_reverse }}
+                    {% endif %}
 
+                    <span class="text-uppercase text-secondary  mb-1 small">
+    {{ item.type }}
+</span>
+    </div>
+    <div class="mb-2">{{ item.Description }}</div>
+<div>
+    </div>
+
+    </div>
+
+    {% endfor %}
+    </div>
+</div>
 {% endblock content %}

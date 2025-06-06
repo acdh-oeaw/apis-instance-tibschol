@@ -4,6 +4,7 @@ from apis_core.relations.utils import relation_content_types
 
 
 from collections import defaultdict
+from json import loads
 
 
 class DataModel:
@@ -11,6 +12,8 @@ class DataModel:
         self.entities = get_entity_content_types()
         self.relations = relation_content_types()
         self.matrix = defaultdict(dict)
+        with open("apis_ontology/static/glossary-models.json", "r") as f:
+            self.glossary = loads(f.read())
 
         for rel in self.relations:
             rel_model = rel.model_class()
@@ -33,18 +36,27 @@ class DataModel:
             # if subj and obj are the same then add name and reverse in the same row
             if subj == obj:
                 if name == rev_name:
-                    self.matrix[subj][obj].append(name)
+                    self.matrix[subj][obj].append(
+                        {"class": rel.model_class().__name__, "display": name}
+                    )
                     continue
 
                 self.matrix[subj][obj].append(
-                    f"{name}<span class='material-symbols-outlined align-middle text-secondary'>arrows_outward</span>{rev_name}"
+                    {
+                        "class": rel.model_class().__name__,
+                        "display": f"{name}<span class='material-symbols-outlined align-middle text-secondary'>arrows_outward</span>{rev_name}",
+                    }
                 )
                 continue
 
-            self.matrix[subj][obj].append(name)
-            self.matrix[obj][subj].append(rev_name)
+            self.matrix[subj][obj].append(
+                {"class": rel.model_class().__name__, "display": name}
+            )
+            self.matrix[obj][subj].append(
+                {"class": rel.model_class().__name__, "display": rev_name}
+            )
 
         # sort the relations
-        for row in self.matrix:
-            for col in self.matrix[row]:
-                self.matrix[row][col] = sorted(set(self.matrix[row][col]))
+        # for row in self.matrix:
+        #     for col in self.matrix[row]:
+        #         self.matrix[row][col] = sorted(set(self.matrix[row][col]))

@@ -60,6 +60,6 @@ class DataModel:
             )
 
         # sort the relations
-        # for row in self.matrix:
-        #     for col in self.matrix[row]:
-        #         self.matrix[row][col] = sorted(set(self.matrix[row][col]))
+        for subj in self.matrix:
+            for obj in self.matrix[subj]:
+                self.matrix[subj][obj].sort(key=lambda x: x["display"])

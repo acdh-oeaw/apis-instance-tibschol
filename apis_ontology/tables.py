@@ -155,7 +155,7 @@ class AuthorColumn(tables.Column):
                 author = Person.objects.get(pk=getattr(subj_work, "author_id"))
                 context = {
                     "entity_id": author.pk,
-                    "entity_name": author.name,
+                    "entity_name": author.uname,
                     "entity_uri": author.get_absolute_url(),
                 }
                 return mark_safe(

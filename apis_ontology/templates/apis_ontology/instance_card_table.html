@@ -7,12 +7,12 @@
 <table class="table table-hover">
     <tr>
         <th>Name</th>
-        <td>{{ object.name }}</td>
+        <td>{{ object.uname }}</td>
     </tr>
     {% if object.alternative_names %}
     <tr>
         <th>Alternative names</th>
-        <td>{{ object.alternative_names | render_list_field }}</td>
+        <td>{{ object.alternative_uname | render_list_field }}</td>
     </tr>
     {% endif %}
 

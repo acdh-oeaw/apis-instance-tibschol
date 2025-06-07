@@ -1,3 +1,4 @@
+from functools import cached_property
 import logging
 
 from apis_core.apis_entities.abc import E53_Place
@@ -22,8 +23,10 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django_interval.fields import FuzzyDateParserField
 from .date_utils import tibschol_dateparser
+import pyewts
 
 logger = logging.getLogger(__name__)
+converter = pyewts.pyewts()
 
 
 class Subject(GenericModel, models.Model):
@@ -119,8 +122,14 @@ class Person(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity
         verbose_name_plural = _("Persons")
         ordering = ["name", "pk"]
 
+    @cached_property
+    def uname(self):
+        if not self.nationality == "Indic":
+            return converter.toUnicode(self.name)
+        return self.name
+
     def __str__(self):
-        return f"{self.name} ({self.pk})"
+        return f"{self.uname} ({self.pk})"
 
 
 class Place(
@@ -152,7 +161,11 @@ class Place(
         verbose_name_plural = _("Places")
 
     def __str__(self):
-        return f"{self.label} ({self.pk})"
+        return f"{self.uname} ({self.pk})"
+
+    @cached_property
+    def uname(self):
+        return converter.toUnicode(self.label)
 
     objects = TibScholEntityManager()
 
@@ -227,6 +240,12 @@ class Work(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
         default=True, verbose_name="Is extant", null=True, blank=True
     )
 
+    @cached_property
+    def uname(self):
+        if self.original_language == "Tibetan":
+            return converter.toUnicode(self.name)
+        return self.name
+
     class Meta(
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
@@ -238,7 +257,7 @@ class Work(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
         ordering = ["name", "pk"]
 
     def __str__(self):
-        return f"{self.name} ({self.pk})"
+        return f"{self.uname} ({self.pk})"
 
     objects = WorkManager()
 
@@ -339,6 +358,10 @@ class Instance(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEnti
         blank=True, null=True, verbose_name="Item description"
     )
 
+    @cached_property
+    def alternative_uname(self):
+        return converter.toUnicode(self.alternative_names)
+
     class Meta(
         VersionMixin.Meta,
         LegacyStuffMixin.Meta,
@@ -349,8 +372,12 @@ class Instance(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEnti
         verbose_name_plural = _("Instances")
         ordering = ["name", "pk"]
 
+    @cached_property
+    def uname(self):
+        return converter.toUnicode(self.name)
+
     def __str__(self):
-        return f"{self.name} ({self.pk})"
+        return f"{self.uname} ({self.pk})"
 
     objects = InstanceManager()
 

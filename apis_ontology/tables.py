@@ -987,3 +987,33 @@ class ZoteroEntryTable(GenericTable):
 
     def render_zoteroId(self, value):
         return value
+
+
+class SubjectTable(GenericTable):
+    class Meta(GenericTable.Meta):
+        exclude = [
+            "id",
+            "desc",
+            "view",
+        ]
+        fields = ["name"]
+        sequence = ("name", "...", "edit", "delete")
+
+    works = tables.Column(orderable=False, verbose_name="Works", accessor="pk")
+
+    def value_works(self, value):
+        works = Work.objects.filter(subject_vocab=value)
+        return render_list_field("\n".join([str(w) for w in works]))
+
+    def render_works(self, value):
+        works = Work.objects.filter(subject_vocab=value)
+        return mark_safe(
+            render_list_field(
+                "\n".join(
+                    [
+                        f"<a href='{w.get_absolute_url()}' target='_blank'>{str(w)}</a>"
+                        for w in works
+                    ]
+                )
+            )
+        )

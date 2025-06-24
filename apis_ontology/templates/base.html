@@ -38,12 +38,9 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
     </div>
 </li>
 {{ block.super }}
+{% include "excerpts/excerpts.html" %}
 {% endblock main-menu %}
 
-{% block modal %}
-{{ block.super }}
-{% include "excerpts/excerpts.html" %}
-{% endblock modal %}
 
 {% block content %}
     <div class="container my-5">

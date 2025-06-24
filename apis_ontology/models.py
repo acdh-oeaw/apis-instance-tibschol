@@ -5,7 +5,6 @@ from apis_core.apis_entities.models import AbstractEntity
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
 from apis_core.relations.models import Relation
-from apis_core.utils.helpers import create_object_from_uri
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.db.models import (
@@ -62,11 +61,6 @@ class LegacyStuffMixin(models.Model):
         "standards.",
     )
     published = None
-
-    @classmethod
-    def get_or_create_uri(cls, uri):
-        logger.info("using custom get_or_create_uri with %s", uri)
-        return create_object_from_uri(uri, cls) or cls.objects.get(pk=uri)
 
     @property
     def uri(self):

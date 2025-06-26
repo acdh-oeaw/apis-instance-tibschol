@@ -43,10 +43,10 @@ class TibScholEntityMixin(models.Model):
 
     comments = models.TextField(blank=True, null=True)
     alternative_names = models.TextField(
-        blank=True, null=True, verbose_name="Alternative names"
+        blank=True, null=True, verbose_name=_("Alternative names")
     )
     external_links = models.TextField(
-        blank=True, null=True, verbose_name="External links"
+        blank=True, null=True, verbose_name=_("External links")
     )
 
 
@@ -80,13 +80,13 @@ class Person(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity
         parser=tibschol_dateparser,
         null=True,
         blank=True,
-        verbose_name="Life date start",
+        verbose_name=_("Life date start"),
     )
     end = FuzzyDateParserField(
         parser=tibschol_dateparser,
         null=True,
         blank=True,
-        verbose_name="Life date end",
+        verbose_name=_("Life date end"),
     )
 
     GENDERS = [
@@ -95,10 +95,16 @@ class Person(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity
     ]
     NATIONALITY = [("Indic", "Indic"), ("Tibetan", "Tibetan")]
 
-    name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
+    name = models.CharField(
+        max_length=255, blank=True, default="", verbose_name=_("Name")
+    )
     gender = models.CharField(max_length=6, choices=GENDERS, default="male")
     nationality = models.CharField(
-        max_length=10, choices=NATIONALITY, blank=True, null=True, verbose_name="Origin"
+        max_length=10,
+        choices=NATIONALITY,
+        blank=True,
+        null=True,
+        verbose_name=_("Origin"),
     )
 
     objects = TibScholEntityManager()
@@ -127,12 +133,12 @@ class Place(
     class_uri = "http://id.loc.gov/ontologies/bibframe/Place"
     _default_search_fields = ["id", "label", "alternative_names"]
 
-    label = models.CharField(blank=True, default="", verbose_name="Name")
+    label = models.CharField(blank=True, default="", verbose_name=_("Name"))
     start = FuzzyDateParserField(
         parser=tibschol_dateparser,
         null=True,
         blank=True,
-        verbose_name="Date",
+        verbose_name=_("Date"),
     )
 
     class Meta(
@@ -199,7 +205,7 @@ class Work(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
         parser=tibschol_dateparser,
         null=True,
         blank=True,
-        verbose_name="Date of composition",
+        verbose_name=_("Date of composition"),
     )
 
     LANGUAGES = [
@@ -209,16 +215,18 @@ class Work(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEntity):
         ("Other", "Other"),
     ]
 
-    subject_vocab = models.ManyToManyField(Subject, verbose_name="Topic", blank=True)
-    name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
+    subject_vocab = models.ManyToManyField(Subject, verbose_name=_("Topic"), blank=True)
+    name = models.CharField(
+        max_length=255, blank=True, default="", verbose_name=_("Name")
+    )
     sde_dge_ref = models.CharField(
-        max_length=25, blank=True, null=True, verbose_name="Derge reference"
+        max_length=25, blank=True, null=True, verbose_name=_("Derge reference")
     )
     original_language = models.CharField(
         max_length=10, choices=LANGUAGES, blank=True, null=True
     )
     isExtant = models.BooleanField(
-        default=True, verbose_name="Is extant", null=True, blank=True
+        default=True, verbose_name=_("Is extant"), null=True, blank=True
     )
 
     class Meta(
@@ -268,7 +276,7 @@ class Instance(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEnti
         parser=tibschol_dateparser,
         null=True,
         blank=True,
-        verbose_name="Date",
+        verbose_name=_("Date"),
     )
 
     SETS = [
@@ -282,55 +290,60 @@ class Instance(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEnti
         ("available", "available"),
         ("non-accessible", "non-accessible"),
     ]
-    name = models.CharField(max_length=255, blank=True, default="", verbose_name="Name")
+    name = models.CharField(
+        max_length=255, blank=True, default="", verbose_name=_("Name")
+    )
     set_num = models.CharField(
-        max_length=5, choices=SETS, null=True, blank=True, verbose_name="Set"
+        max_length=5, choices=SETS, null=True, blank=True, verbose_name=_("Set")
     )
     volume = models.CharField(max_length=255, blank=True, null=True)
     sb_text_number = models.TextField(
         blank=True,
         null=True,
-        verbose_name="Number ascribed to item by Tibschol",
+        verbose_name=_("Number ascribed to item by Tibschol"),
     )
     pp_kdsb = models.CharField(
         max_length=255,
         blank=True,
         null=True,
-        verbose_name="Page numbers in print",
+        verbose_name=_("Page numbers in print"),
     )
     num_folios = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="Number of folios"
+        max_length=255, blank=True, null=True, verbose_name=_("Number of folios")
     )
 
     signature_letter = models.CharField(
         max_length=255,
         blank=True,
         null=True,
-        verbose_name="Signature letter (category)",
+        verbose_name=_("Signature letter (category)"),
     )
     signature_number = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="Signature number"
+        max_length=255, blank=True, null=True, verbose_name=_("Signature number")
     )
     drepung_number = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="Drepung catalogue number"
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name=_("Drepung catalogue number"),
     )
-    provenance = models.TextField(blank=True, null=True, verbose_name="Provenance")
-    zotero_ref = models.TextField(blank=True, null=True, verbose_name="Zotero")
+    provenance = models.TextField(blank=True, null=True, verbose_name=_("Provenance"))
+    zotero_ref = models.TextField(blank=True, null=True, verbose_name=_("Zotero"))
     tibschol_ref = models.TextField(
-        blank=True, null=True, verbose_name="Tibschol reference"
+        blank=True, null=True, verbose_name=_("Tibschol reference")
     )
     availability = models.CharField(
         max_length=15,
         choices=AVAILABILITY,
         blank=True,
         null=True,
-        verbose_name="Availability",
+        verbose_name=_("Availability"),
     )
     dimension = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="WxH size in cm"
+        max_length=255, blank=True, null=True, verbose_name=_("WxH size in cm")
     )
     item_description = models.TextField(
-        blank=True, null=True, verbose_name="Item description"
+        blank=True, null=True, verbose_name=_("Item description")
     )
 
     class Meta(
@@ -350,11 +363,15 @@ class Instance(VersionMixin, LegacyStuffMixin, TibScholEntityMixin, AbstractEnti
 
 
 class ZoteroEntry(GenericModel, models.Model):
-    zoteroId = models.CharField(max_length=255, db_index=True, verbose_name="Zotero ID")
-    shortTitle = models.TextField(blank=True, null=True, verbose_name="Short title")
-    fullCitation = models.TextField(blank=True, null=True, verbose_name="Full Citation")
+    zoteroId = models.CharField(
+        max_length=255, db_index=True, verbose_name=_("Zotero ID")
+    )
+    shortTitle = models.TextField(blank=True, null=True, verbose_name=_("Short title"))
+    fullCitation = models.TextField(
+        blank=True, null=True, verbose_name=_("Full Citation")
+    )
     year = models.CharField(
-        max_length=255, blank=True, null=True, verbose_name="Year of publication"
+        max_length=255, blank=True, null=True, verbose_name=_("Year of publication")
     )
 
     class Meta:
@@ -367,10 +384,10 @@ class Excerpts(GenericModel, models.Model):
     xml_content = models.TextField()
     source = models.CharField(max_length=255)  # the TEI file source
     tibschol_refs = models.TextField(
-        blank=True, null=True, verbose_name="Tibschol reference"
+        blank=True, null=True, verbose_name=_("Tibschol reference")
     )  # populated from //tei:idno[@type="TibSchol"]/text()
     zotero_refs = models.TextField(
-        blank=True, null=True, verbose_name="Zotero references"
+        blank=True, null=True, verbose_name=_("Zotero references")
     )  # populated from //tei:idno[@type="Zotero"]/text()
     status = models.CharField(max_length=255, blank=True)
     location = models.CharField(max_length=255, blank=True)
@@ -392,17 +409,17 @@ class TibScholRelationMixin(VersionMixin, Relation, GenericModel):
         ("Negative", "Negative"),
     ]
 
-    zotero_refs = models.TextField(blank=True, null=True, verbose_name="Zotero")
-    tei_refs = models.TextField(blank=True, null=True, verbose_name="Excerpts")
+    zotero_refs = models.TextField(blank=True, null=True, verbose_name=_("Zotero"))
+    tei_refs = models.TextField(blank=True, null=True, verbose_name=_("Excerpts"))
     support_notes = models.TextField(
-        blank=True, null=True, verbose_name="Support notes"
+        blank=True, null=True, verbose_name=_("Support notes")
     )
     confidence = models.CharField(
         blank=True,
         null=True,
         default="Positive",
         choices=CONFIDENCE,
-        verbose_name="Confidence",
+        verbose_name=_("Confidence"),
         max_length=1000,
     )
     subj_model = None
@@ -437,16 +454,16 @@ class PersonActiveAtPlace(TibScholRelationMixin):
     subj_model = Person
     obj_model = Place
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Topic of teaching", blank=True
+        Subject, verbose_name=_("Topic of teaching"), blank=True
     )
 
     @classmethod
     def name(cls) -> str:
-        return "active at"
+        return _("active at")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "place of activity of"
+        return _("place of activity of")
 
 
 class PersonAddresseeOfWork(TibScholRelationMixin):
@@ -455,11 +472,11 @@ class PersonAddresseeOfWork(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "addressee of"
+        return _("addressee of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "addressed to"
+        return _("addressed to")
 
 
 class PersonAuthorOfWork(TibScholRelationMixin):
@@ -468,11 +485,11 @@ class PersonAuthorOfWork(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "author of"
+        return _("author of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "composed by"
+        return _("composed by")
 
 
 class PersonBiographedInWork(TibScholRelationMixin):
@@ -481,11 +498,11 @@ class PersonBiographedInWork(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "biographed in"
+        return _("biographed in")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "biography of"
+        return _("biography of")
 
 
 class PersonBiographerOfPerson(TibScholRelationMixin):
@@ -494,11 +511,11 @@ class PersonBiographerOfPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "biographer of"
+        return _("biographer of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "biographed by"
+        return _("biographed by")
 
 
 class WorkCommentaryOnWork(TibScholRelationMixin):
@@ -507,11 +524,11 @@ class WorkCommentaryOnWork(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "commentary on"
+        return _("commentary on")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "has as a commentary"
+        return _("has as a commentary")
 
 
 class WorkComposedAtPlace(TibScholRelationMixin):
@@ -520,11 +537,11 @@ class WorkComposedAtPlace(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "composed at"
+        return _("composed at")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "place of composition for"
+        return _("place of composition for")
 
 
 class WorkContainsCitationsOfWork(TibScholRelationMixin):
@@ -533,11 +550,11 @@ class WorkContainsCitationsOfWork(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "contains citations of"
+        return _("contains citations of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "is cited in"
+        return _("is cited in")
 
 
 class InstanceWrittenAtPlace(TibScholRelationMixin):
@@ -546,11 +563,11 @@ class InstanceWrittenAtPlace(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "written at"
+        return _("written at")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "place of scribing for"
+        return _("place of scribing for")
 
 
 class PersonLineagePredecessorOfPerson(TibScholRelationMixin):
@@ -559,14 +576,14 @@ class PersonLineagePredecessorOfPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "lineage predecessor of"
+        return _("lineage predecessor of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "lineage successor of"
+        return _("lineage successor of")
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Topic of teaching", blank=True
+        Subject, verbose_name=_("Topic of teaching"), blank=True
     )
 
 
@@ -576,11 +593,11 @@ class WorkHasAsAnInstanceInstance(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "has as an instance"
+        return _("has as an instance")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "instance of"
+        return _("instance of")
 
 
 class PersonOtherRelationToPerson(TibScholRelationMixin):
@@ -589,11 +606,11 @@ class PersonOtherRelationToPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "other relation to"
+        return _("other relation to")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "other relation to"
+        return _("other relation to")
 
 
 class InstanceIsCopiedFromInstance(TibScholRelationMixin):
@@ -602,14 +619,14 @@ class InstanceIsCopiedFromInstance(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "has source"
+        return _("has source")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "is source for"
+        return _("is source for")
 
     class Meta(TibScholRelationMixin.Meta):
-        verbose_name = "instance has source"
+        verbose_name = _("instance has source")
 
 
 class PlaceLocatedWithinPlace(TibScholRelationMixin):
@@ -618,11 +635,11 @@ class PlaceLocatedWithinPlace(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "located within"
+        return _("located within")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "contains"
+        return _("contains")
 
 
 class PersonOrdinatorOfPerson(TibScholRelationMixin):
@@ -631,11 +648,11 @@ class PersonOrdinatorOfPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "ordinator of"
+        return _("ordinator of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "ordained by"
+        return _("ordained by")
 
 
 class PersonOwnerOfInstance(TibScholRelationMixin):
@@ -644,11 +661,11 @@ class PersonOwnerOfInstance(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "owner of"
+        return _("owner of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "owned by"
+        return _("owned by")
 
 
 class PersonParentOfPerson(TibScholRelationMixin):
@@ -657,11 +674,11 @@ class PersonParentOfPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "parent of"
+        return _("parent of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "child of"
+        return _("child of")
 
 
 class PersonPrompterOfWork(TibScholRelationMixin):
@@ -670,11 +687,11 @@ class PersonPrompterOfWork(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "prompter of"
+        return _("prompter of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "prompted by"
+        return _("prompted by")
 
 
 class WorkRecordsTheTeachingOfPerson(TibScholRelationMixin):
@@ -683,11 +700,11 @@ class WorkRecordsTheTeachingOfPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "records the teaching of"
+        return _("records the teaching of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "has their teaching recorded in"
+        return _("has their teaching recorded in")
 
 
 class PersonQuotesWithNamePerson(TibScholRelationMixin):
@@ -696,14 +713,14 @@ class PersonQuotesWithNamePerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "quotes with name"
+        return _("quotes with name")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "is quoted with name by"
+        return _("is quoted with name by")
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Topic of teaching", blank=True
+        Subject, verbose_name=_("Topic of teaching"), blank=True
     )
 
 
@@ -713,14 +730,14 @@ class PersonQuotesWithoutNamePerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "quotes without name"
+        return _("quotes without name")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "is quoted without name by"
+        return _("is quoted without name by")
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Topic of teaching", blank=True
+        Subject, verbose_name=_("Topic of teaching"), blank=True
     )
 
 
@@ -730,14 +747,14 @@ class PersonRequestsPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "requests"
+        return _("requests")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "requested by"
+        return _("requested by")
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Topic of teaching", blank=True
+        Subject, verbose_name=_("Topic of teaching"), blank=True
     )
 
 
@@ -747,11 +764,11 @@ class PersonScribeOfInstance(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "scribe of"
+        return _("scribe of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "copied/written down by"
+        return _("copied/written down by")
 
 
 class PersonSiblingOfPerson(TibScholRelationMixin):
@@ -760,11 +777,11 @@ class PersonSiblingOfPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "sibling of"
+        return _("sibling of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "sibling of"
+        return _("sibling of")
 
 
 class PersonSponsorOfInstance(TibScholRelationMixin):
@@ -773,11 +790,11 @@ class PersonSponsorOfInstance(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "sponsor of"
+        return _("sponsor of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "sponsored by"
+        return _("sponsored by")
 
 
 class PersonStudentOfPerson(TibScholRelationMixin):
@@ -786,14 +803,14 @@ class PersonStudentOfPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "student of"
+        return _("student of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "teacher of"
+        return _("teacher of")
 
     subject_of_teaching_vocab = models.ManyToManyField(
-        Subject, verbose_name="Topic of teaching", blank=True
+        Subject, verbose_name=_("Topic of teaching"), blank=True
     )
 
 
@@ -803,11 +820,11 @@ class PersonStudiesWork(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "studies"
+        return _("studies")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "studied by"
+        return _("studied by")
 
 
 class PersonTeachesWork(TibScholRelationMixin):
@@ -816,11 +833,11 @@ class PersonTeachesWork(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "teaches"
+        return _("teaches")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "taught by"
+        return _("taught by")
 
 
 class PersonUncleMaternalPaternalOfPerson(TibScholRelationMixin):
@@ -829,11 +846,11 @@ class PersonUncleMaternalPaternalOfPerson(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "uncle (maternal/paternal) of"
+        return _("uncle (maternal/paternal) of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "nephew (maternal/paternal) of"
+        return _("nephew (maternal/paternal) of")
 
 
 class WorkTaughtAtPlace(TibScholRelationMixin):
@@ -842,11 +859,11 @@ class WorkTaughtAtPlace(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "taught at"
+        return _("taught at")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "place of teaching of"
+        return _("place of teaching of")
 
 
 class PersonTranslatorOfWork(TibScholRelationMixin):
@@ -855,11 +872,11 @@ class PersonTranslatorOfWork(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "translator of"
+        return _("translator of")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "translated by"
+        return _("translated by")
 
 
 class PersonHasOtherRelationWithInstance(TibScholRelationMixin):
@@ -868,8 +885,8 @@ class PersonHasOtherRelationWithInstance(TibScholRelationMixin):
 
     @classmethod
     def name(cls) -> str:
-        return "has other relation with"
+        return _("has other relation with")
 
     @classmethod
     def reverse_name(cls) -> str:
-        return "has other relation with"
+        return _("has other relation with")

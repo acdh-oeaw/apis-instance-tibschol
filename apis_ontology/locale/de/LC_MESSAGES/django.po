@@ -1,0 +1,478 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-26 16:38+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: apis_ontology/models.py:35 apis_ontology/models.py:218
+msgid "Topic"
+msgstr "Thema"
+
+#: apis_ontology/models.py:36
+msgid "Topics"
+msgstr "Themen"
+
+#: apis_ontology/models.py:46
+msgid "Alternative names"
+msgstr "Alternative Namen"
+
+#: apis_ontology/models.py:49
+msgid "External links"
+msgstr "Externe Links"
+
+#: apis_ontology/models.py:83
+msgid "Life date start"
+msgstr "Geburtsdatum"
+
+#: apis_ontology/models.py:89
+msgid "Life date end"
+msgstr "Sterbedatum"
+
+#: apis_ontology/models.py:99 apis_ontology/models.py:136
+#: apis_ontology/models.py:220 apis_ontology/models.py:294
+msgid "Name"
+msgstr ""
+
+#: apis_ontology/models.py:101
+msgid "male"
+msgstr "männlich"
+
+#: apis_ontology/models.py:107
+msgid "Origin"
+msgstr "Herkunft"
+
+#: apis_ontology/models.py:118
+msgid "person"
+msgstr "Person"
+
+#: apis_ontology/models.py:119
+msgid "Persons"
+msgstr "Personen"
+
+#: apis_ontology/models.py:141 apis_ontology/models.py:279
+msgid "Date"
+msgstr "Datum"
+
+#: apis_ontology/models.py:151
+msgid "place"
+msgstr "Ort"
+
+#: apis_ontology/models.py:152
+msgid "Places"
+msgstr "Orte"
+
+#: apis_ontology/models.py:208
+msgid "Date of composition"
+msgstr "Datum der Abfassung"
+
+#: apis_ontology/models.py:223
+msgid "Derge reference"
+msgstr "Derge-Referenz"
+
+#: apis_ontology/models.py:229
+msgid "Is extant"
+msgstr "Erhalten"
+
+#: apis_ontology/models.py:238
+msgid "work"
+msgstr "Werk"
+
+#: apis_ontology/models.py:239
+msgid "Works"
+msgstr "Werke"
+
+#: apis_ontology/models.py:297
+msgid "Set"
+msgstr "Set"
+
+#: apis_ontology/models.py:303
+msgid "Number ascribed to item by Tibschol"
+msgstr ""
+
+#: apis_ontology/models.py:309
+msgid "Page numbers in print"
+msgstr "Seitenzahlen im Druck"
+
+#: apis_ontology/models.py:312
+msgid "Number of folios"
+msgstr "Anzahl der Folios"
+
+#: apis_ontology/models.py:319
+msgid "Signature letter (category)"
+msgstr "Signaturbuchstabe (Kategorie)"
+
+#: apis_ontology/models.py:322
+msgid "Signature number"
+msgstr "Signaturnummer"
+
+#: apis_ontology/models.py:328
+msgid "Drepung catalogue number"
+msgstr "Drepung-Katalognummer"
+
+#: apis_ontology/models.py:330
+msgid "Provenance"
+msgstr "Herkunft"
+
+#: apis_ontology/models.py:331 apis_ontology/models.py:412
+msgid "Zotero"
+msgstr ""
+
+#: apis_ontology/models.py:333 apis_ontology/models.py:387
+msgid "Tibschol reference"
+msgstr "Tibschol-Referenz"
+
+#: apis_ontology/models.py:340
+msgid "Availability"
+msgstr "Verfügbarkeit"
+
+#: apis_ontology/models.py:343
+msgid "WxH size in cm"
+msgstr "BxH-Größe in cm"
+
+#: apis_ontology/models.py:346
+msgid "Item description"
+msgstr "Objektbeschreibung"
+
+#: apis_ontology/models.py:355
+msgid "instance"
+msgstr "Instanz"
+
+#: apis_ontology/models.py:356
+msgid "Instances"
+msgstr "Instanzen"
+
+#: apis_ontology/models.py:367
+msgid "Zotero ID"
+msgstr ""
+
+#: apis_ontology/models.py:369
+msgid "Short title"
+msgstr "Kurztitel"
+
+#: apis_ontology/models.py:371
+msgid "Full Citation"
+msgstr "Vollständiges Zitat"
+
+#: apis_ontology/models.py:374
+msgid "Year of publication"
+msgstr "Erscheinungsjahr"
+
+#: apis_ontology/models.py:378
+msgid "zotero entry"
+msgstr "Zotero-Eintrag"
+
+#: apis_ontology/models.py:379
+msgid "zotero entries"
+msgstr "Zotero-Einträge"
+
+#: apis_ontology/models.py:390
+#, fuzzy
+#| msgid "zotero entries"
+msgid "Zotero references"
+msgstr "Zotero-Einträge"
+
+#: apis_ontology/models.py:396
+msgid "excerpt"
+msgstr "Auszug"
+
+#: apis_ontology/models.py:397
+msgid "excerpts"
+msgstr "Auszüge"
+
+#: apis_ontology/models.py:413
+#, fuzzy
+#| msgid "excerpts"
+msgid "Excerpts"
+msgstr "Auszüge"
+
+#: apis_ontology/models.py:415
+msgid "Support notes"
+msgstr "Unterstützende Anmerkungen"
+
+#: apis_ontology/models.py:422
+msgid "Confidence"
+msgstr "Vertrauensniveau"
+
+#: apis_ontology/models.py:457 apis_ontology/models.py:586
+#: apis_ontology/models.py:723 apis_ontology/models.py:740
+#: apis_ontology/models.py:757 apis_ontology/models.py:813
+msgid "Topic of teaching"
+msgstr ""
+
+#: apis_ontology/models.py:462
+msgid "active at"
+msgstr ""
+
+#: apis_ontology/models.py:466
+msgid "place of activity of"
+msgstr ""
+
+#: apis_ontology/models.py:475
+msgid "addressee of"
+msgstr ""
+
+#: apis_ontology/models.py:479
+msgid "addressed to"
+msgstr ""
+
+#: apis_ontology/models.py:488
+msgid "author of"
+msgstr ""
+
+#: apis_ontology/models.py:492
+msgid "composed by"
+msgstr ""
+
+#: apis_ontology/models.py:501
+msgid "biographed in"
+msgstr ""
+
+#: apis_ontology/models.py:505
+msgid "biography of"
+msgstr ""
+
+#: apis_ontology/models.py:514
+msgid "biographer of"
+msgstr ""
+
+#: apis_ontology/models.py:518
+msgid "biographed by"
+msgstr ""
+
+#: apis_ontology/models.py:527
+msgid "commentary on"
+msgstr ""
+
+#: apis_ontology/models.py:531
+msgid "has as a commentary"
+msgstr ""
+
+#: apis_ontology/models.py:540
+msgid "composed at"
+msgstr ""
+
+#: apis_ontology/models.py:544
+msgid "place of composition for"
+msgstr ""
+
+#: apis_ontology/models.py:553
+msgid "contains citations of"
+msgstr ""
+
+#: apis_ontology/models.py:557
+msgid "is cited in"
+msgstr ""
+
+#: apis_ontology/models.py:566
+msgid "written at"
+msgstr ""
+
+#: apis_ontology/models.py:570
+msgid "place of scribing for"
+msgstr ""
+
+#: apis_ontology/models.py:579
+msgid "lineage predecessor of"
+msgstr ""
+
+#: apis_ontology/models.py:583
+msgid "lineage successor of"
+msgstr ""
+
+#: apis_ontology/models.py:596
+#, fuzzy
+#| msgid "instance"
+msgid "has as an instance"
+msgstr "Instanz"
+
+#: apis_ontology/models.py:600
+#, fuzzy
+#| msgid "instance"
+msgid "instance of"
+msgstr "Instanz"
+
+#: apis_ontology/models.py:609 apis_ontology/models.py:613
+msgid "other relation to"
+msgstr ""
+
+#: apis_ontology/models.py:622
+msgid "has source"
+msgstr ""
+
+#: apis_ontology/models.py:626
+msgid "is source for"
+msgstr ""
+
+#: apis_ontology/models.py:629
+msgid "instance has source"
+msgstr ""
+
+#: apis_ontology/models.py:638
+msgid "located within"
+msgstr ""
+
+#: apis_ontology/models.py:642
+msgid "contains"
+msgstr ""
+
+#: apis_ontology/models.py:651
+msgid "ordinator of"
+msgstr ""
+
+#: apis_ontology/models.py:655
+msgid "ordained by"
+msgstr ""
+
+#: apis_ontology/models.py:664
+msgid "owner of"
+msgstr ""
+
+#: apis_ontology/models.py:668
+msgid "owned by"
+msgstr ""
+
+#: apis_ontology/models.py:677
+msgid "parent of"
+msgstr ""
+
+#: apis_ontology/models.py:681
+msgid "child of"
+msgstr ""
+
+#: apis_ontology/models.py:690
+msgid "prompter of"
+msgstr ""
+
+#: apis_ontology/models.py:694
+msgid "prompted by"
+msgstr ""
+
+#: apis_ontology/models.py:703
+msgid "records the teaching of"
+msgstr ""
+
+#: apis_ontology/models.py:707
+msgid "has their teaching recorded in"
+msgstr ""
+
+#: apis_ontology/models.py:716
+msgid "quotes with name"
+msgstr ""
+
+#: apis_ontology/models.py:720
+msgid "is quoted with name by"
+msgstr ""
+
+#: apis_ontology/models.py:733
+msgid "quotes without name"
+msgstr ""
+
+#: apis_ontology/models.py:737
+msgid "is quoted without name by"
+msgstr ""
+
+#: apis_ontology/models.py:750
+msgid "requests"
+msgstr ""
+
+#: apis_ontology/models.py:754
+msgid "requested by"
+msgstr ""
+
+#: apis_ontology/models.py:767
+msgid "scribe of"
+msgstr ""
+
+#: apis_ontology/models.py:771
+msgid "copied/written down by"
+msgstr ""
+
+#: apis_ontology/models.py:780 apis_ontology/models.py:784
+msgid "sibling of"
+msgstr ""
+
+#: apis_ontology/models.py:793
+msgid "sponsor of"
+msgstr ""
+
+#: apis_ontology/models.py:797
+msgid "sponsored by"
+msgstr ""
+
+#: apis_ontology/models.py:806
+msgid "student of"
+msgstr ""
+
+#: apis_ontology/models.py:810
+msgid "teacher of"
+msgstr ""
+
+#: apis_ontology/models.py:823
+msgid "studies"
+msgstr ""
+
+#: apis_ontology/models.py:827
+msgid "studied by"
+msgstr ""
+
+#: apis_ontology/models.py:836
+msgid "teaches"
+msgstr ""
+
+#: apis_ontology/models.py:840
+msgid "taught by"
+msgstr ""
+
+#: apis_ontology/models.py:849
+msgid "uncle (maternal/paternal) of"
+msgstr ""
+
+#: apis_ontology/models.py:853
+msgid "nephew (maternal/paternal) of"
+msgstr ""
+
+#: apis_ontology/models.py:862
+msgid "taught at"
+msgstr ""
+
+#: apis_ontology/models.py:866
+msgid "place of teaching of"
+msgstr ""
+
+#: apis_ontology/models.py:875
+msgid "translator of"
+msgstr ""
+
+#: apis_ontology/models.py:879
+msgid "translated by"
+msgstr ""
+
+#: apis_ontology/models.py:888 apis_ontology/models.py:892
+msgid "has other relation with"
+msgstr ""
+
+#: apis_ontology/templates/base.html:36
+msgid "About"
+msgstr "Über"
+
+#: apis_ontology/templates/base.html:39
+msgid "Data model"
+msgstr "Datenmodell"
+
+#: apis_ontology/templates/base.html:51
+msgid "Database"
+msgstr "Datenbank"

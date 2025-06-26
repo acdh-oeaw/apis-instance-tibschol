@@ -2,6 +2,8 @@
 
 {% load static %}
 {% load tibschol_entity_ctypes %}
+{% load i18n %}
+
 
 {% block styles %}
 <link href="{% static 'styles/tibschol.css' %}" rel="stylesheet" />
@@ -31,10 +33,10 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
     <li class="nav-item dropdown">
     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
         aria-expanded="false">
-        About <span class="caret" />
+        {% translate "About" %} <span class="caret" />
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <a class="dropdown-item" href="{% url 'datamodel' %}">Data model</a>
+        <a class="dropdown-item" href="{% url 'datamodel' %}">{% translate "Data model" %}</a>
     </div>
 </li>
 {{ block.super }}
@@ -46,7 +48,7 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
     <div class="container my-5">
         <div class="p-5 bg-light rounded-3 shadow">
             <div class="container-fluid py-5">
-                <h1 class="display-4 fw-bold text-primary">TibSchol Database</h1>
+                <h1 class="display-4 fw-bold text-primary">TibSchol {% translate "Database" %}</h1>
                 <p class="lead">The Dawn of Tibetan Buddhist Scholasticism (11th–13th century)</p>
             </div>
             <div class="container-fluid">

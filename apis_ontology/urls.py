@@ -34,9 +34,6 @@ urlpatterns = [
 
 urlpatterns += staticfiles_urlpatterns()
 
-urlpatterns += [
-    path("select2/", include("django_select2.urls")),
-]
 
 urlpatterns += [path("", include("django_interval.urls"))]
 

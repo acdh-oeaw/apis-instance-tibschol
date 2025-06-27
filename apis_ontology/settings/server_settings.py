@@ -19,7 +19,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 INSTALLED_APPS += [
     "django.contrib.postgres",
-    "django_select2",
     "django_interval",
 ]
 INSTALLED_APPS.append("apis_core.documentation")
@@ -52,13 +51,8 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     },
-    "select2": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "TIMEOUT": 60 * 60 * 24,  # Timeout set to 1 day (in seconds)
-    },
 }
 
-SELECT2_CACHE_BACKEND = "select2"
 
 MIDDLEWARE += [
     "simple_history.middleware.HistoryRequestMiddleware",

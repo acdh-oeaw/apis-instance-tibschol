@@ -64,7 +64,7 @@ MIDDLEWARE += [
     "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
-
+GIT_REPOSITORY_URL = "https://github.com/acdh-oeaw/apis-instance-tibschol"
 APIS_ANON_VIEWS_ALLOWED = False
 EXPORT_FORMATS = ("csv", "xlsx")
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5-responsive.html"

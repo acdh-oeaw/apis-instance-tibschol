@@ -1,6 +1,6 @@
 import logging
 import re
-
+import string
 
 from apis_core.apis_metainfo.models import RootObject
 from apis_ontology.models import ZoteroEntry
@@ -19,7 +19,8 @@ def render_tei_refs(value):
 
     def linkify_excerpt_id(xml_id):
         true_id = xml_id.replace('"', "").replace("xml:id=", "").strip().rstrip(".")
-        return f"""<a href='#' onclick="showExcerpt('{true_id}'); return false;">{true_id}</a>"""
+        true_id_without_punctuation = xml_id.strip(string.punctuation)
+        return f"""<a href='#' onclick="showExcerpt('{true_id_without_punctuation}'); return false;">{true_id}</a>"""
 
     if not value.strip():
         return ""

@@ -17,10 +17,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://tibschol.acdh-ch-dev.oeaw.ac.at",
 ]
 
-INSTALLED_APPS += [
-    "django.contrib.postgres",
-    "django_interval",
-]
+INSTALLED_APPS += ["django.contrib.postgres", "django_interval", "apis_core.uris"]
 INSTALLED_APPS.append("apis_core.documentation")
 
 

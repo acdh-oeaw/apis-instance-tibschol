@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load relations %}
 {% load static %}
 {% load tibschol_entity_ctypes %}
 {% load i18n %}
@@ -23,6 +24,32 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
 <a class="dropdown-item" href="{{ list_url }}">{{ verbose_name_plural|capfirst }}</a>
 {% endfor %}
 {% endblock entities-menu-items %}
+
+{% block relations-menu %}
+<li class="nav-item dropdown">
+    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"
+        aria-expanded="false">{% translate "Relations" %}
+        <span class="caret" />
+    </a>
+    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item" href="{% url  "apis_core:generic:list" "relations.relation" %}">
+            {% translate "All relations" %}</a>
+        <div class="dropdown-divider"></div>
+        <form class="mx-2">
+            <input type="text" id="relationFilter" class="form-control mb-2 form-control-sm"
+                   placeholder="{% translate "Filter relations..." %}">
+        </form>
+        <div id="relationList">
+            {% get_relation_content_types as content_types %}
+            {% for content_type in content_types %}
+            <a class="dropdown-item relation-item" href="{{ content_type.model_class.get_listview_url }}">
+                {{ content_type.model_class.name }} – {{ content_type.model_class.reverse_name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</li>
+{% endblock relations-menu %}
 
 {% block main-menu %}
     <li class="nav-item">

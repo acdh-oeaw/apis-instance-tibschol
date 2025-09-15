@@ -427,6 +427,15 @@ class TibScholRelationMixin(VersionMixin, Relation, GenericModel):
     start = FuzzyDateParserField(parser=tibschol_dateparser, null=True, blank=True)
     end = FuzzyDateParserField(parser=tibschol_dateparser, null=True, blank=True)
 
+    @classmethod
+    def relation_name(cls) -> str:
+        """Returns the name and reverse_name
+        of the relation as defined in the subclass
+        if they are different, else just the name."""
+        if cls.name() != cls.reverse_name():
+            return f"{cls.name()} - {cls.reverse_name()}"
+        return cls.name()
+
     @property
     def subject_type(self):
         return str(self.subj_model.__name__).lower()

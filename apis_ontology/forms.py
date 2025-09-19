@@ -92,9 +92,7 @@ class InstanceForm(TibscholEntityForm):
     ]
 
 
-class TibScholEntityMixinSearchForm(
-    GenericFilterSetForm, metaclass=GenericFilterSetForm.Meta
-):
+class TibScholEntityMixinSearchForm(GenericFilterSetForm):
     columns_exclude = [
         "start_date_from",
         "end_date_from",

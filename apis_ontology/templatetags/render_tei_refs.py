@@ -20,7 +20,7 @@ def render_tei_refs(value):
     def linkify_excerpt_id(xml_id):
         true_id = xml_id.replace('"', "").replace("xml:id=", "").strip().rstrip(".")
         true_id_without_punctuation = xml_id.strip(string.punctuation)
-        return f"""<a href='#' onclick="showExcerpt('{true_id_without_punctuation}'); return false;">{true_id}</a>"""
+        return f"""<a title='{true_id}' class='align-text-top' href='#' onclick="showExcerpt('{true_id_without_punctuation}'); return false;"><span class="material-symbols-outlined">text_snippet</span></a>"""
 
     if not value.strip():
         return ""

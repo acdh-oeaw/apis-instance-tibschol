@@ -10,6 +10,7 @@ from .export_utils import TibScholDataExport
 class ExcerptsView(View):
     def get(self, request, xml_id, render_style, *args, **kwargs):
         def get_instances_from_tibschol_refs(tibschol_refs):
+            tibschol_refs = tibschol_refs.strip()
             instances = []
             for tibschol_ref in tibschol_refs.split("\n"):
                 try:

@@ -346,7 +346,7 @@ class TibScholEntityMixinRelationsTable(GenericTable):
     )
 
     class Meta(GenericTable.Meta):
-        exclude = ["desc"]
+        exclude = ["desc", "noduplicate"]
         per_page = 1000
         sequence = (
             "relation",

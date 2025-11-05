@@ -41,4 +41,4 @@ def render_tei_refs(value):
 
         linked_lines.append(" ".join(linked_words))
 
-    return "<br />".join(linked_lines) + "<br />" if len(linked_lines) else ""
+    return ", ".join(linked_lines) + "<br />" if len(linked_lines) else ""

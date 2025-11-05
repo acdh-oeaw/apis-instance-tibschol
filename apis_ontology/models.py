@@ -21,6 +21,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django_interval.fields import FuzzyDateParserField
 from .date_utils import tibschol_dateparser
+from auditlog.registry import auditlog
 
 logger = logging.getLogger(__name__)
 
@@ -899,3 +900,44 @@ class PersonHasOtherRelationWithInstance(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return _("has other relation with")
+
+
+auditlog.register(Person)
+auditlog.register(Place)
+auditlog.register(Work)
+auditlog.register(Instance)
+auditlog.register(PersonActiveAtPlace)
+auditlog.register(PersonAuthorOfWork)
+auditlog.register(WorkHasAsAnInstanceInstance)
+auditlog.register(Subject)
+auditlog.register(Excerpts)
+auditlog.register(ZoteroEntry)
+auditlog.register(PersonAddresseeOfWork)
+auditlog.register(PersonBiographedInWork)
+auditlog.register(PersonBiographerOfPerson)
+auditlog.register(WorkCommentaryOnWork)
+auditlog.register(WorkComposedAtPlace)
+auditlog.register(WorkContainsCitationsOfWork)
+auditlog.register(InstanceWrittenAtPlace)
+auditlog.register(PersonLineagePredecessorOfPerson)
+auditlog.register(PersonOtherRelationToPerson)
+auditlog.register(InstanceIsCopiedFromInstance)
+auditlog.register(PlaceLocatedWithinPlace)
+auditlog.register(PersonOrdinatorOfPerson)
+auditlog.register(PersonOwnerOfInstance)
+auditlog.register(PersonParentOfPerson)
+auditlog.register(PersonPrompterOfWork)
+auditlog.register(WorkRecordsTheTeachingOfPerson)
+auditlog.register(PersonQuotesWithNamePerson)
+auditlog.register(PersonQuotesWithoutNamePerson)
+auditlog.register(PersonRequestsPerson)
+auditlog.register(PersonScribeOfInstance)
+auditlog.register(PersonSiblingOfPerson)
+auditlog.register(PersonSponsorOfInstance)
+auditlog.register(PersonStudentOfPerson)
+auditlog.register(PersonStudiesWork)
+auditlog.register(PersonTeachesWork)
+auditlog.register(PersonUncleMaternalPaternalOfPerson)
+auditlog.register(WorkTaughtAtPlace)
+auditlog.register(PersonTranslatorOfWork)
+auditlog.register(PersonHasOtherRelationWithInstance)

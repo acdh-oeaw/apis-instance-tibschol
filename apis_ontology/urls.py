@@ -36,6 +36,9 @@ urlpatterns += staticfiles_urlpatterns()
 
 
 urlpatterns += [path("", include("django_interval.urls"))]
+urlpatterns += [
+    path("", include("apis_acdhch_django_auditlog.urls")),
+]
 
 
 if settings.DEBUG:

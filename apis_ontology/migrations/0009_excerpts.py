@@ -26,6 +26,6 @@ class Migration(migrations.Migration):
                 ("xml_content", models.TextField()),
                 ("source", models.CharField(max_length=255, unique=True)),
             ],
-            bases=(apis_core.generic.abc.GenericModel, models.Model),
+            bases=(models.Model,),
         ),
     ]

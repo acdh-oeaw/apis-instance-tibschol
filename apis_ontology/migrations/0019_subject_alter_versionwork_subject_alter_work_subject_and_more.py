@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 "verbose_name": "Subject",
                 "verbose_name_plural": "Subjects",
             },
-            bases=(apis_core.generic.abc.GenericModel, models.Model),
+            bases=(models.Model,),
         ),
         migrations.AlterField(
             model_name="versionwork",

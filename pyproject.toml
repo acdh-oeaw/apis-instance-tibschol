@@ -5,11 +5,11 @@ description = "An APIS instance for the research project TibSchol"
 authors = [{ name = "Saranya Balasubramanian", email = "saranya.balasubramanian@oeaw.ac.at" }]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
     "psycopg2==2.9.*",
-    "apis-core-rdf==0.52.3",
-    "apis-acdhch-default-settings==2.12.0",
+    "apis-core-rdf==0.56.3",
+    "apis-acdhch-default-settings==2.15.0",
     "django-extensions==4.1.*",
     "tqdm==4.67.1",
     "pandas==2.3.2",

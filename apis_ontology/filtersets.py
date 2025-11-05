@@ -1,4 +1,4 @@
-from apis_core.generic.filtersets import GenericFilterSet
+from apis_core.apis_entities.filtersets import AbstractEntityFilterSet
 import django_filters
 from apis_core.apis_entities.models import RootObject
 from apis_core.relations.filtersets import RelationFilterSet
@@ -76,8 +76,8 @@ def filter_related_entity(queryset, name, value):
     return queryset
 
 
-class LegacyStuffMixinFilterSet(GenericFilterSet):
-    class Meta(GenericFilterSet.Meta):
+class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
+    class Meta(AbstractEntityFilterSet.Meta):
         exclude = ABSTRACT_ENTITY_FILTERS_EXCLUDE
         filter_overrides = {
             models.CharField: {
@@ -93,6 +93,10 @@ class LegacyStuffMixinFilterSet(GenericFilterSet):
                 },
             },
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filters.pop("search", None)  # safely remove the search filter
 
 
 class TibScholRelationMixinFilterSet(RelationFilterSet):
@@ -115,9 +119,13 @@ class TibScholRelationMixinFilterSet(RelationFilterSet):
             FuzzyDateParserField: {"filter_class": YearIntervalRangeFilter},
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filters.pop("search", None)  # safely remove the search filter
 
-class TibScholEntityMixinFilterSet(GenericFilterSet):
-    class Meta(GenericFilterSet.Meta):
+
+class TibScholEntityMixinFilterSet(AbstractEntityFilterSet):
+    class Meta(AbstractEntityFilterSet.Meta):
         filter_overrides = {
             models.CharField: {
                 "filter_class": django_filters.CharFilter,
@@ -140,9 +148,13 @@ class TibScholEntityMixinFilterSet(GenericFilterSet):
     external_links = django_filters.CharFilter(
         label="External links contain", lookup_expr="icontains"
     )
+
     # related_entity = django_filters.CharFilter(
     #     label="Related entity", method=filter_related_entity
     # )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filters.pop("search", None)  # safely remove the search filter
 
 
 class PlaceFilterSet(TibScholEntityMixinFilterSet):
@@ -254,8 +266,8 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
         return queryset.filter(name_query)
 
 
-class OtherModelsFilterSet(GenericFilterSet):
-    class Meta(GenericFilterSet.Meta):
+class OtherModelsFilterSet(AbstractEntityFilterSet):
+    class Meta(AbstractEntityFilterSet.Meta):
         filter_overrides = {
             models.CharField: {
                 "filter_class": django_filters.CharFilter,

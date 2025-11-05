@@ -17,8 +17,16 @@ CSRF_TRUSTED_ORIGINS = [
     "https://tibschol.acdh-ch-dev.oeaw.ac.at",
 ]
 
-INSTALLED_APPS += ["django.contrib.postgres", "django_interval", "apis_core.uris"]
-INSTALLED_APPS.append("apis_core.documentation")
+EXTRA_APPS = [
+    "django.contrib.postgres",
+    "django_interval",
+    "apis_core.uris",
+    "apis_core.documentation",
+]
+
+for app in EXTRA_APPS:
+    if app not in INSTALLED_APPS:
+        INSTALLED_APPS.append(app)
 
 
 LOGGING = {

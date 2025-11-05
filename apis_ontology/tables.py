@@ -2,7 +2,7 @@ import logging
 from django.core.exceptions import FieldError
 
 import django_tables2 as tables
-from apis_core.apis_entities.tables import AbstractEntityTable
+from apis_core.generic.tables import GenericTable
 from apis_core.generic.tables import CustomTemplateColumn, GenericTable, MoreLessColumn
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
@@ -35,8 +35,8 @@ def preview_text(text, n=50):
     return truncated_text + "…"
 
 
-class TibscholEntityMixinTable(AbstractEntityTable):
-    class Meta(AbstractEntityTable.Meta):
+class TibscholEntityMixinTable(GenericTable):
+    class Meta(GenericTable.Meta):
         exclude = ["id", "desc", "view", "edit", "delete", "noduplicate"]
         sequence = (
             "name",

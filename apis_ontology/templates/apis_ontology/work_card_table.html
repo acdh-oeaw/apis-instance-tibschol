@@ -51,7 +51,11 @@
     {% endif %}
     <tr>
         <th>Is extant</th>
-        <td>{{ object.isExtant }}</td>
+        <td>
+            {% if object.isExtant is None %}Unknown
+            {% else %}{{ object.isExtant }}
+            {% endif %}
+        </td>
     </tr>
 
     {% if object.comments %}

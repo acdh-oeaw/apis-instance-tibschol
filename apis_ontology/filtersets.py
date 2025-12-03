@@ -13,6 +13,7 @@ from apis_ontology.forms import (
     PlaceSearchForm,
     RelationSearchForm,
     WorkSearchForm,
+    InstanceSearchForm,
 )
 
 
@@ -243,7 +244,7 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
             "alternative_names",
         ]
 
-        form = WorkSearchForm
+        form = InstanceSearchForm
 
     name = django_filters.CharFilter(
         method="custom_name_search", label="Name or Tibschol reference or ID"

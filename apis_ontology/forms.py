@@ -104,6 +104,22 @@ class TibScholEntityMixinSearchForm(GenericFilterSetForm):
         "self_contenttype",
     ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Force override of the model BooleanField
+        self.fields["review"] = forms.TypedChoiceField(
+            label="Entity reviewed",
+            choices=[
+                ("", ""),
+                ("true", "Yes"),
+                ("false", "No"),
+            ],
+            widget=forms.Select,
+            coerce=lambda v: {"true": True, "false": False}.get(v, None),
+            required=False,
+        )
+
 
 class PlaceSearchForm(TibScholEntityMixinSearchForm):
     field_order = [

@@ -159,6 +159,21 @@ class WorkSearchForm(TibScholEntityMixinSearchForm):
         "external_links",
     ]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Force override of the model BooleanField
+        self.fields["isExtant"] = forms.TypedChoiceField(
+            choices=[
+                ("", ""),
+                ("true", "Yes"),
+                ("false", "No"),
+            ],
+            widget=forms.Select,
+            coerce=lambda v: {"true": True, "false": False}.get(v, None),
+            required=False,
+        )
+
 
 class InstanceSearchForm(TibScholEntityMixinSearchForm):
     field_order = [

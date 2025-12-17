@@ -336,12 +336,14 @@ class TibScholEntityMixinRelationsTable(GenericTable):
         orderable=False,
         preview=lambda x: "",
         fulltext=lambda x: mark_safe(
-            render_tei_refs(getattr(x, "tei_refs", "") or "")
-            .replace("<br />", ", ")
-            .rstrip(", ")
-            + "<br />"
-            if getattr(x, "tei_refs", "")
-            else ""
+            (
+                render_tei_refs(getattr(x, "tei_refs", "") or "")
+                .replace("<br />", ", ")
+                .rstrip(", ")
+                + "<br />"
+                if getattr(x, "tei_refs")
+                else ""
+            )
             + parse_comment(
                 render_list_field(
                     f"{getattr(x,'support_notes', '') or ''}\n{getattr(x, 'zotero_refs','')  or ''}",

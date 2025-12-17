@@ -1,5 +1,6 @@
 from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
 from apis_core.relations.forms import RelationForm
+from apis_core.apis_entities.forms import E53_PlaceForm
 from django import forms
 
 
@@ -18,8 +19,17 @@ class TibScholRelationMixinForm(RelationForm):
     field_order = ["subj", "subj_ct_and_id", "obj", "obj_ct_and_id"]
 
 
-class PlaceForm(TibscholEntityForm):
+class PlaceForm(E53_PlaceForm):
+    class Meta:
+        exclude = ["published"]
+        widgets = {
+            "notes": forms.TextInput(
+                attrs={"placeholder": "Do not use this field, it will be dropped soon."}
+            ),
+        }
+
     field_order = [
+        "place",
         "label",
         "alternative_names",
         "start",
@@ -30,9 +40,6 @@ class PlaceForm(TibscholEntityForm):
         "external_links",
         "review",
     ]
-
-    class Meta(TibscholEntityForm.Meta):
-        exclude = ["published", "feature_code"]
 
 
 class PersonForm(TibscholEntityForm):

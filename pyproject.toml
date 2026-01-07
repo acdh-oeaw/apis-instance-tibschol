@@ -24,8 +24,8 @@ dependencies = [
 dev = [
     "ipython==9.8.0",
     "jupyter==1.1.1",
-    "jupyterlab==4.5.0",
-    "django-stubs==5.2.7"
+    "jupyterlab==4.5.1",
+    "django-stubs==5.2.8"
 ]
 
 [tool.hatch.build.targets.wheel]

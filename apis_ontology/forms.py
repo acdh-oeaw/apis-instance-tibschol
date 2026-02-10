@@ -171,6 +171,7 @@ class WorkSearchForm(TibScholEntityMixinSearchForm):
 
         # Force override of the model BooleanField
         self.fields["isExtant"] = forms.TypedChoiceField(
+            label="Is extant?",
             choices=[
                 ("", ""),
                 ("true", "Yes"),

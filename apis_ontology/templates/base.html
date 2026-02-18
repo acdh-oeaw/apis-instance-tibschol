@@ -71,8 +71,10 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
         {% translate "About" %} <span class="caret" />
     </a>
     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-        <a class="dropdown-item" href="{% url 'datamodel' %}">{% translate "Data model" %}</a>
-    </div>
+        <a class="dropdown-item" href="/">{% translate "About" %}</a>
+        <a class="dropdown-item"
+            href="{% url 'datamodel' %}">{% translate "Data model" %}</a>
+        </div>
 </li>
 {{ block.super }}
 {% include "excerpts/excerpts.html" %}

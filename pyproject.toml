@@ -11,7 +11,7 @@ dependencies = [
     "apis-core-rdf==0.59.0",
     "apis-acdhch-default-settings==2.16.0",
     "django-extensions==4.1.*",
-    "tqdm==4.67.1",
+    "tqdm==4.67.3",
     "pandas==3.0.0",
     "tablib[xlsx]==3.9.0",
     "lxml==6.0.2",

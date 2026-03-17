@@ -4,7 +4,10 @@
 {% load static %}
 {% load tibschol_entity_ctypes %}
 {% load i18n %}
-
+{% block meta %}
+{{ block.super }}
+<meta name="referrer" content="strict-origin-when-cross-origin">
+{% endblock meta %}
 
 {% block styles %}
 <link href="{% static 'styles/tibschol.css' %}" rel="stylesheet" />

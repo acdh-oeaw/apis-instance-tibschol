@@ -53,7 +53,7 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
         <div id="relationList">
             {% get_relation_content_types as content_types %}
             {% for content_type in content_types %}
-            <a class="dropdown-item relation-item" href="{{ content_type.model_class.get_listview_url }}">
+            <a class="dropdown-item relation-item" href="{{ content_type.model_class.get_listview_url }}" target="_blank">
                 {{ content_type.model_class.relation_name }}
             </a>
             {% endfor %}
@@ -152,12 +152,31 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
                     Resource Center (BDRC), and, for Indian canonical Buddhist works, to the Resources for Kanjur and
                     Tanjur Studies (<a href="http://www.rkts.org/" target="_blank">rKTs</a>) database.
                 </p>
-                <p>
-                    The entire dataset is freely available under the
-                    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">
-                        Creative Commons Attribution 4.0 International (CC BY 4.0)
-                    </a> licence.
-                </p>
+                <p>TibSchol is committed to making its research results openly accessible.</p>
+
+                <p>The dataset contained in the database is placed under the Creative Commons license CC0, at the exception of Comments (in
+                pages related to Person, Work, Instance, Place) and Item description (in Instance pages), which are placed under the
+                    <a href="https://creativecommons.org/licenses/by/4.0/">Creative Common license CC BY 4.0</a>.</p>
+
+                <p>Dates for Persons are, unless they are approximated (before/after) or it is indicated otherwise in the Comments, those
+                    provided by the <a href="https://library.bdrc.io/">Buddhist Digital Resource Center</a> under CC0 license at the URL indicated under “External links.”</p>
+
+                <p>For Indic Works and their author, we used the title and name provided by the <a href="http://www.rkts.org/">rKTs project</a>. More
+                    details can be obtained on these works by following the external link to rKTs.</p>
+
+                <p>Coordinates for Places are, unless indicated otherwise in the Comments, those provided by the Buddhist Digital Resource
+                    Center under CC0 license at the URL indicated under “External links.”</p>
+
+                <p>Please note and respect the copyright regulations specific to other resources referred to in the database, such as
+                    publications and online resources.</p>
+
+                <p>TibSchol database does not contain metadata on natural persons.</p>
+
+                <p>Text excerpts (<span class="material-symbols-outlined">text_snippet</span>) are from works in the Public Domain.
+                    Related TEI files that contain these excerpts, hosted at <a
+                        href="https://github.com/ERC-TibSchol/TibSchol-TEI-Library">https://github.com/ERC-TibSchol/TibSchol-TEI-Library</a>,
+                    are distributed under a <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Common CC BY-SA 4.0
+                    License</a>.
                 <p>
                     For enquiries and comments, please write to:
                     <a href="mailto:ERC.tibschol@oeaw.ac.at">ERC.tibschol@oeaw.ac.at</a>.
@@ -166,7 +185,7 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
                 <p class="small text-muted">
                     The project TibSchol has received funding from the European Research Council (ERC)
                     under the
-                    European Union’s <a
+                    European Union’s <a target="_blank"
                         href="https://research-and-innovation.ec.europa.eu/funding/funding-opportunities/funding-programmes-and-open-calls/horizon-2020_en">Horizon
                     2020</a> research and innovation programme (grant agreement No 101001002). DOI:
                     <a href="https://doi.org/10.3030/101001002" target="_blank">10.3030/101001002</a>

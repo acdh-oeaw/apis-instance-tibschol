@@ -18,6 +18,7 @@ dependencies = [
     "django-interval==0.5.4",
     "django-debug-toolbar==6.2.0",
     "tabulate==0.10.0",
+    "django-tables2==2.8",
 ]
 
 [project.optional-dependencies]

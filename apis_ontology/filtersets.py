@@ -178,12 +178,13 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
     # )
 
     def custom_name_search(self, queryset, name, value):
-        name_query = models.Q(label__unaccent__icontains=value) | models.Q(
-            alternative_names__unaccent__icontains=value
+        name_query = (
+            models.Q(label__unaccent__icontains=value)
+            | models.Q(alternative_names__unaccent__icontains=value)
+            | models.Q(tibetan_transliteration__icontains=value)
         )
         if value.isdigit():
             name_query = name_query | models.Q(pk=int(value))
-
         return queryset.filter(name_query)
 
 
@@ -205,12 +206,13 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
     # )
 
     def custom_name_search(self, queryset, name, value):
-        name_query = models.Q(name__unaccent__icontains=value) | models.Q(
-            alternative_names__unaccent__icontains=value
+        name_query = (
+            models.Q(name__unaccent__icontains=value)
+            | models.Q(alternative_names__unaccent__icontains=value)
+            | models.Q(tibetan_transliteration__icontains=value)
         )
         if value.isdigit():
             name_query = name_query | models.Q(pk=int(value))
-
         return queryset.filter(name_query)
 
 
@@ -232,12 +234,13 @@ class WorkFilterSet(TibScholEntityMixinFilterSet):
     # )
 
     def custom_name_search(self, queryset, name, value):
-        name_query = models.Q(name__unaccent__icontains=value) | models.Q(
-            alternative_names__unaccent__icontains=value
+        name_query = (
+            models.Q(name__unaccent__icontains=value)
+            | models.Q(alternative_names__unaccent__icontains=value)
+            | models.Q(tibetan_transliteration__icontains=value)
         )
         if value.isdigit():
             name_query = name_query | models.Q(pk=int(value))
-
         return queryset.filter(name_query)
 
 
@@ -265,10 +268,10 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
             models.Q(name__unaccent__icontains=value)
             | models.Q(alternative_names__unaccent__icontains=value)
             | models.Q(tibschol_ref__icontains=value)
+            | models.Q(tibetan_transliteration__icontains=value)
         )
         if value.isdigit():
             name_query = name_query | models.Q(pk=int(value))
-
         return queryset.filter(name_query)
 
 

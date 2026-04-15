@@ -7,7 +7,13 @@
 <table class="table table-hover">
     <tr>
         <th>Name</th>
-        <td>{{ object.name }}</td>
+        <td>
+            {% if request.user.is_authenticated and request.user.script_preference.prefers_tibetan_script and object.tibetan_transliteration %}
+                {{ object.tibetan_transliteration }}
+            {% else %}
+                {{ object.name }}
+            {% endif %}
+        </td>
     </tr>
     {% if object.alternative_names %}
     <tr>

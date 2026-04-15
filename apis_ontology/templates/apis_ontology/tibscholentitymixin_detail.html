@@ -1,11 +1,12 @@
 {% extends "apis_core/apis_entities/abstractentity_detail.html" %}
+{% load entity_display %}
 {% block card-header-content %}
 <div class="row">
     <div class="col-md-2">{% include "apis_entities/partials/prev_url.html" %}</div>
     <div class="col-md-8">
         <h2 style="text-align: center;">
             {% include "apis_entities/partials/listview_url.html" %}
-            {{ object }}
+            {% entity_display_name object %}
             {% if object.review %}
             <span class="material-symbols-outlined">
                 done_all

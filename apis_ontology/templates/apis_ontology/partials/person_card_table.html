@@ -8,7 +8,11 @@
             Name
         </th>
         <td>
-            {{ object.name }}
+            {% if request.user.is_authenticated and request.user.script_preference.prefers_tibetan_script and object.tibetan_transliteration %}
+                {{ object.tibetan_transliteration }}
+            {% else %}
+                {{ object.name }}
+            {% endif %}
         </td>
     </tr>
     {% if object.alternative_names %}

@@ -1,4 +1,4 @@
-from apis_ontology.views import DataModelView, ExcerptsView, ExportRelationsJSONView
+from apis_ontology.views import DataModelView, ExcerptsView, ExportRelationsJSONView, update_script_preference
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
@@ -30,6 +30,7 @@ urlpatterns = [
         ExportRelationsJSONView.as_view(),
         name="relations.json",
     ),
+    path('update-script-preference/', update_script_preference, name='update_script_preference'),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

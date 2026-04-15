@@ -44,10 +44,13 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
                           </form>
                         </div>
                         <div class="dropdown-item d-flex align-items-center">
-                            <label class="me-2 mb-0" for="script-switch">Tibetan</label>
-                            <div class="form-check form-switch m-0">
-                                <input class="form-check-input" type="checkbox" id="script-switch">
-                            </div>
+                            <form method="post" action="{% url 'update_script_preference' %}" style="display: flex; align-items: center;">
+                                {% csrf_token %}
+                                <label class="me-2 mb-0" for="script-switch">Tibetan</label>
+                                <div class="form-check form-switch m-0">
+                                    <input class="form-check-input" type="checkbox" id="script-switch" name="prefers_tibetan_script" value="true" {% if user.script_preference.prefers_tibetan_script %}checked{% endif %} onchange="this.form.submit()">
+                                </div>
+                            </form>
                         </div>
                         <a class="dropdown-item" href="{% url 'apis_core:password-change' %}">{% translate "change password" %}</a>
                       {% endblock user-menu-items %}

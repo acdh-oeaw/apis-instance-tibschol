@@ -2,13 +2,14 @@ import logging
 import re
 
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic.base import TemplateView
 
 from .data_model_utils import DataModel
 from .export_utils import TibScholDataExport
-from .models import Excerpts, Instance
+from .forms import UserScriptPreferenceForm
+from .models import Excerpts, Instance, UserScriptPreference
 
 
 class ExcerptsView(View):
@@ -59,3 +60,19 @@ class ExportRelationsJSONView(View):
     def get(self, request, *args, **kwargs):
         data = TibScholDataExport.all_relations()
         return JsonResponse(data, safe=False)
+
+
+def update_script_preference(request):
+    user = request.user
+    try:
+        pref = user.script_preference
+    except UserScriptPreference.DoesNotExist:
+        pref = UserScriptPreference(user=user)
+    if request.method == "POST":
+        form = UserScriptPreferenceForm(request.POST, instance=pref)
+        if form.is_valid():
+            form.save()
+            return redirect(request.META.get("HTTP_REFERER", "/"))
+    else:
+        form = UserScriptPreferenceForm(instance=pref)
+    return render(request, "update_script_preference.html", {"form": form})

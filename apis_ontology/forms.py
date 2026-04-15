@@ -37,6 +37,7 @@ class PlaceForm(E53_PlaceForm):
         "place",
         "label",
         "alternative_names",
+        "tibetan_transliteration",
         "start",
         "latitude",
         "longitude",
@@ -51,6 +52,7 @@ class PersonForm(TibscholEntityForm):
     field_order = [
         "name",
         "alternative_names",
+        "tibetan_transliteration",
         "start",
         "end",
         "gender",
@@ -66,6 +68,7 @@ class WorkForm(TibscholEntityForm):
     field_order = [
         "name",
         "alternative_names",
+        "tibetan_transliteration",
         "original_language",
         "subject_vocab",
         "start",
@@ -82,6 +85,7 @@ class InstanceForm(TibscholEntityForm):
     field_order = [
         "name",
         "alternative_names",
+        "tibetan_transliteration",
         "start",
         "availability",
         "tibschol_ref",

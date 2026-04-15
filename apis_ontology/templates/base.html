@@ -21,6 +21,51 @@
 TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
 {% endif %}
 {% endblock title %}
+{% block userlogin-menu %}
+              <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                  <li class="nav-item dropdown ml-auto">
+                    <a href=""
+                       class="nav-link dropdown-toggle"
+                       data-bs-toggle="dropdown"
+                       role="button"
+                       aria-haspopup="true"
+                       aria-expanded="false">{{ user.get_username }}</a>
+                    <div class="dropdown-menu dropdown-menu-end">
+
+                      {% block user-menu-items %}
+                        <div class="dropdown-item">
+                          <form action="{% url 'apis_core:logout' %}?next=/" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn px-0">
+                              <span class="material-symbols-outlined material-symbols-align">logout</span>
+                              {% translate "log out" %}
+                            </button>
+                          </form>
+                        </div>
+                        <div class="dropdown-item d-flex align-items-center">
+                            <label class="me-2 mb-0" for="script-switch">Tibetan</label>
+                            <div class="form-check form-switch m-0">
+                                <input class="form-check-input" type="checkbox" id="script-switch">
+                            </div>
+                        </div>
+                        <a class="dropdown-item" href="{% url 'apis_core:password-change' %}">{% translate "change password" %}</a>
+                      {% endblock user-menu-items %}
+
+                    </div>
+                  </li>
+                {% else %}
+                  <li class="nav-item dropdown ml-auto">
+                    <a class="nav-link p-0"
+                       href="{% url 'apis_core:login' %}?next={{ request.path|urlencode }}">
+                      <span class="material-symbols-outlined">login</span>
+                    </a>
+                  </li>
+                {% endif %}
+              </ul>
+
+{% endblock userlogin-menu %}
+
 {% block entities-menu %}
 <li class="nav-item dropdown">
     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true"

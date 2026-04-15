@@ -2,7 +2,12 @@ from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
 from apis_core.relations.forms import RelationForm
 from apis_core.apis_entities.forms import E53_PlaceForm
 from django import forms
+from .models import UserScriptPreference
 
+class UserScriptPreferenceForm(forms.ModelForm):
+    class Meta:
+        model = UserScriptPreference
+        fields = ["prefers_tibetan_script"]
 
 class TibscholEntityForm(GenericModelForm):
     class Meta:

@@ -1,12 +1,13 @@
-import logging
 
+import logging
+from django.conf import settings
+from django.db import models
 from apis_core.apis_entities.abc import E53_Place
 from apis_core.apis_entities.models import AbstractEntity
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
 from apis_core.relations.models import Relation
 from django.contrib.contenttypes.models import ContentType
-from django.db import models
 from django.db.models import (
     Case,
     IntegerField,
@@ -24,6 +25,14 @@ from .date_utils import tibschol_dateparser
 from auditlog.registry import auditlog
 
 logger = logging.getLogger(__name__)
+
+# User script preference model
+class UserScriptPreference(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="script_preference")
+    prefers_tibetan_script = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} prefers Tibetan script: {self.prefers_tibetan_script}"
 
 
 class Subject(GenericModel, models.Model):

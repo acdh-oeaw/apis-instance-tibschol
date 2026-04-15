@@ -1,0 +1,6 @@
+{% load relations %}
+{% load tibschol_entity_ctypes %}
+{% relations_from from_obj=object as relations %}
+{% sorted_possible_targets object as possible_targets %}
+{% block display-relations %}
+{% endblock display-relations %}

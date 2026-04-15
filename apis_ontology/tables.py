@@ -8,6 +8,7 @@ from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 import re
+from .templatetags.entity_display import display_entity_name
 from django.db.models import OuterRef, Subquery
 from django.db.models import Value
 from django.db.models.functions import Coalesce
@@ -78,7 +79,7 @@ class TibscholEntityMixinTable(GenericTable):
     )
 
     def render_name(self, record):
-        return str(record)
+        return display_entity_name(record, getattr(self, 'request', None))
 
     def value_name(self, record):
         return getattr(record, "label", getattr(record, "name", ""))
@@ -217,9 +218,6 @@ class PersonTable(TibscholEntityMixinTable):
         model = Person
         fields = ["name"]
         # exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
-
-    def render_name(self, record):
-        return str(record)
 
     export_lifedate_start = tables.Column(
         accessor="start", verbose_name="Life date start", visible=False

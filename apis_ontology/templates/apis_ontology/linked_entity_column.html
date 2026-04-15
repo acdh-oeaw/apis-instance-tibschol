@@ -1,7 +1,12 @@
+{% load entity_display %}
 <div>
-    {% if entity_uri %}
-    <a href="{{entity_uri}}" target="_BLANK">{{entity_name}} ({{ entity_id }}) </a>
+    {% if entity %}
+        {% if entity.get_absolute_url %}
+            <a href="{{ entity.get_absolute_url }}" target="_BLANK">{% entity_display_name entity %} ({{ entity.pk }})</a>
+        {% else %}
+            {% entity_display_name entity %} ({{ entity.pk }})
+        {% endif %}
     {% else %}
-    {{entity_name}} ({{ entity_id }})
+        &mdash;
     {% endif %}
 </div>

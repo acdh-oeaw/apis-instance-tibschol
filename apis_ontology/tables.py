@@ -155,10 +155,9 @@ class AuthorColumn(tables.Column):
             try:
                 author = Person.objects.get(pk=getattr(subj_work, "author_id"))
                 context = {
-                    "entity_id": author.pk,
-                    "entity_name": author.name,
-                    "entity_uri": author.get_absolute_url(),
+                    "entity": author,
                 }
+                print(render_to_string("apis_ontology/linked_entity_column.html", context))
                 return mark_safe(
                     render_to_string("apis_ontology/linked_entity_column.html", context)
                 )
@@ -379,15 +378,8 @@ class EntityRelationAuthorColumn(CustomTemplateColumn):
         if getattr(subj_work, "author_id"):
             try:
                 author = Person.objects.get(pk=getattr(subj_work, "author_id"))
-                author_uri = None
-                if (record.forward and record.subj_object_id != author.pk) or (
-                    not record.forward and record.obj_object_id != author.pk
-                ):
-                    author_uri = author.get_absolute_url()
                 self.extra_context = {
-                    "entity_id": author.pk,
-                    "entity_name": author.name,
-                    "entity_uri": author_uri,
+                    "entity": author,
                 }
                 return super().render(author, **kwargs)
 

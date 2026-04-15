@@ -166,6 +166,7 @@ class PlaceFilterSet(TibScholEntityMixinFilterSet):
             "longitude",
             "name",
             "feature_code",
+            "tibetan_transliteration",
         ]
         form = PlaceSearchForm
 
@@ -191,6 +192,8 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
         exclude = [
             *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
             "alternative_names",
+            "tibetan_transliteration",
+            
         ]
         form = PersonSearchForm
 
@@ -216,6 +219,7 @@ class WorkFilterSet(TibScholEntityMixinFilterSet):
         exclude = [
             *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
             "alternative_names",
+            "tibetan_transliteration",
         ]
 
         form = WorkSearchForm
@@ -242,6 +246,7 @@ class InstanceFilterSet(TibScholEntityMixinFilterSet):
         exclude = [
             *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
             "alternative_names",
+            "tibetan_transliteration",
         ]
 
         form = InstanceSearchForm

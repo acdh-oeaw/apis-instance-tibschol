@@ -132,7 +132,18 @@ class PersonDateColumn(tables.Column):
         return queryset, True
 
 
-class AuthorColumn(tables.Column):
+class AuthorColumn(CustomTemplateColumn):
+    template_name = "apis_ontology/linked_entity_column.html"
+    def __init__(self, *args, **kwargs):
+        self.orderable = kwargs.get("orderable", False)
+        self.verbose_name = kwargs.get("verbose_name", None)
+        kwargs.pop("orderable", None)
+        kwargs.pop("verbose_name", None)    
+        super().__init__(
+            *args,
+            **kwargs,
+        )
+
     @classmethod
     def get_work_from_id(cls, work_instance_id):
         try:
@@ -147,27 +158,24 @@ class AuthorColumn(tables.Column):
                     work_instance_id,
                 )
 
-    def render(self, value, *args, **kwargs):
+    def render(self, record,table, value, *args, **kwargs):
         subj_work = self.__class__.get_work_from_id(value)
         if not subj_work:
             return ""
         if getattr(subj_work, "author_id"):
             try:
                 author = Person.objects.get(pk=getattr(subj_work, "author_id"))
-                context = {
+                self.extra_context = {
                     "entity": author,
                 }
-                print(render_to_string("apis_ontology/linked_entity_column.html", context))
-                return mark_safe(
-                    render_to_string("apis_ontology/linked_entity_column.html", context)
-                )
+                return super().render(record, table, author, **kwargs)
             except Person.DoesNotExist:
                 # Author is deleted or not accessible to the user
                 logger.warning("Unable to find author for %s ", subj_work)
 
         return ""
 
-    def value(self, value, *args, **kwargs):
+    def value(self,record, table, value, *args, **kwargs):
         work = self.get_work_from_id(value)
         if not work:
             return ""
@@ -460,7 +468,27 @@ class TibScholEntityMixinPersonRelationsTable(TibScholEntityMixinRelationsTable)
     class Meta(TibScholEntityMixinRelationsTable.Meta):
         pass
 
+class LinkedEntityColumn(CustomTemplateColumn):
+    template_name = "apis_ontology/linked_entity_column.html"
+    orderable = True
 
+    def __init__(self, *args, **kwargs):
+        if "verbose_name" in kwargs:
+            self.verbose_name = kwargs.pop("verbose_name")
+        if "orderable" in kwargs:
+            self.orderable = kwargs.pop("orderable")
+        
+        super().__init__(*args, **kwargs)
+
+    def render(self, record, *args, **kwargs):
+        self.extra_context = {
+            "entity": getattr(record, str(self.accessor), None),
+        }
+        return super().render(record,*args,**kwargs)
+
+
+        return super().render(record, table, value, bound_column, **kwargs) 
+    
 class TibScholRelationMixinTable(GenericTable):
     paginate_by = 100
     export_filename = (
@@ -472,8 +500,8 @@ class TibScholRelationMixinTable(GenericTable):
         exclude = ["desc", "view", "edit", "delete", "noduplicate"]
         sequence = ("subj", "obj", "...")
 
-    subj = tables.Column(verbose_name="Subject")
-    obj = tables.Column(verbose_name="Object")
+    subj = LinkedEntityColumn(verbose_name="Subject")
+    obj =  LinkedEntityColumn(verbose_name="Object")
 
     export_subj_pk = tables.Column(
         accessor="subj_object_id", verbose_name="subj_pk", visible=False
@@ -482,17 +510,10 @@ class TibScholRelationMixinTable(GenericTable):
         accessor="obj_object_id", verbose_name="obj_pk", visible=False
     )
 
-    def render_subj(self, value):
-        url = value.get_absolute_url()
-        return format_html('<a href="{}" target="_blank">{}</a>', url, value)
-
     def value_subj(self, value):
         return getattr(value, "name", "") or getattr(value, "label", "") or ""
 
-    def render_obj(self, value):
-        url = value.get_absolute_url()
-        return format_html('<a href="{}" target="_blank">{}</a>', url, value)
-
+ 
     def value_obj(self, value):
         return getattr(value, "name", "") or getattr(value, "label", "") or ""
 

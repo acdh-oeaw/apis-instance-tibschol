@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.apps import apps
 from apis_core.relations.utils import relation_content_types
 from apis_core.apis_entities.utils import get_entity_classes
+from apis_core.relations.templatetags.relations import get_relation_targets_from
 
 register = template.Library()
 
@@ -24,6 +25,20 @@ def tibschol_entity_types():
     ]
 
     return sorted_entities
+
+
+@register.simple_tag
+def sorted_possible_targets(obj) -> list[ContentType]:
+    custom_order = [
+        "person",
+        "work",
+        "instance",
+        "place",
+    ]
+
+    targets = get_relation_targets_from(obj)
+    targets_sorted = sorted(targets, key=lambda ct: custom_order.index(ct.model))
+    return targets_sorted
 
 
 @register.simple_tag

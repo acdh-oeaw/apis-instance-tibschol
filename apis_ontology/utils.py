@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from pyewts import pyewts
 
 
 def is_relavent_relation_model(relation_model, entity_model):
@@ -29,3 +30,26 @@ def get_relevant_relations(any_model):
                 relavent_rels.append((f"{rel_model.__name__}", rel_model.reverse_name))
 
     return relavent_rels
+
+
+
+def latin_to_tibetan(value):
+	"""
+	Converts EWTS (Latin) transliteration to Unicode Tibetan.
+	Usage: {{ value|latin_to_tibetan }}
+	"""
+	if not value:
+		return ''
+	converter = pyewts()
+	return converter.toUnicode(value)
+
+
+def tibetan_to_latin(value):
+	"""
+	Converts Unicode Tibetan to EWTS (Latin) transliteration.
+	Usage: {{ value|tibetan_to_latin }}
+	"""
+	if not value:
+		return ''
+	converter = pyewts()
+	return converter.toWylie(value)

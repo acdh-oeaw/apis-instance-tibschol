@@ -19,6 +19,7 @@ dependencies = [
     "django-debug-toolbar==6.2.0",
     "tabulate==0.10.0",
     "django-tables2==2.8",
+    "pyewts>=0.2.0",
 ]
 
 [project.optional-dependencies]

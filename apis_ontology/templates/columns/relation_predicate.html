@@ -1,9 +1,10 @@
+{% load entity_display %}
 {% if record.forward %}
 <a href="{{ record.obj.get_absolute_url }}" target="_blank" style="{{ highlight_style }}">
-    {{ record.obj }}
+    {% entity_display_name record.obj %}
 </a>
 {% else %}
 <a href="{{ record.subj.get_absolute_url }}" target="_blank" style="{{ highlight_style }}">
-    {{ record.subj }}
+    {% entity_display_name record.subj %}
 </a>
 {% endif %}

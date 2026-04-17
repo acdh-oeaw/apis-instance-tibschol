@@ -2,9 +2,9 @@
 <div>
     {% if entity %}
         {% if entity.get_absolute_url %}
-            <a href="{{ entity.get_absolute_url }}" target="_BLANK">{% entity_display_name entity %} ({{ entity.pk }})</a>
+            <a href="{{ entity.get_absolute_url }}" target="_BLANK">{% entity_display_name entity %}</a>
         {% else %}
-            {% entity_display_name entity %} ({{ entity.pk }})
+            {% entity_display_name entity %}
         {% endif %}
     {% else %}
         &mdash;

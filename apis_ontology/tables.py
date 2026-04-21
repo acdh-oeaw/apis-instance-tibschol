@@ -38,7 +38,7 @@ def preview_text(text, n=50):
 
 class TibscholEntityMixinTable(GenericTable):
     class Meta(GenericTable.Meta):
-        exclude = ["id", "desc", "view", "edit", "delete", "noduplicate"]
+        exclude = ["id", "desc", "actions"]
         sequence = (
             "name",
             "...",
@@ -79,7 +79,7 @@ class TibscholEntityMixinTable(GenericTable):
     )
 
     def render_name(self, record):
-        return display_entity_name(record, getattr(self, 'request', None))
+        return display_entity_name(record, getattr(self, "request", None))
 
     def value_name(self, record):
         return getattr(record, "label", getattr(record, "name", ""))
@@ -134,11 +134,12 @@ class PersonDateColumn(tables.Column):
 
 class AuthorColumn(CustomTemplateColumn):
     template_name = "apis_ontology/linked_entity_column.html"
+
     def __init__(self, *args, **kwargs):
         self.orderable = kwargs.get("orderable", False)
         self.verbose_name = kwargs.get("verbose_name", None)
         kwargs.pop("orderable", None)
-        kwargs.pop("verbose_name", None)    
+        kwargs.pop("verbose_name", None)
         super().__init__(
             *args,
             **kwargs,
@@ -158,7 +159,7 @@ class AuthorColumn(CustomTemplateColumn):
                     work_instance_id,
                 )
 
-    def render(self, record,table, value, *args, **kwargs):
+    def render(self, record, table, value, *args, **kwargs):
         subj_work = self.__class__.get_work_from_id(value)
         if not subj_work:
             return ""
@@ -175,7 +176,7 @@ class AuthorColumn(CustomTemplateColumn):
 
         return ""
 
-    def value(self,record, table, value, *args, **kwargs):
+    def value(self, record, table, value, *args, **kwargs):
         work = self.get_work_from_id(value)
         if not work:
             return ""
@@ -224,7 +225,6 @@ class PersonTable(TibscholEntityMixinTable):
     class Meta(TibscholEntityMixinTable.Meta):
         model = Person
         fields = ["name"]
-        # exclude = ["id", "desc", "view", "edit", "noduplicate", "delete"]
 
     export_lifedate_start = tables.Column(
         accessor="start", verbose_name="Life date start", visible=False
@@ -358,16 +358,14 @@ class TibScholEntityMixinRelationsTable(GenericTable):
     )
 
     class Meta(GenericTable.Meta):
-        exclude = ["desc", "noduplicate"]
+        exclude = ["desc"]
         per_page = 1000
         sequence = (
             "relation",
             "predicate",
             "...",
             "references",
-            "view",
-            "edit",
-            "delete",
+            "actions",
         )
 
 
@@ -468,6 +466,7 @@ class TibScholEntityMixinPersonRelationsTable(TibScholEntityMixinRelationsTable)
     class Meta(TibScholEntityMixinRelationsTable.Meta):
         pass
 
+
 class LinkedEntityColumn(CustomTemplateColumn):
     template_name = "apis_ontology/linked_entity_column.html"
     orderable = True
@@ -477,18 +476,18 @@ class LinkedEntityColumn(CustomTemplateColumn):
             self.verbose_name = kwargs.pop("verbose_name")
         if "orderable" in kwargs:
             self.orderable = kwargs.pop("orderable")
-        
+
         super().__init__(*args, **kwargs)
 
     def render(self, record, *args, **kwargs):
         self.extra_context = {
             "entity": getattr(record, str(self.accessor), None),
         }
-        return super().render(record,*args,**kwargs)
+        return super().render(record, *args, **kwargs)
+
+        return super().render(record, table, value, bound_column, **kwargs)
 
 
-        return super().render(record, table, value, bound_column, **kwargs) 
-    
 class TibScholRelationMixinTable(GenericTable):
     paginate_by = 100
     export_filename = (
@@ -497,11 +496,11 @@ class TibScholRelationMixinTable(GenericTable):
 
     class Meta(GenericTable.Meta):
         fields = ["subj", "obj"]
-        exclude = ["desc", "view", "edit", "delete", "noduplicate"]
+        exclude = ["desc", "actions"]
         sequence = ("subj", "obj", "...")
 
     subj = LinkedEntityColumn(verbose_name="Subject")
-    obj =  LinkedEntityColumn(verbose_name="Object")
+    obj = LinkedEntityColumn(verbose_name="Object")
 
     export_subj_pk = tables.Column(
         accessor="subj_object_id", verbose_name="subj_pk", visible=False
@@ -513,7 +512,6 @@ class TibScholRelationMixinTable(GenericTable):
     def value_subj(self, value):
         return getattr(value, "name", "") or getattr(value, "label", "") or ""
 
- 
     def value_obj(self, value):
         return getattr(value, "name", "") or getattr(value, "label", "") or ""
 
@@ -979,9 +977,9 @@ class PersonAuthorOfWorkTable(TibScholRelationMixinTable):
 
 class ExcerptsTable(GenericTable):
     class Meta(GenericTable.Meta):
-        exclude = ["desc", "edit"]
+        exclude = ["desc", "actions"]
         fields = ["xml_id", "xml_content"]
-        sequence = ["xml_id", "xml_content", "...", "view", "delete"]
+        sequence = ["xml_id", "xml_content", "..."]
         per_page = 100
 
     def render_xml_id(self, value):
@@ -993,7 +991,7 @@ class ExcerptsTable(GenericTable):
 
 class ZoteroEntryTable(GenericTable):
     class Meta(GenericTable.Meta):
-        exclude = ["desc", "view", "edit", "delete"]
+        exclude = ["desc", "actions"]
         fields = ["zoteroId", "shortTitle", "fullCitation", "year"]
         sequence = fields + ["..."]
         per_page = 100
@@ -1012,10 +1010,10 @@ class SubjectTable(GenericTable):
         exclude = [
             "id",
             "desc",
-            "view",
+            "actions",
         ]
         fields = ["name"]
-        sequence = ("name", "...", "edit", "delete")
+        sequence = ("name", "...")
 
     works = tables.Column(orderable=False, verbose_name="Works", accessor="pk")
 

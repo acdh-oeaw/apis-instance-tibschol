@@ -79,3 +79,6 @@ pre#rawTEI{
     direction: ltr;
 }
 
+td:has(.actions-column) {
+  width: auto !important;
+}

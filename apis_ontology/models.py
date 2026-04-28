@@ -22,6 +22,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django_interval.fields import FuzzyDateParserField
 from .date_utils import tibschol_dateparser
+from .fields import AlternativeLabelsField
 from auditlog.registry import auditlog
 
 logger = logging.getLogger(__name__)
@@ -52,7 +53,10 @@ class TibScholEntityMixin(models.Model):
         abstract = True
     tibetan_transliteration = models.CharField(max_length=255, blank=True, default="", verbose_name=_("Tibetan script"))
     comments = models.TextField(blank=True, null=True)
-    alternative_names = models.TextField(
+    alternative_names_legacy = models.TextField(
+        blank=True, null=True, verbose_name=_("Alternative names (legacy)")
+    )
+    alternative_names = AlternativeLabelsField(
         blank=True, null=True, verbose_name=_("Alternative names")
     )
     external_links = models.TextField(

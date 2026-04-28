@@ -14,7 +14,7 @@ dependencies = [
     "tqdm==4.67.3",
     "pandas==3.0.1",
     "tablib[xlsx]==3.9.0",
-    "lxml==6.0.2",
+    "lxml==6.1.0",
     "django-interval==0.5.4",
     "django-debug-toolbar==6.2.0",
     "tabulate==0.10.0",

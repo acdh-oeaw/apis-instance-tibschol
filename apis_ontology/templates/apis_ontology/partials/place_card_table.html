@@ -18,11 +18,17 @@
     </tr>
     {% if object.alternative_names %}
         <tr>
-            <th>
-                Alternative names
-            </th>
+            <th>Alternative names</th>
             <td>
-                {{ object.alternative_names | render_list_field }}
+            <ul class="list-unstyled mb-0">
+                {% for item in object.alternative_names %}
+                {% if item.label or item.language %}
+                    <li>
+                    {{ item.label }}{% if item.language %} ({{ item.language }}){% endif %}
+                    </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
             </td>
         </tr>
     {% endif %}

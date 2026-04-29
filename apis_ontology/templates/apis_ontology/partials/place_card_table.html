@@ -24,7 +24,7 @@
                 {% for item in object.alternative_names %}
                 {% if item.label or item.language %}
                     <li>
-                    {{ item.label }}{% if item.language %} ({{ item.language }}){% endif %}
+                    {{ item.label }}{% if item.language %}{% endif %}
                     </li>
                 {% endif %}
                 {% endfor %}

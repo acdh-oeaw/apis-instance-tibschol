@@ -7,6 +7,7 @@ MODELS = ["instance", "person", "place", "versioninstance", "versionperson", "ve
 
 
 class Migration(migrations.Migration):
+    atomic = False
     dependencies = [
         ("apis_ontology", "0076_alter_instance_tibetan_transliteration_and_more"),
     ]

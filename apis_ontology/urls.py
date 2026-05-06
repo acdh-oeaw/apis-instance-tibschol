@@ -26,6 +26,12 @@ urlpatterns = [
         name="datamodel",
     ),
     path(
+        "imprint/",
+        TemplateView.as_view(template_name="imprint.html"),
+        name="imprint",
+    ),
+
+    path(
         "apis/export-relations-json/",
         ExportRelationsJSONView.as_view(),
         name="relations.json",

@@ -13,11 +13,13 @@ class DataModel:
         self.relations = relation_content_types()
         self.matrix = defaultdict(dict)
         with open("apis_ontology/static/glossary-models.json", "r") as f:
-            self.glossary = loads(f.read())
+            self.glossary_entities = loads(f.read())
 
         with open("apis_ontology/static/glossary-terms.json", "r") as f:
             self.glossary_terms = loads(f.read())
 
+        with open("apis_ontology/static/glossary-relations.json", "r") as f:
+            self.glossary_relations = loads(f.read())
         for rel in self.relations:
             rel_model = rel.model_class()
             subj = str(rel_model.subj_model.__name__)

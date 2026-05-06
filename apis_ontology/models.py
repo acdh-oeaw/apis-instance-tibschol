@@ -914,7 +914,18 @@ class PersonHasOtherRelationWithInstance(TibScholRelationMixin):
     def reverse_name(cls) -> str:
         return _("has other relation with")
 
+class PersonAnnotatorOfInstance(TibScholRelationMixin):
+    subj_model = Person
+    obj_model = Instance
 
+    @classmethod
+    def name(cls) -> str:
+        return _("annotator of")
+
+    @classmethod
+    def reverse_name(cls) -> str:
+        return _("annotated by")
+    
 auditlog.register(Person)
 auditlog.register(Place)
 auditlog.register(Work)

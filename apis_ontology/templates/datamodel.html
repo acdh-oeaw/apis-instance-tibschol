@@ -10,10 +10,10 @@
 <div class="container  mb-auto" id="top">
     
     <h4 class="display-6">Overview</h4>
-    <p>
+    <p class="">
            This prosopographical database contains data collected by the <a href="https://www.oeaw.ac.at/projects/tibschol/people" target="_blank" rel="noopener noreferrer">TibSchol project team</a> in its exploration of the formative phase of the Tibetan Buddhist scholastic tradition. Beyond the focus on scholastic works and related activities of composition and learning in the 11th to 13th c., data has been included that concerns later developments of individual textual traditions, non-scholastic texts, as well as scholars that were not involved in scholastic activities but operate as links enabling to put on the maps lesser-known figures. Beginning with the survey of manuscripts from the recently published bKa’ gdams gsung ’bum series, the database has expanded to incorporate further corpora and sources, including also records of lost works, to offer a more nuanced understanding of scholars’ endeavors in all their many facets. We strove to provide support for all relations between entities, which are documented in the database via textual excerpts from original sources (sored in our TEI repository) as well as secondary literature (listed in TibSchol Zotero group library). 
 </p>
-<p>Not all entries in the database have received the same amount of attention. Information in the database will keep being enhanced in the future and is supplemented by links to other databases in the field of Tibetan and Buddhist studies. Provided in particular are links the rich resources of the Buddhist Digital Archives (BUDA) of the Buddhist Digital Resource Center (BDRC); for epistemological works and their authors to <a href="https://east.ikga.oeaw.ac.at/" target="_blank" rel="noopener noreferrer">EAST “Epistemology and Argumentation in South Asia and Tibet”</a>; and more generally for all Indian Buddhist canonical works, to the Resources for Kanjur and Tanjur Studies (rKTs) database. 
+<p class="">Not all entries in the database have received the same amount of attention. Information in the database will keep being enhanced in the future and is supplemented by links to other databases in the field of Tibetan and Buddhist studies. Provided in particular are links the rich resources of the Buddhist Digital Archives (BUDA) of the Buddhist Digital Resource Center (BDRC); for epistemological works and their authors to <a href="https://east.ikga.oeaw.ac.at/" target="_blank" rel="noopener noreferrer">EAST “Epistemology and Argumentation in South Asia and Tibet”</a>; and more generally for all Indian Buddhist canonical works, to the Resources for Kanjur and Tanjur Studies (rKTs) database. 
 </p>
     <h4 class="display-6">Entities and Relations</h4>
     <table border="1" class=" text-center align-middle table table-bordered table-striped table-hover">
@@ -49,8 +49,9 @@
                 {% endfor %}
         </tbody>
     </table>
+        <h1 class=""display-6">Entities</h1>
     <div class="mb-auto">
-        {% for item in datamodel.glossary %}
+        {% for item in datamodel.glossary_entities %}
             <div id="{{item.model_class | lower}}" class="text-start glossary-item border rounded p-2 mb-2 bg-light text-muted small">
                 <div class="fw-semibold text-dark mb-1">{{ item.name }}
                     {% if item.name_reverse %}
@@ -69,6 +70,28 @@
     </div>
 
     {% endfor %}
+    <h1 class=""display-6">Relations</h1>
+    <div class="mb-auto">
+        {% for item in datamodel.glossary_relations %}
+            <div id="{{item.model_class | lower}}" class="text-start glossary-item border rounded p-2 mb-2 bg-light text-muted small">
+                <div class="fw-semibold text-dark mb-1">{{ item.name }}
+                    {% if item.name_reverse %}
+                        <span class='material-symbols-outlined align-middle text-secondary'>arrows_outward</span>
+                        {{ item.name_reverse }}
+                    {% endif %}
+
+                    <span class="text-uppercase text-secondary  mb-1 small">
+    {{ item.type }}
+</span>
+    </div>
+    <div class="mb-2">{{ item.Description }}</div>
+    <div>
+    </div>
+
+    </div>
+
+    {% endfor %}
+    <h1 class=""display-6">Attributes</h1>
     {% for item in datamodel.glossary_terms %}
     {% if item.description %}
 

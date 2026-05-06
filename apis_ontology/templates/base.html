@@ -167,6 +167,42 @@ TibSchol: The Dawn of Tibetan Buddhist Scholasticism (11th–13th c.)
         </div>
       </div>
     </div>
+</div>
+  <!-- Three panels row -->
+  <div class="container my-5">
+    <div class="row justify-content-center g-4">
+      <div class="col-12 col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+          <img src="{% static 'img/statue.jpeg' %}" class="card-img-top object-fit-cover splash-panel-img" alt="Phya pa Chos kyi seng ge">
+          <div class="card-body text-center">
+            <h5 class="card-title">Phya pa Chos kyi seng ge</h5>            
+            <a href="/apis/apis_ontology.person/3831" class="btn btn-outline-primary">Learn more</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+          <img src="{% static 'img/manuscript.png' %}" class="card-img-top object-fit-cover splash-panel-img" alt="Epistemological works">
+          <div class="card-body text-center">
+            <h5 class="card-title">Epistemological works</h5>
+            <a href="apis/apis_ontology.work/?choices-columns=name&choices-columns=author&choices-columns=comments&filterset-name=&filterset-original_language=Tibetan&filterset-subject_vocab=9&filterset-start_0=&filterset-start_1=&filterset-sde_dge_ref=&filterset-isExtant=&filterset-comments=&filterset-external_links=&filterset-alternative_names_legacy=&filterset-review=&filterset-changed_since=&filterset-relation_0=&submit=Submit" class="btn btn-outline-primary">Learn more</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+          <img src="{% static 'img/places.png' %}" class="card-img-top object-fit-cover splash-panel-img" alt="Abbots of gSang phu Monastery">
+          <div class="card-body text-center">
+            <h5 class="card-title">Abbots of gSang phu Monastery</h5>
+            <a href="/apis/apis_ontology.personactiveatplace/?choices-columns=subj&choices-columns=lifespan&choices-columns=obj&choices-columns=start&choices-columns=end&choices-columns=subject_of_teaching_vocab&filterset-zotero_refs=&filterset-tei_refs=&filterset-support_notes=&filterset-confidence=&filterset-start_0=&filterset-start_1=&filterset-end_0=&filterset-end_1=&filterset-subj_search=&filterset-obj_search=+gSang+phu&submit=Submit&page=7&sort=-subj" class="btn btn-outline-primary">Learn more</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    
   </div>
 </div>
 {% endblock content %}

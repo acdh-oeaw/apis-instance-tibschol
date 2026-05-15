@@ -4,10 +4,12 @@ from apis_core.apis_entities.forms import E53_PlaceForm
 from django import forms
 from .models import UserScriptPreference
 
+
 class UserScriptPreferenceForm(forms.ModelForm):
     class Meta:
         model = UserScriptPreference
         fields = ["prefers_tibetan_script"]
+
 
 class TibscholEntityForm(GenericModelForm):
     class Meta:
@@ -36,8 +38,8 @@ class PlaceForm(E53_PlaceForm):
     field_order = [
         "place",
         "label",
-        "alternative_names",
         "tibetan_transliteration",
+        "alternative_names",
         "start",
         "latitude",
         "longitude",
@@ -51,8 +53,8 @@ class PlaceForm(E53_PlaceForm):
 class PersonForm(TibscholEntityForm):
     field_order = [
         "name",
-        "alternative_names",
         "tibetan_transliteration",
+        "alternative_names",
         "start",
         "end",
         "gender",
@@ -67,8 +69,8 @@ class PersonForm(TibscholEntityForm):
 class WorkForm(TibscholEntityForm):
     field_order = [
         "name",
-        "alternative_names",
         "tibetan_transliteration",
+        "alternative_names",
         "original_language",
         "subject_vocab",
         "start",
@@ -84,8 +86,8 @@ class WorkForm(TibscholEntityForm):
 class InstanceForm(TibscholEntityForm):
     field_order = [
         "name",
-        "alternative_names",
         "tibetan_transliteration",
+        "alternative_names",
         "start",
         "availability",
         "tibschol_ref",

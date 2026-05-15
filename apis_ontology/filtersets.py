@@ -103,7 +103,11 @@ class LegacyStuffMixinFilterSet(AbstractEntityFilterSet):
 class TibScholRelationMixinFilterSet(RelationFilterSet):
     class Meta(RelationFilterSet.Meta):
         form = RelationSearchForm
-        exclude = RelationFilterSet.Meta.exclude + ABSTRACT_ENTITY_FILTERS_EXCLUDE
+        exclude = (
+            RelationFilterSet.Meta.exclude
+            + ABSTRACT_ENTITY_FILTERS_EXCLUDE
+            + ["support_notes", "tei_refs", "zotero_refs"]
+        )
         filter_overrides = {
             models.CharField: {
                 "filter_class": django_filters.CharFilter,
@@ -194,7 +198,6 @@ class PersonFilterSet(TibScholEntityMixinFilterSet):
             *ABSTRACT_ENTITY_FILTERS_EXCLUDE,
             "alternative_names",
             "tibetan_transliteration",
-            
         ]
         form = PersonSearchForm
 

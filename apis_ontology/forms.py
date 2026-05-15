@@ -231,3 +231,13 @@ class RelationSearchForm(GenericFilterSetForm):
         "end_date_to",
         "relation_ptr",
     ]
+    field_order = [
+        "columns",
+        "subj_search",
+        "obj_search",
+        "confidence",
+        "notes_or_refs",
+        "start",
+        "end",
+        "..."
+    ]

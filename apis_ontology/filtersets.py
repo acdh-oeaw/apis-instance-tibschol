@@ -124,6 +124,21 @@ class TibScholRelationMixinFilterSet(RelationFilterSet):
             FuzzyDateParserField: {"filter_class": YearIntervalRangeFilter},
         }
 
+
+    notes_or_refs = django_filters.CharFilter(
+        label="References contain",
+        method="filter_notes_or_refs"
+    )
+
+    def filter_notes_or_refs(self, queryset, name, value):
+        """Custom filter method to search across support_notes, tei_refs, and zotero_refs."""
+        query = (
+            models.Q(support_notes__icontains=value)
+            | models.Q(tei_refs__icontains=value)
+            | models.Q(zotero_refs__icontains=value)
+        )
+        return queryset.filter(query)
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.filters.pop("search", None)  # safely remove the search filter

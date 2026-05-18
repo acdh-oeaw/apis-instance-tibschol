@@ -7,19 +7,25 @@ from collections import defaultdict
 from json import loads
 
 
+def get_glossary_items(section):
+    filename = f"apis_ontology/static/glossary-{section}.json"
+    with open(filename, "r") as f:
+        items = loads(f.read())
+        # sort items by alphabetical order of the "name" key
+        items.sort(key=lambda x: x["name"])
+        return items
+
+
 class DataModel:
+
     def __init__(self):
         self.entities = get_entity_content_types()
         self.relations = relation_content_types()
         self.matrix = defaultdict(dict)
-        with open("apis_ontology/static/glossary-models.json", "r") as f:
-            self.glossary_entities = loads(f.read())
+        self.glossary_entities = get_glossary_items("models")
+        self.glossary_terms = get_glossary_items("terms")
+        self.glossary_relations = get_glossary_items("relations")
 
-        with open("apis_ontology/static/glossary-terms.json", "r") as f:
-            self.glossary_terms = loads(f.read())
-
-        with open("apis_ontology/static/glossary-relations.json", "r") as f:
-            self.glossary_relations = loads(f.read())
         for rel in self.relations:
             rel_model = rel.model_class()
             subj = str(rel_model.subj_model.__name__)

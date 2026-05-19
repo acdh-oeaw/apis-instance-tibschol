@@ -18,7 +18,7 @@ dependencies = [
     "django-interval==0.5.4",
     "django-debug-toolbar==6.3.0",
     "tabulate==0.10.0",
-    "django-tables2==2.8",
+    "django-tables2==3.0.0",
     "pyewts @ git+https://github.com/gythaogg/pyewts.git"
 ]
 

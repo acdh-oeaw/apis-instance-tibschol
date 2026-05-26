@@ -58,6 +58,7 @@ CACHES = {
     },
 }
 
+DATABASES["default"]["DISABLE_SERVER_SIDE_CURSORS"] = True
 
 MIDDLEWARE += [
     "simple_history.middleware.HistoryRequestMiddleware",

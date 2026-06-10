@@ -1,6 +1,7 @@
 {% load generic %}
 {% load filter_utils %}
 {% load parse_comment %}
+{% load render_tei_refs %}
 {% modeldict object as d %}
 
 <table class="table table-hover">
@@ -82,7 +83,7 @@
     {% if object.comments %}
         <tr>
             <th>Comments</th>
-            <td>{{ object.comments | parse_comment }}</td>
+            <td>{{ object.comments | render_tei_refs | parse_comment }}</td>
         </tr>
     {% endif %}
     {% if object.external_links %}

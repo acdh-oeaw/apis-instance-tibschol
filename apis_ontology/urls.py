@@ -1,4 +1,9 @@
-from apis_ontology.views import DataModelView, ExcerptsView, ExportRelationsJSONView, update_script_preference
+from apis_ontology.views import (
+    DataModelView,
+    ExcerptsView,
+    ExportRelationsJSONView,
+    update_script_preference,
+)
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic import TemplateView
@@ -30,13 +35,17 @@ urlpatterns = [
         TemplateView.as_view(template_name="imprint.html"),
         name="imprint",
     ),
-
     path(
         "apis/export-relations-json/",
         ExportRelationsJSONView.as_view(),
         name="relations.json",
     ),
-    path('update-script-preference/', update_script_preference, name='update_script_preference'),
+    path(
+        "update-script-preference/",
+        update_script_preference,
+        name="update_script_preference",
+    ),
+    path("explore", include("apis_data_explorer.urls")),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

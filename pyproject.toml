@@ -11,7 +11,7 @@ dependencies = [
     "apis-core-rdf==0.64.5",
     "apis-acdhch-default-settings==2.20.0",
     "django-extensions==4.1.*",
-    "tqdm>=4.68.3",
+    "tqdm>=4.68.3,<5",
     "pandas==3.0.1",
     "tablib[xlsx]==3.9.0",
     "lxml==6.1.0",
@@ -20,7 +20,7 @@ dependencies = [
     "tabulate==0.10.0",
     "django-tables2==2.8",
     "pyewts @ git+https://github.com/gythaogg/pyewts.git",
-    "apis-data-explorer>=0.0.4",
+    "apis-data-explorer==0.0.6",
 ]
 
 [project.optional-dependencies]

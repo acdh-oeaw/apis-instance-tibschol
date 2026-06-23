@@ -20,7 +20,7 @@ dependencies = [
     "tabulate==0.10.0",
     "django-tables2==2.8",
     "pyewts @ git+https://github.com/gythaogg/pyewts.git",
-    "apis-data-explorer==0.0.7",
+    "apis-data-explorer==0.0.8",
 ]
 
 [project.optional-dependencies]

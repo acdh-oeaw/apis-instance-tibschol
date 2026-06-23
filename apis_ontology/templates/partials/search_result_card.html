@@ -1,0 +1,11 @@
+<article class="search-result">
+    <hgroup>
+        <h6> <small>{{ result.entity_type }}</small>
+            <a href="/apis/apis_ontology.{{ result.entity_type|lower }}/{{ result.source_object_id }}" target="_blank">{{ result.label }}</a>
+
+        </h6>
+    </hgroup>
+    {% if result.search_text %}
+    <p>{{ result.search_text|truncatechars:500 }}</p>
+    {% endif %}
+</article>

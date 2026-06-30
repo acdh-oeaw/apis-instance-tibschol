@@ -93,3 +93,12 @@ pre#rawTEI{
 td:has(.actions-column) {
   width: auto !important;
 }
+
+figcaption{
+    line-height: 1em;
+    margin-top: 0.5em;
+}
+
+figure{
+ margin: 0 !important;
+}

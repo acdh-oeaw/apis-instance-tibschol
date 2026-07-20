@@ -63,16 +63,30 @@ class ExportRelationsJSONView(View):
 
 
 def update_script_preference(request):
-    user = request.user
-    try:
-        pref = user.script_preference
-    except UserScriptPreference.DoesNotExist:
-        pref = UserScriptPreference(user=user)
-    if request.method == "POST":
-        form = UserScriptPreferenceForm(request.POST, instance=pref)
-        if form.is_valid():
-            form.save()
-            return redirect(request.META.get("HTTP_REFERER", "/"))
+    if request.user.is_staff:
+        try:
+            pref = request.user.script_preference
+        except UserScriptPreference.DoesNotExist:
+            pref = UserScriptPreference(user=request.user)
+
+        if request.method == "POST":
+            form = UserScriptPreferenceForm(request.POST, instance=pref)
+            if form.is_valid():
+                form.save()
+                return redirect(request.META.get("HTTP_REFERER", "/"))
+
+        else:
+            form = UserScriptPreferenceForm(instance=pref)
+
     else:
-        form = UserScriptPreferenceForm(instance=pref)
+        if request.method == "POST":
+            form = UserScriptPreferenceForm(request.POST)
+            if form.is_valid():
+                request.session["script_preference"] = form.cleaned_data
+                return redirect(request.META.get("HTTP_REFERER", "/"))
+        else:
+            form = UserScriptPreferenceForm(
+                initial=request.session.get("script_preference", {})
+            )
+
     return render(request, "update_script_preference.html", {"form": form})

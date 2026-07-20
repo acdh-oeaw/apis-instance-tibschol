@@ -3,24 +3,33 @@ from django import template
 register = template.Library()
 
 
-def display_entity_name(obj, request=None):
-    # Person, Work, Instance: use name; Place: use label
-    name = getattr(obj, "name", None) or getattr(obj, "label", None)
-    id = getattr(obj, "pk", None)
-    translit = getattr(obj, "tibetan_transliteration", None)
-    # Try to get user preference from request
+def prefers_tibetan_script(request):
+    if not request:
+        return False
+
     if (
-        request
-        and hasattr(request, "user")
-        and getattr(request.user, "is_authenticated", False)
+        hasattr(request, "user")
+        and request.user.is_authenticated
+        and request.user.is_staff
     ):
-        script_pref = getattr(
+        return getattr(
             getattr(request.user, "script_preference", None),
             "prefers_tibetan_script",
             False,
         )
-        if script_pref and translit:
-            return f"{translit} ({id})"
+
+    return request.session.get("script_preference", {}).get(
+        "prefers_tibetan_script", False
+    )
+
+
+def display_entity_name(obj, request=None):
+    id = getattr(obj, "pk", None)
+    translit = getattr(obj, "tibetan_transliteration", None)
+
+    if prefers_tibetan_script(request) and translit:
+        return f"{translit} ({id})"
+
     return str(obj)
 
 

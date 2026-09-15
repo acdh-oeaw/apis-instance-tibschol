@@ -89,4 +89,13 @@ def update_script_preference(request):
                 initial=request.session.get("script_preference", {})
             )
 
-    return render(request, "update_script_preference.html", {"form": form})
+    return render(
+        request,
+        "update_script_preference.html",
+        {
+            "form": form,
+            "prefers_tibetan_script": request.session.get("script_preference", {}).get(
+                "prefers_tibetan_script", False
+            ),
+        },
+    )

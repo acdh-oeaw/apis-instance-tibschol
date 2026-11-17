@@ -1,6 +1,6 @@
 from apis_core.generic.forms import GenericFilterSetForm, GenericModelForm
 from apis_core.relations.forms import RelationForm
-from apis_core.apis_entities.forms import E53_PlaceForm
+from apis_core.entities.forms import E53_PlaceForm
 from django import forms
 from .models import UserScriptPreference
 
@@ -239,5 +239,5 @@ class RelationSearchForm(GenericFilterSetForm):
         "notes_or_refs",
         "start",
         "end",
-        "..."
+        "...",
     ]

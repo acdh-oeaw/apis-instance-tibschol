@@ -44,6 +44,10 @@ urlpatterns = [
         update_script_preference,
         name="update_script_preference",
     ),
+    path(
+        "advanced-search/",
+        include("apis_advanced_search.urls"),
+    ),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -22,6 +22,7 @@ EXTRA_APPS = [
     "django_interval",
     "apis_core.uris",
     "apis_core.documentation",
+    "apis_advanced_search",
 ]
 
 for app in EXTRA_APPS:

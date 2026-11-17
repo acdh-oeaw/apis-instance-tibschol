@@ -5,7 +5,7 @@ description = "An APIS instance for the research project TibSchol"
 authors = [{ name = "Saranya Balasubramanian", email = "saranya.balasubramanian@oeaw.ac.at" }]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14,<3.15"
 dependencies = [
     "psycopg2==2.9.*",
     "apis-core-rdf==0.74.2",
@@ -40,6 +40,3 @@ build-backend = "hatchling.build"
 
 [tool.hatch.metadata]
 allow-direct-references = true
-
-[tool.uv]
-no-build-package = ["lxml"]

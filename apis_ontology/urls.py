@@ -12,7 +12,6 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from apis_core.apis_entities.api_views import GetEntityGeneric
 from django.conf import settings
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("apis/", include("apis_core.urls", namespace="apis")),
@@ -45,7 +44,6 @@ urlpatterns = [
         update_script_preference,
         name="update_script_preference",
     ),
-    path("explore", include("apis_data_explorer.urls")),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

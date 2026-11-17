@@ -1,8 +1,7 @@
-
 import logging
 from django.conf import settings
 from django.db import models
-from apis_core.apis_entities.abc import E53_Place
+from apis_core.entities.abc import E53_Place, Entity
 from apis_core.apis_entities.models import AbstractEntity
 from apis_core.generic.abc import GenericModel
 from apis_core.history.models import VersionMixin
@@ -48,10 +47,13 @@ class Subject(GenericModel, models.Model):
         ordering = ["name"]
 
 
-class TibScholEntityMixin(models.Model):
+class TibScholEntityMixin(Entity, models.Model):
     class Meta:
         abstract = True
-    tibetan_transliteration = models.CharField(max_length=255, blank=True, default="", verbose_name=_("Tibetan script"))
+
+    tibetan_transliteration = models.CharField(
+        max_length=255, blank=True, default="", verbose_name=_("Tibetan script")
+    )
     comments = models.TextField(blank=True, null=True)
     alternative_names_legacy = models.TextField(
         blank=True, null=True, verbose_name=_("Alternative names (legacy)")
@@ -914,6 +916,7 @@ class PersonHasOtherRelationWithInstance(TibScholRelationMixin):
     def reverse_name(cls) -> str:
         return _("has other relation with")
 
+
 class PersonAnnotatorOfInstance(TibScholRelationMixin):
     subj_model = Person
     obj_model = Instance
@@ -925,7 +928,8 @@ class PersonAnnotatorOfInstance(TibScholRelationMixin):
     @classmethod
     def reverse_name(cls) -> str:
         return _("annotated by")
-    
+
+
 auditlog.register(Person)
 auditlog.register(Place)
 auditlog.register(Work)
